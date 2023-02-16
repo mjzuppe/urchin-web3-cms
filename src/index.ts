@@ -6,6 +6,6 @@ const createPlaya = () => {
     }
 
     return Playa;
-}
+};
 
 export default createPlaya;

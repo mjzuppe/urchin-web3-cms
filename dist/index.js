@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const createPlaya = () => {
-    function Playa({ params }) {
+    function Playa(args) {
+        var _a;
+        const apiVersion = (_a = args.apiVersion) !== null && _a !== void 0 ? _a : 'latest';
         return {
             ping: () => 'pong',
         };

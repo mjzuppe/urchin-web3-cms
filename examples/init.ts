@@ -2,4 +2,4 @@ import Playa from 'playa';
 
 const playa = new Playa({});
 
-// TODO: More consistent example
+console.log(playa.ping());

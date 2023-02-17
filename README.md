@@ -24,7 +24,7 @@ The package needs to be configured with your account's secret key, which is avai
 
 ```javascript
 const Playa = require('playa').default();
-const playa = new Playa({ apiKey: 'PL_**********', apiVersion: '2022-01-01' });
+const playa = new Playa({ apiVersion: '2023-01-01' });
 
 // TODO: Put an example
 ```
@@ -33,7 +33,7 @@ Or using ES modules and async/await:
 
 ```javascript
 import Playa from 'playa';
-const playa = new Playa({ apiKey: 'PL_**********', apiVersion: '2022-01-01' });
+const playa = new Playa({ apiVersion: '2023-01-01' });
 
 // TODO: Put an example
 ```
@@ -41,15 +41,11 @@ const playa = new Playa({ apiKey: 'PL_**********', apiVersion: '2022-01-01' });
 # Configuration
 
 ```javascript
-const playa = Playa({
-  apiKey: 'PL_**********',
-  apiVersion: '2022-01-01',
-});
+const playa = Playa({ apiVersion: '2023-01-01' });
 ```
 
 | Option     | Default  | Description |
 | :--------- | :------- | :---------- |
-| apiKey     | required | Playa API key to used. Need to be provided |
 | apiVersion | null     | Playa API version to be used. If not set the account's default version will be used. |
 
 # Support

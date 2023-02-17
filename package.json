@@ -1,5 +1,5 @@
 {
-  "name": "playa-node",
+  "name": "playa",
   "version": "0.0.1",
   "description": "The Playa Node library provides convenient access to the Playa API from applications written in JavaScript.",
   "main": "dist/index.js",

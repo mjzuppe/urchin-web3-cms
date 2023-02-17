@@ -1,5 +1,9 @@
+import { PlayaArgs } from './types/core';
+
 const createPlaya = () => {
-    function Playa ({ params }: any) {
+    function Playa (args: PlayaArgs) {
+        const apiVersion = args.apiVersion ?? 'latest';
+
         return {
             ping: () => 'pong',
         };

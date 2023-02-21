@@ -1,5 +1,6 @@
-declare const createTaxonomy: (queue: string, payload: any) => void;
-declare const getTaxonomyQueue: (queue: string) => any;
+import { Taxonomy, TaxonomyPayload } from '../../types/taxonomy';
+declare const createTaxonomy: (queue: string, payload: TaxonomyPayload) => Taxonomy;
+declare const getTaxonomyQueue: (queue: string) => Taxonomy[];
 declare const processTaxonomyQueue: (queue: string) => {
     id: string;
     pubkey: string;

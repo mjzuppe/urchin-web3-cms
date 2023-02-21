@@ -1,16 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processTaxonomyQueue = exports.getTaxonomyQueue = exports.createTaxonomy = void 0;
+const taxonomy_1 = require("../../validators/taxonomy");
 let QUEUES = {};
 const createTaxonomy = (queue, payload) => {
+    (0, taxonomy_1.validateCreateTaxonomySchema)(payload);
     if (!QUEUES[queue])
         QUEUES[queue] = [];
     QUEUES[queue].push(payload);
+    return payload;
 };
 exports.createTaxonomy = createTaxonomy;
 const getTaxonomyQueue = (queue) => {
     if (!QUEUES[queue])
-        QUEUES[queue] = {};
+        return [];
     return QUEUES[queue];
 };
 exports.getTaxonomyQueue = getTaxonomyQueue;

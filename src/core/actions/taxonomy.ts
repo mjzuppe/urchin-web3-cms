@@ -1,13 +1,20 @@
-let QUEUES: any = {};
+import { Taxonomy, TaxonomyPayload, TaxonomyQueues } from '../../types/taxonomy';
+import { validateCreateTaxonomySchema } from '../../validators/taxonomy';
 
-const createTaxonomy = (queue: string, payload: any) => {
+let QUEUES: TaxonomyQueues = {};
+
+const createTaxonomy = (queue: string, payload: TaxonomyPayload): Taxonomy => {
+  validateCreateTaxonomySchema(payload);
+
   if (!QUEUES[queue]) QUEUES[queue] = [];
 
   QUEUES[queue].push(payload);
+
+  return payload;
 };
 
-const getTaxonomyQueue = (queue: string) => {
-  if (!QUEUES[queue]) QUEUES[queue] = {};
+const getTaxonomyQueue = (queue: string): Taxonomy[] => {
+  if (!QUEUES[queue]) return [];
 
   return QUEUES[queue];
 };
@@ -17,20 +24,20 @@ const processTaxonomyQueue = (queue: string) => {
     // do something
     return {
         pubkey: "111111111111111111111111"
-    }
+    };
   };
 
   const uploadToArweave = () => { // TODO: add to dedicated services folder for ARWEAVE
     // do something
     return {
         id: "222222222222222222222222"
-    }
+    };
   };
 
   const r1 = createSolanaRecords();
   const r2 = uploadToArweave();
 
-  return {success: true, ...r1, ...r2};
+  return { success: true, ...r1, ...r2 };
 };
 
 export { createTaxonomy, getTaxonomyQueue, processTaxonomyQueue };

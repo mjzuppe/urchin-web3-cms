@@ -1,40 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const createPlaya = () => {
-    const queue_taxonomy = [];
-    return {
-        taxonomy: () => taxonomy(queue_taxonomy),
-        getQueue: () => {
-            return queue_taxonomy;
+const taxonomy_1 = require("./core/actions/taxonomy");
+const playa = ({ apiVersion }) => {
+    // TODO: create method to automate this part
+    let v1 = {
+        taxonomy: {
+            createTaxonomy: taxonomy_1.createTaxonomy,
+            getTaxonomyQueue: taxonomy_1.getTaxonomyQueue,
+            processTaxonomyQueue: taxonomy_1.processTaxonomyQueue,
         },
-        run: () => processQueue(queue_taxonomy)
     };
-};
-const taxonomy = (queue) => {
     return {
-        create: (payload) => createTaxonomy(queue, payload),
+        v1,
     };
 };
-const createTaxonomy = (queue, payload) => {
-    const { label } = payload; // TODO Need to setup validation for this input (label:string and required)
-    queue.push({ label });
-    return "taxonomy created";
-};
-const processQueue = (queue) => {
-    const createSolanaRecords = () => {
-        // do something
-        return {
-            pubkey: "111111111111111111111111"
-        };
-    };
-    const uploadToArweave = () => {
-        // do something
-        return {
-            id: "222222222222222222222222"
-        };
-    };
-    const r1 = createSolanaRecords();
-    const r2 = uploadToArweave();
-    return Object.assign(Object.assign({ success: true }, r1), r2);
-};
-exports.default = createPlaya;
+exports.default = playa;

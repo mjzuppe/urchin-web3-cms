@@ -2,6 +2,7 @@ import Joi from 'joi';
 
 const CREATE_TAXONOMY_SCHEMA = Joi.object({
     label: Joi.string().required(),
+    parent: Joi.string(),
 });
 
 const validateCreateTaxonomySchema = (data: any): boolean => {

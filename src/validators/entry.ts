@@ -9,8 +9,8 @@ const CREATE_ENTRY_SCHEMA = Joi.object({
     }),
   ),
   private: Joi.boolean().default(false),
-  taxonomy: Joi.string(),
-  template: Joi.string(),
+  taxonomy: Joi.array().items(Joi.string()).max(4),
+  template: Joi.string().required(),
 });
 
 const GET_ENTRIES_SCHEMA = Joi.object({

@@ -4,6 +4,7 @@ type Taxonomy = {
 
 type TaxonomyPayload = {
     label: string;
+    parent?: string;
 };
 
 type TaxonomyQueues = {

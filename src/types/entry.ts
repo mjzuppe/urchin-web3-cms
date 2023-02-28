@@ -18,13 +18,13 @@ type Entry = {
 };
 
 type CreateEntryPayload = {
-  immutable: boolean;
-  inputs: {
+  immutable?: boolean;
+  inputs?: {
     label: string;
     value: any;
   }[];
-  private: boolean;
-  taxonomy: string[];
+  private?: boolean;
+  taxonomy?: string[];
   template: string;
 };
 

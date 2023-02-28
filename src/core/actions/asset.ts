@@ -1,21 +1,21 @@
 import { Asset, CreateAssetPayload } from '../../types/asset';
-import { validateCreateAssetSchema, validateGetAssetSchema } from '../../validators/asset';
+import { validateCreateAssetSchema, validateGetAssetsSchema } from '../../validators/asset';
 
 const createAsset = (payload: CreateAssetPayload): Asset => {
   validateCreateAssetSchema(payload);
 
   return {
-    publicKey: '',
     id: '',
-    url: '',
+    publicKey: '',
     updated: 0,
+    url: '',
   };
 };
 
-const getAsset = (publicKeys: string[] = []): Asset[] => {
-  validateGetAssetSchema(publicKeys);
+const getAssets = (publicKeys: string[] = []): Asset[] => {
+  validateGetAssetsSchema(publicKeys);
 
   return [];
 };
 
-export { createAsset, getAsset };
+export { createAsset, getAssets };

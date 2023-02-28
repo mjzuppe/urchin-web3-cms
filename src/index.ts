@@ -1,4 +1,5 @@
-import { createAsset, getAsset } from './core/actions/asset';
+import { createAsset, getAssets } from './core/actions/asset';
+import { createEntry, getEntries} from './core/actions/entry';
 import { createTaxonomy, getTaxonomyQueue, processTaxonomyQueue } from './core/actions/taxonomy';
 import { PlayaArgs } from './types/core';
 
@@ -7,7 +8,11 @@ const playa = ({ apiVersion }: PlayaArgs) => {
   let v1 = {
     asset: {
       createAsset,
-      getAsset,
+      getAssets,
+    },
+    entry: {
+      createEntry,
+      getEntries,
     },
     taxonomy: {
       createTaxonomy,

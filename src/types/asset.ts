@@ -1,8 +1,8 @@
 type Asset = {
-  publicKey: string;
   id: string;
-  url: string;
+  publicKey: string;
   updated: number;
+  url: string;
 };
 
 type CreateAssetPayload = {

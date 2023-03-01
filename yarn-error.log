@@ -1,0 +1,86 @@
+Arguments: 
+  /Users/veraprotopopova/.nvm/versions/node/v19.7.0/bin/node /opt/homebrew/bin/yarn install
+
+PATH: 
+  /Users/veraprotopopova/.nvm/versions/node/v19.7.0/bin:“/opt/homebrew/opt/node@16/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin”:/usr/local/mongodb/bin:/usr/local/go/bin:/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  19.7.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  SyntaxError: /Users/veraprotopopova/Desktop/code/playa-node-sdk/package.json: Expected double-quoted property name in JSON at position 560
+      at JSON.parse (<anonymous>)
+      at /opt/homebrew/lib/node_modules/yarn/lib/cli.js:1629:59
+      at Generator.next (<anonymous>)
+      at step (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /opt/homebrew/lib/node_modules/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "playa",
+    "version": "0.0.1",
+    "description": "The Playa Node library provides convenient access to the Playa API from applications written in JavaScript.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+      "test": "node_modules/.bin/ts-mocha --file src/tests/*.spec.ts",
+      "build": "rm -rf dist && tsc"
+    },
+    "keywords": [],
+    "author": "juicebox-technologies",
+    "license": "ISC",
+    "devDependencies": {
+      "@types/chai": "^4.3.4",
+      "@types/mocha": "^10.0.1",
+      "@typescript-eslint/eslint-plugin": "^5.51.0",
+  <<<<<<< HEAD
+      "chai": "^4.3.7",
+  =======
+      "crypto-browserify": "^3.12.0",
+  >>>>>>> ca7f80a (wip: try to resolve crypto dependency issue)
+      "eslint": "^8.34.0",
+      "eslint-config-prettier": "^8.6.0",
+      "eslint-config-standard-with-typescript": "^34.0.0",
+      "eslint-plugin-import": "^2.27.5",
+      "eslint-plugin-n": "^15.6.1",
+      "eslint-plugin-prettier": "^4.2.1",
+      "eslint-plugin-promise": "^6.1.1",
+      "mocha": "^10.2.0",
+      "prettier": "^2.8.4",
+      "ts-mocha": "^10.0.0",
+      "typescript": "^4.9.5"
+    },
+    "dependencies": {
+      "@project-serum/anchor": "^0.26.0",
+      "@solana/web3.js": "^1.73.3",
+      "@bundlr-network/client": "^0.10.3",
+      "arbundles": "^0.8.0",
+      "arlocal": "^1.1.60",
+      "arseeding-arbundles": "^0.6.24",
+      "arseeding-js": "^0.0.25",
+      "arweave": "^1.11.0",
+      "arweave-bundles": "^1.0.3",
+      "axios": "^1.3.2",
+      "crypto": "^1.0.1",
+      "dotenv": "^16.0.3",
+      "fs": "^0.0.1-security",
+      "import": "^0.0.6",
+      "install": "^0.13.0",
+      "joi": "^17.8.3",
+      "npm": "^9.5.1",
+      "path": "^0.12.7",
+      "ts-node": "^10.9.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

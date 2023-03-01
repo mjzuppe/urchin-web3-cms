@@ -13,7 +13,10 @@ import ArweaveBundles from 'arweave-bundles';
 import {bundleAndSignData, createData, file, signers } from "arbundles";
 import fs from "fs/promises"
 import path from "path"
+
+
 require('dotenv').config()
+
 
 const generateTransactionItems = async(bundlr: any, ephemeral: any, arweave: any, arBundles: any) => {
   let files = await fs.readdir(path.resolve(__dirname, './data'))
@@ -61,14 +64,13 @@ const bundleAndSignDataFunc = async(dataItems:any, bundlr: any, ephemeral: any, 
   );
   
   const manifest = await arBundles.sign(manifestItem, ephemeral);
-  
+
   const myBundle = await arBundles.bundleData([...dataItems, manifest]);
-  console.log(myBundle)
+  // console.log(myBundle)
 
-
-  const myTx = await arweave.createTransaction({ data: myBundle }, ephemeral);
+  return await arweave.createTransaction({ data: Uint8Array.from(myBundle) }, ephemeral);
   
-  console.log(myTx)
+  // console.log(myTx)
 
 }
 
@@ -83,7 +85,12 @@ const bundlr = new Bundlr(
 )
 
 const test = async() => {
-  const arweave = Arweave.init({});
+  const arweave = Arweave.init({
+    host: 'arweave.net',
+  port: 443,
+  protocol: 'https'
+  });
+
   const ephemeral = await arweave.wallets.generate();
 
     const deps = {
@@ -97,13 +104,12 @@ const test = async() => {
   // // iterate over the directory, creating a mapping 
   // of path to DataItem instances, which you then create+sign using this signer
   let items = await generateTransactionItems(bundlr, ephemeral, arweave, arBundles)
-
   // pass a new mapping of paths to IDs to bundlr.uploader.generateManifest, 
   // then create a DataItem from this data for the manifest 
   // with the tags [{ name: "Type", value: "manifest" }, 
   // { name: "Content-Type", value: "application/x.arweave-manifest+json" }]  
-  bundleAndSignDataFunc(items, bundlr, ephemeral, arweave, arBundles)
-
+  const r = await bundleAndSignDataFunc(items, bundlr, ephemeral, arweave, arBundles)
+  console.log("r", r)
 }
 test()
 
@@ -171,6 +177,7 @@ const upload = async (payload: any) => {
     let[fundError, fundResponse] = await fundNode(bundlr, price)
       if(fundError != null ) {
       } else {
+        console.log("going for it");
         generateTransactionItems(bundlr, ephemeral, arweave, arBundles)
       }
   }

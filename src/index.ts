@@ -6,7 +6,7 @@ import { PlayaArgs } from './types/core';
 
 const playa = ({ apiVersion }: PlayaArgs) => {
   // TODO: create method to automate this part
-  let v1 = {
+  return {
     asset: {
       create: createAsset,
       get: getAssets,
@@ -24,10 +24,6 @@ const playa = ({ apiVersion }: PlayaArgs) => {
       create: createTemplate,
       get: getTemplates,
     },
-  };
-
-  return {
-    v1,
   };
 };
 

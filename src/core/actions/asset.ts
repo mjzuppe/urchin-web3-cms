@@ -5,12 +5,12 @@ import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PublicKey } from '@solana/web3.js';
 import { validateCreateAssetSchema, validateGetAssetsSchema, validateUpdateAssetSchema } from '../../validators/asset';
 import { PlayaArgs } from '../../types/core';
-import { Asset, CreateAssetPayload } from '../../types/asset';
+import { Asset, CreateAssetPayload, UpdateAssetPayload } from '../../types/asset';
 import Bundlr from "@bundlr-network/client";
 import Arweave from 'arweave';
 import deepHash from 'arweave/node/lib/deepHash';
 import ArweaveBundles from 'arweave-bundles';
-import {bundleAndSignData, createData, file, signers } from "arbundles";
+import {bundleAndSignData, createData, signers } from "arbundles";
 import fs from "fs/promises"
 import path from "path"
 

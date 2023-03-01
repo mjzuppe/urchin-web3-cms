@@ -8,21 +8,21 @@ const playa = ({ apiVersion }: PlayaArgs) => {
   // TODO: create method to automate this part
   let v1 = {
     asset: {
-      createAsset,
-      getAssets,
+      create: createAsset,
+      get: getAssets,
     },
     entry: {
-      createEntry,
-      getEntries,
+      create: createEntry,
+      get: getEntries,
     },
     taxonomy: {
-      createTaxonomy,
-      getTaxonomyQueue,
+      create: createTaxonomy,
+      get: getTaxonomyQueue,
       processTaxonomyQueue,
     },
     template: {
-      createTemplate,
-      getTemplates,
+      create: createTemplate,
+      get: getTemplates,
     },
   };
 

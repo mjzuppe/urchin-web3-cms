@@ -86,9 +86,11 @@ const bundlr = new Bundlr(
 
 const test = async() => {
   const arweave = Arweave.init({
-    host: 'arweave.net/tx_anchor',
+    host: 'arweave.net',
     port: 443,
-    protocol: 'http'
+    protocol: 'https', 
+    logger: console.log, 
+    logging: true,
   });
 
   const ephemeral = await arweave.wallets.generate();
@@ -104,8 +106,9 @@ const test = async() => {
   let items = await generateTransactionItems(bundlr, ephemeral, arweave, arBundles)
  
   const tx = await bundleAndSignDataFunc(items, bundlr, ephemeral, arweave, arBundles)
+
   await arweave.transactions.sign(tx, ephemeral);
-  
+
   let post =  await arweave.transactions.post(tx);
   console.log(post)
 }

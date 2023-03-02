@@ -86,9 +86,9 @@ const bundlr = new Bundlr(
 
 const test = async() => {
   const arweave = Arweave.init({
-    host: 'arweave.net',
-  port: 443,
-  protocol: 'https'
+    host: 'arweave.net/tx_anchor',
+    port: 443,
+    protocol: 'http'
   });
 
   const ephemeral = await arweave.wallets.generate();
@@ -101,15 +101,13 @@ const test = async() => {
   
   const arBundles = ArweaveBundles(deps);
 
-  // // iterate over the directory, creating a mapping 
-  // of path to DataItem instances, which you then create+sign using this signer
   let items = await generateTransactionItems(bundlr, ephemeral, arweave, arBundles)
-  // pass a new mapping of paths to IDs to bundlr.uploader.generateManifest, 
-  // then create a DataItem from this data for the manifest 
-  // with the tags [{ name: "Type", value: "manifest" }, 
-  // { name: "Content-Type", value: "application/x.arweave-manifest+json" }]  
-  const r = await bundleAndSignDataFunc(items, bundlr, ephemeral, arweave, arBundles)
-  console.log("r", r)
+ 
+  const tx = await bundleAndSignDataFunc(items, bundlr, ephemeral, arweave, arBundles)
+  await arweave.transactions.sign(tx, ephemeral);
+  
+  let post =  await arweave.transactions.post(tx);
+  console.log(post)
 }
 test()
 

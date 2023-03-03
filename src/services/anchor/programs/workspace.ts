@@ -26,7 +26,6 @@ export class AnchorSDK {
 
   ) {
     const provider = new anchor.AnchorProvider(connection, wallet, opts);
-    console.log("PROVIDER", provider);
     this.model = model;
 
     const taxonomyProgram = new anchor.Program(

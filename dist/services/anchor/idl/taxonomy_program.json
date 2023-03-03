@@ -1,0 +1,114 @@
+{
+    "version": "0.1.0",
+    "name": "taxonomy_program",
+    "instructions": [
+        {
+            "name": "createTaxonomy",
+            "accounts": [
+                {
+                    "name": "taxonomy",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "payer",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "owner",
+                    "isMut": false,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                },
+                {
+                    "name": "parent",
+                    "type": {
+                        "option": "publicKey"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "updateTaxonomy",
+            "accounts": [
+                {
+                    "name": "taxonomy",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "payer",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "owner",
+                    "isMut": false,
+                    "isSigner": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                },
+                {
+                    "name": "parent",
+                    "type": {
+                        "option": "publicKey"
+                    }
+                }
+            ]
+        }
+    ],
+    "accounts": [
+        {
+            "name": "TaxonomyAccount",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "label",
+                        "type": "string"
+                    },
+                    {
+                        "name": "parent",
+                        "type": {
+                            "option": "publicKey"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "LabelTooLong",
+            "msg": "Label can't be longer then 24 characters."
+        },
+        {
+            "code": 6001,
+            "name": "LabelTooShort",
+            "msg": "Label too short."
+        }
+    ],
+    "metadata": {
+        "address": "2rasBfCUQYPAcn2AjCYFvzjSokRYbrZJV3oeu2W696nB"
+    }
+}

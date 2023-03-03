@@ -22,13 +22,13 @@ const generateTransactionItems = async(bundlr: any, ephemeral: any, arweave: any
   let files = await fs.readdir(path.resolve(__dirname, './data'))
   let dataItems = Promise.all(files.map(async fileName => {
     let file = await fs.readFile(path.resolve(__dirname, './data', fileName))
-    return await createAndSignDataItem(file, ephemeral, arweave, arBundles)
+    return await createAndSignDataItem(file, ephemeral, arweave, arBundles, bundlr)
   }))
 
   return await dataItems
 }
 
-const createAndSignDataItem = async(file: Buffer, ephemeral: any, arweave: any, arBundles: any) => {
+const createAndSignDataItem = async(file: Buffer, ephemeral: any, arweave: any, arBundles: any, bundlr: any) => {
   let item:any = await arBundles.createData(
     { 
       data: file, 
@@ -66,12 +66,9 @@ const bundleAndSignDataFunc = async(dataItems:any, bundlr: any, ephemeral: any, 
   const manifest = await arBundles.sign(manifestItem, ephemeral);
 
   const myBundle = await arBundles.bundleData([...dataItems, manifest]);
-  // console.log(myBundle)
 
   return await arweave.createTransaction({ data: Uint8Array.from(myBundle) }, ephemeral);
   
-  // console.log(myTx)
-
 }
 
 // remove after testing
@@ -86,12 +83,13 @@ const bundlr = new Bundlr(
 
 const test = async() => {
   const arweave = Arweave.init({
-    host: 'arweave.net',
+    host: 'arweave.dev',
     port: 443,
     protocol: 'https', 
     logger: console.log, 
     logging: true,
   });
+
 
   const ephemeral = await arweave.wallets.generate();
 
@@ -109,8 +107,12 @@ const test = async() => {
 
   await arweave.transactions.sign(tx, ephemeral);
 
-  let post =  await arweave.transactions.post(tx);
-  console.log(post)
+  const response = await arweave.transactions.post(tx);
+
+  if (response.status !== 200) {
+    console.log(response.data);
+    throw new Error(`Got ${response.status} error from arWeave`);
+  }
 }
 test()
 
@@ -172,6 +174,7 @@ const upload = async (payload: any) => {
   const[priceErorr, price] = await getTransactionPrice(dataSizeToCheck, bundlr)
   const nodeBalance = await getFundedNodeBalance(bundlr)
   if( priceErorr !== null ) {
+    // throw error 
   } else if(price <= nodeBalance) {
     generateTransactionItems(bundlr, ephemeral, arweave, arBundles)
   } else {

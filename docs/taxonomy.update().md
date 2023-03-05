@@ -4,7 +4,7 @@
 /// Create instance
 const connection = urchin(...config); 
 
-const connection.taxonomy.create([...TaxonomyCreateInput]);
+const connection.taxonomy.update([...TaxonomyCreateInput]);
 
 
 ```
@@ -15,7 +15,6 @@ const connection.taxonomy.create([...TaxonomyCreateInput]);
 
 | label/required | description                | type      | default | valid values           |
 | :------------- | :------------------------- | :-------- | :------ | :--------------------- |
-| publickKey*    | reference to target address| PublicKey |         |                        |
 | label\*        | name of taxonomy reference | string    |         | length 1-24 characters |
 | parent         | reference to parent        | PublicKey |         |                        |
 

@@ -13,7 +13,7 @@ export class AnchorSDK {
   readonly program: anchor.Program;
   readonly provider: anchor.AnchorProvider;
   readonly model: "taxonomy" | "template";
-  readonly cluster: Cluster | "localnet";
+  readonly cluster: Cluster;
 
 
   constructor(
@@ -21,7 +21,7 @@ export class AnchorSDK {
     connection: anchor.web3.Connection,
     opts: anchor.web3.ConfirmOptions,
     model: "taxonomy" | "template",
-    cluster: Cluster | "localnet",
+    cluster: Cluster,
  
 
   ) {

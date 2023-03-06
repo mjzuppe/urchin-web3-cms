@@ -17,28 +17,30 @@ import {bundleAndSignData, createData, signers } from "arbundles";
 import fs from "fs/promises"
 import path from "path"
 import { signers, bundleAndSignData, createData } from "arbundles";
-
-
 require('dotenv').config()
 
 
 const prepareFilesForBundlrTransaction = async(signer: any) => {
   let files = await fs.readdir(path.resolve(__dirname, './data'))
-  let dataItems = Promise.all(files.map(async fileName => {
-    let file = await fs.readFile(path.resolve(__dirname, './data', fileName))
-    return await createDataItem(file, signer)
-  }));
-
-  return await dataItems
+  const items: [string, any][] = await Promise.all(
+    files.map(async (fileName) => {
+      console.log(fileName)
+      let file = await fs.readFile(path.resolve(__dirname, './data', fileName))
+      return [
+        fileName,
+        await createDataItem(file, signer),
+      ];
+    })
+  );
+  return new Map(items);
 }
 
-
-const createDataItem = async(file: Buffer, signer: any) => {
+const createDataItem = async(file: Buffer, signer: any): Promise<any> => {
   let item = createData(
     new Uint8Array(file),
     signer,
     {
-      tags: [{ name: "Content-Type", value: "json" }],
+      tags: [{ name: "Content-Type", value: "txt" }],
     }
   );
 
@@ -46,9 +48,11 @@ const createDataItem = async(file: Buffer, signer: any) => {
   return item;
 }
 
-const bundleTransactionItems = async(dataItems: any, signer: any, bundlr: any) => {
+const bundleTransactionItems = async(itemMap: any, signer: any, bundlr: any) => {
+  const pathMap: Map<string, string> = new Map([...itemMap].map(([path, item]) => ([path, item.id])))
+
   let manifestItem:any = await createData(
-    (await bundlr.uploader.generateManifest({ items: dataItems })).manifest,
+    (await bundlr.uploader.generateManifest({ items: pathMap })).manifest,
     signer,
     {
       tags: [{ 
@@ -62,7 +66,7 @@ const bundleTransactionItems = async(dataItems: any, signer: any, bundlr: any) =
     }, 
   ); 
   
-  let bundle = await bundleAndSignData([...dataItems, manifestItem], signer);
+  let bundle = await bundleAndSignData([...itemMap.values(), manifestItem], signer);
   return bundle
 }
 
@@ -80,8 +84,8 @@ const uploadBundle = async(bundle: any, bundlr: any) => {
 }
 
 const bundlrUpload = async(bundlr: any, signer: any) => {
-  let items = await prepareFilesForBundlrTransaction(signer)
-  let signedBundles = await bundleTransactionItems(items, signer, bundlr)
+  let itemsMap = await prepareFilesForBundlrTransaction(signer)
+  let signedBundles = await bundleTransactionItems(itemsMap, signer, bundlr)
   let result = await uploadBundle(signedBundles, bundlr)
   console.log(result)
 }

@@ -13,6 +13,7 @@ import ArweaveBundles from 'arweave-bundles';
 import {bundleAndSignData, createData, signers } from "arbundles";
 import fs from "fs/promises"
 import path from "path"
+import { signers, bundleAndSignData, createData } from "arbundles";
 
 
 require('dotenv').config()
@@ -22,53 +23,59 @@ const generateTransactionItems = async(bundlr: any, ephemeral: any, arweave: any
   let files = await fs.readdir(path.resolve(__dirname, './data'))
   let dataItems = Promise.all(files.map(async fileName => {
     let file = await fs.readFile(path.resolve(__dirname, './data', fileName))
-    return await createAndSignDataItem(file, ephemeral, arweave, arBundles, bundlr)
-  }))
+    return await createDataItem(file, ephemeral, arweave, arBundles, bundlr)
+  }));
 
   return await dataItems
 }
 
-const createAndSignDataItem = async(file: Buffer, ephemeral: any, arweave: any, arBundles: any, bundlr: any) => {
-  let item:any = await arBundles.createData(
-    { 
-      data: file, 
-      tags: [
-        { name: 'App-Name', value: 'myApp' }, //update to have correct content type and other file info
-        { name: 'App-Version', value: '1.0.0' }
-      ]
-    }, 
-    ephemeral
+
+const createDataItem = async(file: Buffer, signer: any, arweave: any, arBundles: any, bundlr: any) => {
+  let item = createData(
+    new Uint8Array(file),
+    signer,
+    {
+      tags: [{ name: "Content-Type", value: "json" }],
+    }
   );
 
-  const data = await arBundles.sign(item, ephemeral);
-
-  return data;
+  await item.sign(signer);
+  return item;
 }
 
-const bundleAndSignDataFunc = async(dataItems:any, bundlr: any, ephemeral: any, arweave: any, arBundles: any) => {
-  let manifestItem:any = await arBundles.createData(
-    { 
-      data: (await bundlr.uploader.generateManifest({items: dataItems})).manifest,
-      tags: [
-        { 
-          name: "Type",
-          value: "manifest"
-        }, 
-        { 
-          name: "Content-Type", 
-          value: "application/x.arweave-manifest+json" 
-        }
-      ]
+const bundle = async(dataItems:any, signer: any, bundlr: any) => {
+  let manifestItem:any = await createData(
+    (await bundlr.uploader.generateManifest({ items: dataItems })).manifest,
+    signer,
+    {
+      tags: [{ 
+        name: "Type",
+        value: "manifest"
+      }, 
+      { 
+        name: "Content-Type", 
+        value: "application/x.arweave-manifest+json" 
+      }]
     }, 
-    ephemeral
-  );
+  ); 
   
-  const manifest = await arBundles.sign(manifestItem, ephemeral);
+  let bundle = await bundleAndSignData([...dataItems, manifestItem], signer);
+  return bundle
+}
 
-  const myBundle = await arBundles.bundleData([...dataItems, manifest]);
+const uploadBundle = async(bundle: any, bundlr: any) => {
+  await bundlr.ready()
 
-  return await arweave.createTransaction({ data: Uint8Array.from(myBundle) }, ephemeral);
-  
+  const tx = bundlr.createTransaction(bundle.getRaw(), {
+    tags: [{ name: "Bundle-Format", value: "binary" }, { name: "Bundle-Version", value: "2.0.0" }]
+  })
+
+  await tx.sign()
+  let res = await tx.upload()
+  console.log(res);
+  let manifestId = bundle.items[bundle.items.length - 1].id
+  console.log(`Manifest ID: ${manifestId}`)
+  return manifestId;
 }
 
 // remove after testing
@@ -101,21 +108,15 @@ const test = async() => {
   
   const arBundles = ArweaveBundles(deps);
 
-  let items = await generateTransactionItems(bundlr, ephemeral, arweave, arBundles)
- 
-  const tx = await bundleAndSignDataFunc(items, bundlr, ephemeral, arweave, arBundles)
-
-  await arweave.transactions.sign(tx, ephemeral);
-
-  const response = await arweave.transactions.post(tx);
-
-  if (response.status !== 200) {
-    console.log(response.data);
-    throw new Error(`Got ${response.status} error from arWeave`);
-  }
+  const signer = new signers.ArweaveSigner(ephemeral);
+  
+  let items = await generateTransactionItems(bundlr, signer, arweave, arBundles)
+  let signedBundles = await bundle(items, signer, bundlr)
+  let result = await uploadBundle(signedBundles, bundlr)
+  console.log(result)
 }
-test()
 
+test()
 
 const getTransactionPrice = async(fileSize: number, bundlr: any) => {
   let[err, price]: [any, any] = [null, null]

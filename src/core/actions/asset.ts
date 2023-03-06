@@ -8,9 +8,12 @@ import { PlayaArgs } from '../../types/core';
 import { Asset, CreateAssetPayload, UpdateAssetPayload } from '../../types/asset';
 import Bundlr from "@bundlr-network/client";
 import Arweave from 'arweave';
+<<<<<<< HEAD
 import deepHash from 'arweave/node/lib/deepHash';
 import ArweaveBundles from 'arweave-bundles';
 import {bundleAndSignData, createData, signers } from "arbundles";
+=======
+>>>>>>> e90a544 (remove unused dependencies)
 import fs from "fs/promises"
 import path from "path"
 import { signers, bundleAndSignData, createData } from "arbundles";

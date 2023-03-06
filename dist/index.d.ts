@@ -10,9 +10,6 @@ declare const playa: ({ apiVersion }: PlayaArgs) => {
                 success: boolean;
             };
         };
-        asset: {
-            upload: (payload: import("./types/asset").BundlrPayload[]) => Promise<void>;
-        };
     };
 };
 export default playa;

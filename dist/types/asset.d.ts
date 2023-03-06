@@ -7,4 +7,5 @@ type Asset = {
 type CreateAssetPayload = {
     original: string;
 };
+
 export type { Asset, CreateAssetPayload };

@@ -23,7 +23,7 @@ const connection = urchin(
 | label/required | description                     | type    | default  | valid values       |
 | :------------- | :------------------------------ | :------ | :------- | :----------------- |
 | payer\*        | public and private key of payer | Keypair |          |                    |
-| publicKey      | author if different then payer  | Signer  |          |                    |
+| owner      | author if different then payer  | Keypair  |          |                    |
 | cluster        | Solana/Arweave environment      | string  | "devnet" | "devnet","mainnet" |
 | rpc            | Custom Solana RPC               | string  |          |                    |
 
@@ -35,7 +35,7 @@ const connection = urchin(
      cluster: "devnet", 
      rpc: "https://api.devnet.solana.com",
 		 publicKey_author: "5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd" 
-     publicKey_payer: ""
+     publicKey_owner: ""
  		 }
 ```
 

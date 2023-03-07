@@ -1,21 +1,19 @@
-import { PublicKey } from "@solana/web3.js";
+import { Keypair, PublicKey } from '@solana/web3.js';
 
 type Taxonomy = {
     label: string;
     level: number;
+    owner: Keypair;
     parent: string;
-    publicKey: string;
+    publicKey: PublicKey;
     updated: number;
 };
 
 type TaxonomyPayload = {
     label: string;
-    parent?: string; // TODO VV: type PublicKey not string (will properly error if not a valid PublicKey)
-    publicKey?: string;
-};
-
-type TaxonomyQueues = {
-    [name: string]: Taxonomy[];
+    owner: Keypair;
+    parent?: PublicKey;
+    publicKey?: PublicKey;
 };
 
 type TaxonomyAccount = {
@@ -29,5 +27,4 @@ type TaxonomyOutput = {
     account: TaxonomyAccount
 };
 
-
-export type { Taxonomy, TaxonomyPayload, TaxonomyQueues, TaxonomyOutput };
+export type { Taxonomy, TaxonomyPayload, TaxonomyOutput };

@@ -2,6 +2,7 @@ import Joi from 'joi';
 
 const CREATE_TAXONOMY_SCHEMA = Joi.object({
   label: Joi.string().required(),
+  owner: Joi.string(),
   parent: Joi.string(),
 });
 
@@ -11,7 +12,9 @@ const GET_TAXONOMIES_SCHEMA = Joi.object({
 
 const CREATE_UPDATE_SCHEMA = Joi.object({
   label: Joi.string().required(),
+  owner: Joi.string(),
   parent: Joi.string(),
+  publicKey: Joi.string(),
 });
 
 const validateCreateTaxonomySchema = (data: any): boolean => {

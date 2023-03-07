@@ -2,11 +2,16 @@ import { PublicKey } from "@solana/web3.js";
 
 type Taxonomy = {
     label: string;
+    level: number;
+    parent: string;
+    publicKey: string;
+    updated: number;
 };
 
 type TaxonomyPayload = {
     label: string;
     parent?: string; // TODO VV: type PublicKey not string (will properly error if not a valid PublicKey)
+    publicKey?: string;
 };
 
 type TaxonomyQueues = {

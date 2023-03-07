@@ -1,10 +1,10 @@
 import { createAsset, getAssets } from './core/actions/asset';
 import { createEntry, getEntries} from './core/actions/entry';
-import { createTaxonomy, getTaxonomyQueue, processTaxonomyQueue } from './core/actions/taxonomy';
+import { createTaxonomy, getTaxonomies, updateTaxonomy } from './core/actions/taxonomy';
 import { createTemplate, getTemplates } from './core/actions/template';
 import { PlayaArgs } from './types/core';
 
-const playa = (args: PlayaArgs) => {
+const playa = ({ apiVersion }: PlayaArgs) => {
   // TODO: create method to automate this part
   return {
     asset: {
@@ -17,8 +17,8 @@ const playa = (args: PlayaArgs) => {
     },
     taxonomy: {
       create: createTaxonomy,
-      get: getTaxonomyQueue,
-      processTaxonomyQueue,
+      get: getTaxonomies,
+      update: updateTaxonomy,
     },
     template: {
       create: createTemplate,

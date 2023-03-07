@@ -1,12 +1,12 @@
 {
   "version": "0.1.0",
-  "name": "template_program",
+  "name": "entry_program",
   "instructions": [
     {
-      "name": "createTemplate",
+      "name": "createEntry",
       "accounts": [
         {
-          "name": "template",
+          "name": "entry",
           "isMut": true,
           "isSigner": true
         },
@@ -32,8 +32,14 @@
           "type": "string"
         },
         {
-          "name": "original",
-          "type": "publicKey"
+          "name": "taxonomy",
+          "type": {
+            "vec": "publicKey"
+          }
+        },
+        {
+          "name": "immutable",
+          "type": "bool"
         },
         {
           "name": "archived",
@@ -42,10 +48,10 @@
       ]
     },
     {
-      "name": "updateTemplate",
+      "name": "updateEntry",
       "accounts": [
         {
-          "name": "template",
+          "name": "entry",
           "isMut": true,
           "isSigner": false
         },
@@ -62,15 +68,33 @@
       ],
       "args": [
         {
-          "name": "archived",
+          "name": "arweaveId",
+          "type": "string"
+        },
+        {
+          "name": "immutable",
           "type": "bool"
+        },
+        {
+          "name": "taxonomy",
+          "type": {
+            "option": {
+              "vec": "publicKey"
+            }
+          }
+        },
+        {
+          "name": "archived",
+          "type": {
+            "option": "bool"
+          }
         }
       ]
     }
   ],
   "accounts": [
     {
-      "name": "TemplateAccount",
+      "name": "EntryAccount",
       "type": {
         "kind": "struct",
         "fields": [
@@ -83,8 +107,14 @@
             "type": "string"
           },
           {
-            "name": "original",
-            "type": "publicKey"
+            "name": "taxonomy",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "immutable",
+            "type": "bool"
           },
           {
             "name": "archived",
@@ -103,9 +133,24 @@
       "code": 6000,
       "name": "IdIncorrectLength",
       "msg": "arweave_id is not the correct length."
+    },
+    {
+      "code": 6001,
+      "name": "TaxonomyTooLong",
+      "msg": "taxonomy cannot exceed 3 items."
+    },
+    {
+      "code": 6002,
+      "name": "Immutable",
+      "msg": "this program is immutable."
+    },
+    {
+      "code": 6003,
+      "name": "InvalidVersion",
+      "msg": "this program no longer has version remaining."
     }
   ],
   "metadata": {
-    "address": "DDr6GWEUMARbpwThziuFpwCUkmWAG1htNyQpfdwZJf2G"
+    "address": "7BnsrUwQorEwpzLK5U9Kte9qPgWXzGPNyKBJJXdDEPHW"
   }
 }

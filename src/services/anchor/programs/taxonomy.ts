@@ -9,7 +9,6 @@ export class Taxonomy {
     this.sdk = sdk;
   }
 
-
   async createTaxonomy(
     label: string,
     owner: anchor.web3.Keypair,

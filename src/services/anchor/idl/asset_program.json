@@ -1,12 +1,12 @@
 {
   "version": "0.1.0",
-  "name": "template_program",
+  "name": "asset_program",
   "instructions": [
     {
-      "name": "createTemplate",
+      "name": "createAsset",
       "accounts": [
         {
-          "name": "template",
+          "name": "asset",
           "isMut": true,
           "isSigner": true
         },
@@ -32,8 +32,8 @@
           "type": "string"
         },
         {
-          "name": "original",
-          "type": "publicKey"
+          "name": "immutable",
+          "type": "bool"
         },
         {
           "name": "archived",
@@ -42,10 +42,10 @@
       ]
     },
     {
-      "name": "updateTemplate",
+      "name": "updateAsset",
       "accounts": [
         {
-          "name": "template",
+          "name": "asset",
           "isMut": true,
           "isSigner": false
         },
@@ -62,15 +62,25 @@
       ],
       "args": [
         {
-          "name": "archived",
+          "name": "arweaveId",
+          "type": "string"
+        },
+        {
+          "name": "immutable",
           "type": "bool"
+        },
+        {
+          "name": "archived",
+          "type": {
+            "option": "bool"
+          }
         }
       ]
     }
   ],
   "accounts": [
     {
-      "name": "TemplateAccount",
+      "name": "AssetAccount",
       "type": {
         "kind": "struct",
         "fields": [
@@ -83,16 +93,12 @@
             "type": "string"
           },
           {
-            "name": "original",
-            "type": "publicKey"
+            "name": "immutable",
+            "type": "bool"
           },
           {
             "name": "archived",
             "type": "bool"
-          },
-          {
-            "name": "version",
-            "type": "u8"
           }
         ]
       }
@@ -103,9 +109,14 @@
       "code": 6000,
       "name": "IdIncorrectLength",
       "msg": "arweave_id is not the correct length."
+    },
+    {
+      "code": 6001,
+      "name": "Immutable",
+      "msg": "this program is immutable."
     }
   ],
   "metadata": {
-    "address": "DDr6GWEUMARbpwThziuFpwCUkmWAG1htNyQpfdwZJf2G"
+    "address": "H1YXak97J5CiuEJUjdMQg9YSEkCRLHpKQA3kuUEUKgYz"
   }
 }

@@ -33,7 +33,7 @@ const results =
  owner: "5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd",
  taxonomies: [
     {
-      publicKey: "", label: "", parent: "", level: 0, updated: 0
+      publicKey: "", label: "", parent: "", 
     }
   ], templates: [
     {

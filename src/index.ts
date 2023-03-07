@@ -4,7 +4,7 @@ import { createTaxonomy, getTaxonomyQueue, processTaxonomyQueue } from './core/a
 import { createTemplate, getTemplates } from './core/actions/template';
 import { PlayaArgs } from './types/core';
 
-const playa = ({ apiVersion }: PlayaArgs) => {
+const playa = (args: PlayaArgs) => {
   // TODO: create method to automate this part
   return {
     asset: {

@@ -33,9 +33,9 @@ const getTaxonomiesUpdateQueue = (): TaxonomyPayload[] => {
   return UPDATE_QUEUE;
 };
 
-const processTaxonomies = async (owner: Keypair, args: PlayaArgs): Promise<Taxonomy[]> => {
-  const createdTaxonomies: Taxonomy[] = [];
-  const updatedTaxonomies: Taxonomy[] = [];
+const processTaxonomies = async (owner: Keypair, args: PlayaArgs): Promise<any> => {
+  // const createdTaxonomies: Taxonomy[] = [];
+  // const updatedTaxonomies: Taxonomy[] = [];
 
   const { cluster, payer, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
 
@@ -56,6 +56,8 @@ const processTaxonomies = async (owner: Keypair, args: PlayaArgs): Promise<Taxon
   }
 
   for (const updateTaxonomyFromQueue of UPDATE_QUEUE) {
+    if (!updateTaxonomyFromQueue.publicKey) continue;
+
     const updatedTaxonomy = await new SolanaInteractions.Taxonomy(sdk).updateTaxonomy(
       updateTaxonomyFromQueue.publicKey,
       updateTaxonomyFromQueue.label,
@@ -63,6 +65,9 @@ const processTaxonomies = async (owner: Keypair, args: PlayaArgs): Promise<Taxon
       updateTaxonomyFromQueue.parent
     );
   }
+
+  CREATE_QUEUE = [];
+  UPDATE_QUEUE= [];
 
   await sleep(8000);
 
@@ -81,7 +86,14 @@ const processTaxonomies = async (owner: Keypair, args: PlayaArgs): Promise<Taxon
 
   // return { success: true, ...r1, ...r2 };
 
-  return taxonomyAccounts;
+  return {
+    assets: [],
+    entries: [],
+    payer,
+    owner,
+    taxonomies: taxonomyAccounts,
+    templates: [],
+  };
 };
 
 const resetTaxonomiesCreateQueue = (): void => {

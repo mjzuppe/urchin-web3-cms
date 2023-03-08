@@ -11,7 +11,7 @@ type Taxonomy = {
 
 type TaxonomyCreatePayload = {
     label: string;
-    owner: Keypair;
+    owner?: Keypair;
     parent?: PublicKey;
     publicKey?: PublicKey;
 };
@@ -19,7 +19,7 @@ type TaxonomyCreatePayload = {
 type TaxonomyUpdatePayload = {
     publicKey: PublicKey;
     label: string;
-    owner: Keypair;
+    owner?: Keypair;
     parent?: PublicKey;
 
 };

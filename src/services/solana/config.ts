@@ -3,7 +3,7 @@ import { PlayaArgs } from "../../types/core"
 import { Keypair, Connection } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 
-export const loadSolanaConfig = async (args: PlayaArgs) => {
+export const loadSolanaConfig = (args: PlayaArgs) => {
     const cluster = args.cluster || "devnet";
     const defaultRpc = cluster === "devnet" ? "https://api.devnet.solana.com" : "https://api.mainnet-beta.solana.com";
     const rpc = new Connection(args.rpc || defaultRpc, "confirmed");

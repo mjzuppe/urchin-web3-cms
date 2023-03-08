@@ -9,10 +9,13 @@ declare const urchin: (args: PlayaArgs) => {
         get: (publicKeys?: string[]) => import("./types/entry").Entry[];
     };
     preflight: () => Promise<{
+        asset: import("./types/asset").AssetQueues;
         cluster: string;
+        entry: import("./types/entry").EntryQueues;
         payer: string;
         rpc: string;
         taxonomy: import("./types/taxonomy").TaxonomyQueues;
+        template: import("./types/template").TemplateQueues;
     }>;
     process: () => Promise<{
         completed: boolean;

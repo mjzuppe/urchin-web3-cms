@@ -1,6 +1,6 @@
 import urchin from '../index';
 import { Keypair, Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-// import fs from "fs";
+// yarn  from "fs";
 
 describe('Manage taxonomy', () => {
 

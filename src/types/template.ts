@@ -1,3 +1,4 @@
+import { PublicKey } from '@solana/web3.js';
 import Joi from 'joi';
 
 type CreateTemplatePayload = {
@@ -20,5 +21,17 @@ type Template = {
   title: string;
 };
 
-export type { CreateTemplatePayload, Template };
+type UpdateTemplatePayload = {
+  inputs: {
+    label: string;
+    options?: string[];
+    type: 'file' | 'numeric' | 'text' | 'textArea' | 'select';
+    validation?: Joi.ObjectSchema;
+  }[];
+  private?: boolean;
+  publicKey: PublicKey;
+  title: string;
+};
+
+export type { CreateTemplatePayload, Template, UpdateTemplatePayload };
   

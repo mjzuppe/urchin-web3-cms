@@ -1,3 +1,16 @@
+import { PublicKey } from "@solana/web3.js";
+
+type CreateEntryPayload = {
+  immutable?: boolean;
+  inputs?: {
+    label: string;
+    value: any;
+  }[];
+  private?: boolean;
+  taxonomy?: string[];
+  template: string;
+};
+
 type Entry = {
   immutable: boolean;
   inputs: {
@@ -17,15 +30,16 @@ type Entry = {
   version: number;
 };
 
-type CreateEntryPayload = {
+type UpdateEntryPayload = {
   immutable?: boolean;
   inputs?: {
     label: string;
     value: any;
   }[];
   private?: boolean;
+  publicKey: PublicKey;
   taxonomy?: string[];
   template: string;
 };
 
-export type { Entry, CreateEntryPayload };
+export type { CreateEntryPayload, Entry, UpdateEntryPayload };

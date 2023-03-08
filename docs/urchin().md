@@ -9,7 +9,7 @@ import {Keypair, Signer} from "@solana/web3.js";
 
 const connection = urchin(
     {
-        payer:KeyPair: payer,
+        payer:Keypair: payer,
         ...parameters
     });
 

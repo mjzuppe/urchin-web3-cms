@@ -1,4 +1,5 @@
 "use strict";
+// import fs from "fs";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -22,14 +23,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wallet = void 0;
-const fs_1 = __importDefault(require("fs"));
 const web3_js_1 = require("@solana/web3.js");
 const anchor = __importStar(require("@project-serum/anchor"));
-const jsonKeypair = fs_1.default.readFileSync("src/tests/burner-wallet.json", "utf8");
-const keypair = web3_js_1.Keypair.fromSecretKey(Buffer.from(JSON.parse(jsonKeypair)));
+// const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");
+// const keypair = Keypair.fromSecretKey(
+//   Buffer.from(JSON.parse(jsonKeypair))
+// ); // TODO MJZ
+const keypair = web3_js_1.Keypair.generate();
 exports.wallet = new anchor.Wallet(keypair);

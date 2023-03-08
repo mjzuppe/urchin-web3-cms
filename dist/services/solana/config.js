@@ -31,12 +31,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loadSolanaConfig = void 0;
-const fs_1 = __importDefault(require("fs"));
+// import fs from "fs";
 const web3_js_1 = require("@solana/web3.js");
 const anchor = __importStar(require("@project-serum/anchor"));
 const loadSolanaConfig = (args) => __awaiter(void 0, void 0, void 0, function* () {
@@ -50,6 +47,8 @@ const loadSolanaConfig = (args) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.loadSolanaConfig = loadSolanaConfig;
 const testPayer = () => {
-    const jsonKeypair = fs_1.default.readFileSync("src/tests/burner-wallet.json", "utf8");
-    const keypair = web3_js_1.Keypair.fromSecretKey(Buffer.from(JSON.parse(jsonKeypair)));
+    // const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");
+    // const keypair = Keypair.fromSecretKey(
+    //     Buffer.from(JSON.parse(jsonKeypair))
+    // );
 };

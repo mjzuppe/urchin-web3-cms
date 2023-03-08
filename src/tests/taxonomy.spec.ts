@@ -1,14 +1,16 @@
 import urchin from '../index';
 import { Keypair, Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import fs from "fs";
+// import fs from "fs";
 
 describe('Manage taxonomy', () => {
 
-  const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");
+  // const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");
 
-const payer = Keypair.fromSecretKey(
-  Buffer.from(JSON.parse(jsonKeypair))
-);
+// const payer = Keypair.fromSecretKey(
+//   Buffer.from(JSON.parse(jsonKeypair))
+// ); // TODO MJZ
+
+const payer = Keypair.generate();
 
 let pubkey:PublicKey = payer.publicKey;
 

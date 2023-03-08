@@ -1,5 +1,5 @@
 import { PlayaArgs } from "../../types/core"
-import fs from "fs";
+// import fs from "fs";
 import { Keypair, Connection } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 
@@ -14,9 +14,9 @@ export const loadSolanaConfig = async (args: PlayaArgs) => {
 }
 
 const testPayer = () => {
-    const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");
+    // const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");
 
-    const keypair = Keypair.fromSecretKey(
-        Buffer.from(JSON.parse(jsonKeypair))
-    );
+    // const keypair = Keypair.fromSecretKey(
+    //     Buffer.from(JSON.parse(jsonKeypair))
+    // );
 }

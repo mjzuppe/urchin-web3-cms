@@ -29,28 +29,23 @@ Available Parameters:
 ```javascript
 const results = 
 {
- payer: "5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd",
- owner: "5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd",
+ completed: true,
  taxonomies: [
     {
-      publicKey: "", label: "", parent: "", 
+      publicKey: "", label: "", owner: "", parent: "", 
     }
   ], templates: [
     {
-    	title: "", inputs: [], private: true, version: 0,
+
     }
   ], entries: [
     {
-      //
+
     }
   ], assets: [
     {
-      publicKey: "", arweaveId: "", url: "", metadataId: "" 
+     
     }
   ] 
 }
 ```
-
-
-
-`playa().run()` // runs all functions. If assets are uploading AND entries being created, entry values can scan for `{{filename}}` and replace with arweave URL

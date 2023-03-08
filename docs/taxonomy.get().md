@@ -22,6 +22,6 @@ const getOne = connection.taxonomy.get(...TaxonomyGetInput);
 
 ```javascript
 [
-  {publicKey: "", label: "", parent: "", level: 0, updated: 0}
+  {publicKey: "", label: "", owner: "", parent: ""}
 ]
 ```

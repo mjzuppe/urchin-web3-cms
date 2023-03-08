@@ -17,7 +17,6 @@ const connection = urchin(
 ```
 
 
-
 ## Parameters
 
 | label/required | description                     | type    | default  | valid values       |
@@ -27,25 +26,4 @@ const connection = urchin(
 | cluster        | Solana/Arweave environment      | string  | "devnet" | "devnet","mainnet" |
 | rpc            | Custom Solana RPC               | string  |          |                    |
 
-## Response Example
 
-```javascript
-{ queue: 
-     {taxonomy: {create:[], update:[]}, template: {create:[], update:[]}, entry: {create:[], update:[]}, asset: {create: [], update:[]} }, 
-     cluster: "devnet", 
-     rpc: "https://api.devnet.solana.com",
-     payer: "5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd",
-     owner: "HdKNt2TSwPdyZitDcLVcFwTC2SvitDcLVcFeQrkqQ131"
-}
-```
-
-
-
-|    |
-| :- |
-
-# Processing Functions
-
-`playa().reset()` // removes all functions awaiting run
-
-`playa().run()` // runs all functions. If assets are uploading AND entries being created, entry values can scan for `{{filename}}` and replace with arweave URL

@@ -9,8 +9,6 @@ const connection.taxonomy.create([...TaxonomyCreateInput]);
 
 ```
 
-
-
 ## Parameters for TaxonomyCreateInput
 
 | label/required | description                | type      | default | valid values           |
@@ -21,9 +19,10 @@ const connection.taxonomy.create([...TaxonomyCreateInput]);
 
 ## Response Example
 
-```javascript
+```
 {
 	label: "javascript",
   parent: null
+  // Note that response is payload from input
 }
 ```

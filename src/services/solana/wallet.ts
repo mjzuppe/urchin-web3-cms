@@ -1,11 +1,12 @@
-import fs from "fs";
-import { Keypair } from "@solana/web3.js";
-import * as anchor from "@project-serum/anchor";
+// import fs from "fs";
 
-const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");
+// import { Keypair } from "@solana/web3.js";
+// import * as anchor from "@project-serum/anchor";
 
-const keypair = Keypair.fromSecretKey(
-  Buffer.from(JSON.parse(jsonKeypair))
-);
+// const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");
 
-export const wallet = new anchor.Wallet(keypair);
+// const keypair = Keypair.fromSecretKey(
+//   Buffer.from(JSON.parse(jsonKeypair))
+// );
+
+// export const wallet = new anchor.Wallet(keypair);

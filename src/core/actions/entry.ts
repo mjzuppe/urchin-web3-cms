@@ -1,6 +1,6 @@
 import * as anchor from '@project-serum/anchor';
 import * as SolanaInteractions from '../../services/anchor/programs';
-import { Entry, CreateEntryPayload, UpdateEntryPayload } from '../../types/entry';
+import { Entry, CreateEntryPayload, UpdateEntryPayload, EntryQueues } from '../../types/entry';
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PlayaArgs } from '../../types/core';
@@ -48,6 +48,8 @@ const getEntries = (publicKeys: string[] = []): Entry[] => {
 
   return [];
 };
+
+const getEntriesQueues = (): EntryQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 
 // const processEntries = async (args: PlayaArgs): Promise<any> => {
 //   const { cluster, payer, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
@@ -100,4 +102,4 @@ const updateEntry = (payload: UpdateEntryPayload): UpdateEntryPayload => {
   return payload;
 };
 
-export { createEntry, getEntries, updateEntry };
+export { createEntry, getEntries, getEntriesQueues, updateEntry };

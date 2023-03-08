@@ -13,6 +13,10 @@ const payer = Keypair.fromSecretKey(
 let pubkey:PublicKey = payer.publicKey;
 
   it("should create a new taxonomy", async () => {
+    const key = new Keypair();
+
+    console.log(key);
+
       const u = urchin({
           payer,
           cluster: "devnet",

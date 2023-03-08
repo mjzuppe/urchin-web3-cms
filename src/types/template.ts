@@ -21,6 +21,11 @@ type Template = {
   title: string;
 };
 
+type TemplateQueues = {
+  create: CreateTemplatePayload[];
+  update: UpdateTemplatePayload[];
+};
+
 type UpdateTemplatePayload = {
   inputs: {
     label: string;
@@ -33,5 +38,5 @@ type UpdateTemplatePayload = {
   title: string;
 };
 
-export type { CreateTemplatePayload, Template, UpdateTemplatePayload };
+export type { CreateTemplatePayload, Template, TemplateQueues, UpdateTemplatePayload };
   

@@ -1,6 +1,6 @@
 import * as anchor from '@project-serum/anchor';
 import * as SolanaInteractions from '../../services/anchor/programs';
-import { Asset, CreateAssetPayload, UpdateAssetPayload } from '../../types/asset';
+import { Asset, AssetQueues, CreateAssetPayload, UpdateAssetPayload } from '../../types/asset';
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PublicKey } from '@solana/web3.js';
@@ -35,6 +35,8 @@ const getAssets = (publicKeys: string[] = []): Asset[] => {
 const getAssetsCreateQueue = (): CreateAssetPayload[] => {
   return CREATE_QUEUE;
 };
+
+const getAssetsQueues = (): AssetQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 
 const getAssetsUpdateQueue = (): UpdateAssetPayload[] => {
   return UPDATE_QUEUE;
@@ -95,6 +97,7 @@ export {
   createAsset,
   getAssets,
   getAssetsCreateQueue,
+  getAssetsQueues,
   getAssetsUpdateQueue,
   updateAsset
 };

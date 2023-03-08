@@ -1,6 +1,6 @@
 import * as anchor from '@project-serum/anchor';
 import * as SolanaInteractions from '../../services/anchor/programs';
-import { CreateTemplatePayload, Template, UpdateTemplatePayload } from '../../types/template';
+import { CreateTemplatePayload, Template, TemplateQueues, UpdateTemplatePayload } from '../../types/template';
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PublicKey } from '@solana/web3.js';
@@ -31,6 +31,8 @@ const getTemplates = (publicKeys: string[] = []): Template[] => {
 
   return [];
 };
+
+const getTemplatesQueues = (): TemplateQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 
 // const processTemplates = async (args: PlayaArgs): Promise<any> => {
 //   const { cluster, payer, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
@@ -81,4 +83,4 @@ const updateTemplate = (payload: UpdateTemplatePayload): UpdateTemplatePayload =
   return payload;
 };
 
-export { createTemplate, getTemplates, updateTemplate };
+export { createTemplate, getTemplates, getTemplatesQueues, updateTemplate };

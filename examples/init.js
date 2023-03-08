@@ -1,5 +1,5 @@
-const Playa = require('playa').default();
+const Urchin = require('urchin').default();
 
-const playa = new Playa({});
+const urchin = new Urchin({});
 
-console.log(playa.ping());
+console.log(urchin.ping());

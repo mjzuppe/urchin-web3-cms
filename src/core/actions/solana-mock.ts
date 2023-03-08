@@ -1,5 +1,5 @@
 import { Keypair, PublicKey } from "@solana/web3.js";
-import { SolanaAssetCreateInput, SolanaTaxonomyCreateInput } from "../types/solana";
+import { SolanaAssetCreateInput, SolanaTaxonomyCreateInput } from "../../types/solana";
 
 const generateKey = () => new Keypair().publicKey.toString();
 const simulateProcessing = () => new Promise((resolve) => setTimeout(resolve, 5000));

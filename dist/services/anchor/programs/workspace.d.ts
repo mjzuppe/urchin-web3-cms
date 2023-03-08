@@ -5,5 +5,5 @@ export declare class AnchorSDK {
     readonly provider: anchor.AnchorProvider;
     readonly model: "taxonomy" | "template";
     readonly cluster: Cluster;
-    constructor(wallet: anchor.Wallet, connection: anchor.web3.Connection, opts: anchor.web3.ConfirmOptions, model: "taxonomy" | "template", cluster: Cluster );
+    constructor(wallet: anchor.Wallet, connection: anchor.web3.Connection, opts: anchor.web3.ConfirmOptions, model: "taxonomy" | "template", cluster: Cluster);
 }

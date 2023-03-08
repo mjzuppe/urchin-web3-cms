@@ -10,7 +10,10 @@ type SolanaTaxonomyCreateInput = {
 type SolanaAssetCreateInput = {
     arweaveId: string;
     payer: Keypair;
-    owner?: PublicKey 
+    owner?: PublicKey;
+    private: boolean;
+    immutable: boolean;
+    taxonomy?: PublicKey[];
 }
 
 type SolanaTemplateCreateInput = {

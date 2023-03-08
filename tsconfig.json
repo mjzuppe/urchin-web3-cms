@@ -12,6 +12,7 @@
   },
   "exclude": [
     "examples",
-    "tests"
+    "tests",
+    "src/tests"
   ]
 }

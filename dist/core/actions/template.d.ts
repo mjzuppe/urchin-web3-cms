@@ -1,4 +1,5 @@
-import { CreateTemplatePayload, Template } from '../../types/template';
+import { CreateTemplatePayload, Template, UpdateTemplatePayload } from '../../types/template';
 declare const createTemplate: (payload: CreateTemplatePayload) => Template;
 declare const getTemplates: (publicKeys?: string[]) => Template[];
-export { createTemplate, getTemplates };
+declare const updateTemplate: (payload: UpdateTemplatePayload) => UpdateTemplatePayload;
+export { createTemplate, getTemplates, updateTemplate };

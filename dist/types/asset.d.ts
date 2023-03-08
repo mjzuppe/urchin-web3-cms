@@ -1,3 +1,4 @@
+import { PublicKey } from "@solana/web3.js";
 type Asset = {
     id: string;
     publicKey: string;
@@ -7,4 +8,8 @@ type Asset = {
 type CreateAssetPayload = {
     original: string;
 };
-export type { Asset, CreateAssetPayload };
+type UpdateAssetPayload = {
+    original: string;
+    publicKey: PublicKey;
+};
+export type { Asset, CreateAssetPayload, UpdateAssetPayload };

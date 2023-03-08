@@ -1,9 +1,10 @@
-import { Taxonomy, TaxonomyPayload } from '../../types/taxonomy';
-declare const createTaxonomy: (queue: string, payload: TaxonomyPayload) => Taxonomy;
-declare const getTaxonomyQueue: (queue: string) => Taxonomy[];
-declare const processTaxonomyQueue: (queue: string) => {
-    id: string;
-    pubkey: string;
-    success: boolean;
-};
-export { createTaxonomy, getTaxonomyQueue, processTaxonomyQueue };
+import { PlayaArgs } from '../../types/core';
+import { Taxonomy, TaxonomyCreatePayload, TaxonomyUpdatePayload, TaxonomyQueues } from '../../types/taxonomy';
+declare const createTaxonomy: (payload: TaxonomyCreatePayload) => TaxonomyCreatePayload;
+declare const getTaxonomies: (publicKeys?: string[]) => Taxonomy[];
+declare const getTaxonomiesCreateQueue: () => TaxonomyCreatePayload[];
+declare const getTaxonomiesUpdateQueue: () => TaxonomyCreatePayload[];
+declare const getTaxonomiesQueues: () => TaxonomyQueues;
+declare const processTaxonomies: (args: PlayaArgs) => Promise<any>;
+declare const updateTaxonomy: (payload: TaxonomyUpdatePayload) => TaxonomyUpdatePayload;
+export { createTaxonomy, getTaxonomies, getTaxonomiesCreateQueue, getTaxonomiesUpdateQueue, getTaxonomiesQueues, processTaxonomies, updateTaxonomy };

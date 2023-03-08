@@ -1,4 +1,5 @@
-import { Entry, CreateEntryPayload } from '../../types/entry';
+import { Entry, CreateEntryPayload, UpdateEntryPayload } from '../../types/entry';
 declare const createEntry: (payload: CreateEntryPayload) => Entry;
 declare const getEntries: (publicKeys?: string[]) => Entry[];
-export { createEntry, getEntries };
+declare const updateEntry: (payload: UpdateEntryPayload) => UpdateEntryPayload;
+export { createEntry, getEntries, updateEntry };

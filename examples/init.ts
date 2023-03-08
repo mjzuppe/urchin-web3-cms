@@ -1,5 +1,5 @@
-import Playa from 'playa';
+import Urchin from 'urchin';
 
-const playa = new Playa({});
+const urchin = new Urchin({});
 
-console.log(playa.ping());
+console.log(urchin.ping());

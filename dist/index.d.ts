@@ -1,15 +1,32 @@
 import { PlayaArgs } from './types/core';
-declare const playa: ({ apiVersion }: PlayaArgs) => {
-    v1: {
-        taxonomy: {
-            createTaxonomy: (queue: string, payload: import("./types/taxonomy").TaxonomyPayload) => import("./types/taxonomy").Taxonomy;
-            getTaxonomyQueue: (queue: string) => import("./types/taxonomy").Taxonomy[];
-            processTaxonomyQueue: (queue: string) => {
-                id: string;
-                pubkey: string;
-                success: boolean;
-            };
-        };
+declare const urchin: (args: PlayaArgs) => {
+    asset: {
+        create: (payload: import("./types/asset").CreateAssetPayload) => import("./types/asset").CreateAssetPayload;
+        get: (publicKeys?: string[]) => import("./types/asset").Asset[];
+    };
+    entry: {
+        create: (payload: import("./types/entry").CreateEntryPayload) => import("./types/entry").Entry;
+        get: (publicKeys?: string[]) => import("./types/entry").Entry[];
+    };
+    preflight: () => Promise<{
+        cluster: string;
+        payer: string;
+        rpc: string;
+        taxonomy: import("./types/taxonomy").TaxonomyQueues;
+    }>;
+    process: () => Promise<{
+        completed: boolean;
+        taxonomy: any;
+    }>;
+    taxonomy: {
+        create: (payload: import("./types/taxonomy").TaxonomyCreatePayload) => import("./types/taxonomy").TaxonomyCreatePayload;
+        queue: () => import("./types/taxonomy").TaxonomyQueues;
+        get: (publicKeys?: string[]) => import("./types/taxonomy").Taxonomy[];
+        update: (payload: import("./types/taxonomy").TaxonomyUpdatePayload) => import("./types/taxonomy").TaxonomyUpdatePayload;
+    };
+    template: {
+        create: (payload: import("./types/template").CreateTemplatePayload) => import("./types/template").Template;
+        get: (publicKeys?: string[]) => import("./types/template").Template[];
     };
 };
-export default playa;
+export default urchin;

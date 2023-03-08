@@ -47,7 +47,7 @@
                 {
                     "name": "template",
                     "isMut": true,
-                    "isSigner": true
+                    "isSigner": false
                 },
                 {
                     "name": "payer",
@@ -58,11 +58,6 @@
                     "name": "owner",
                     "isMut": false,
                     "isSigner": true
-                },
-                {
-                    "name": "systemProgram",
-                    "isMut": false,
-                    "isSigner": false
                 }
             ],
             "args": [

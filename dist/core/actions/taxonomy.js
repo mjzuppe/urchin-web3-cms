@@ -46,7 +46,7 @@ const _resetTaxonomiesUpdateQueue = () => {
 };
 const createTaxonomy = (payload) => {
     (0, taxonomy_1.validateCreateTaxonomySchema)(payload);
-    CREATE_QUEUE.push(payload);
+    CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
     return payload;
 };
 exports.createTaxonomy = createTaxonomy;
@@ -66,17 +66,17 @@ exports.getTaxonomiesUpdateQueue = getTaxonomiesUpdateQueue;
 const getTaxonomiesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 exports.getTaxonomiesQueues = getTaxonomiesQueues;
 const processTaxonomies = (args) => __awaiter(void 0, void 0, void 0, function* () {
-    const { cluster, payer, rpc, wallet, preflightCommitment } = yield (0, solana_1.loadSolanaConfig)(args);
+    const { cluster, payer, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'taxonomy', 'devnet');
     let mutatedTaxonomyIds = [];
     for (const createTaxonomyFromQueue of CREATE_QUEUE) {
-        const createdTaxonomy = yield new SolanaInteractions.Taxonomy(sdk).createTaxonomy(createTaxonomyFromQueue.label, createTaxonomyFromQueue.owner, createTaxonomyFromQueue.parent);
+        const createdTaxonomy = yield new SolanaInteractions.Taxonomy(sdk).createTaxonomy(createTaxonomyFromQueue.label, createTaxonomyFromQueue.owner || payer, createTaxonomyFromQueue.parent);
         mutatedTaxonomyIds.push(createdTaxonomy.publicKey);
     }
     for (const updateTaxonomyFromQueue of UPDATE_QUEUE) {
         if (!updateTaxonomyFromQueue.publicKey)
             continue;
-        const updatedTaxonomy = yield new SolanaInteractions.Taxonomy(sdk).updateTaxonomy(updateTaxonomyFromQueue.publicKey, updateTaxonomyFromQueue.label, updateTaxonomyFromQueue.owner, updateTaxonomyFromQueue.parent);
+        const updatedTaxonomy = yield new SolanaInteractions.Taxonomy(sdk).updateTaxonomy(updateTaxonomyFromQueue.publicKey, updateTaxonomyFromQueue.label, updateTaxonomyFromQueue.owner || payer, updateTaxonomyFromQueue.parent);
         mutatedTaxonomyIds.push(updatedTaxonomy.publicKey);
     }
     yield (0, solana_1.sleep)(8000);

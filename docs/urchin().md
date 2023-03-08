@@ -5,7 +5,7 @@ It accepts a Connection instance from `@solana/web3.js`that will be used to comm
 ## Init Example
 
 ```javascript JavaScript
-import {Keypair, Signer} from "@solana/web3js";
+import {Keypair, Signer} from "@solana/web3.js";
 
 const connection = urchin(
     {

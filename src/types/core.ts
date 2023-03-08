@@ -4,7 +4,7 @@ import { ApiVersions } from './api';
 type PlayaArgs = {
   apiVersion?: ApiVersions;
   payer: Keypair,
-  publicKey?: PublicKey,
+  owner?: PublicKey,
   cluster?: string,
   rpc?: string,
   ping?:any;

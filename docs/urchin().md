@@ -31,12 +31,12 @@ const connection = urchin(
 
 ```javascript
 { queue: 
-     {taxonomy: [], templates: [], entries: [] }, 
+     {taxonomy: {create:[], update:[]}, template: {create:[], update:[]}, entry: {create:[], update:[]}, asset: {create: [], update:[]} }, 
      cluster: "devnet", 
      rpc: "https://api.devnet.solana.com",
-		 publicKey_author: "5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd" 
-     publicKey_owner: ""
- 		 }
+     payer: "5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd",
+     owner: "HdKNt2TSwPdyZitDcLVcFwTC2SvitDcLVcFeQrkqQ131"
+}
 ```
 
 

@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 const CREATE_TAXONOMY_SCHEMA = Joi.object({
   label: Joi.string().required(),
-  owner: Joi.string(),
+  owner: Joi.any(), //TODO VV: how to validate a Keypair class
   parent: Joi.string(),
 });
 
@@ -11,10 +11,10 @@ const GET_TAXONOMIES_SCHEMA = Joi.object({
 });
 
 const CREATE_UPDATE_SCHEMA = Joi.object({
+  publicKey: Joi.any(), //TODO VV: how to validate a PublicKey class
   label: Joi.string().required(),
-  owner: Joi.string(),
+  owner: Joi.any(), //TODO VV: how to validate a Keypair class
   parent: Joi.string(),
-  publicKey: Joi.string(),
 });
 
 const validateCreateTaxonomySchema = (data: any): boolean => {

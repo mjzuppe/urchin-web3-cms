@@ -1,21 +1,18 @@
 import * as anchor from '@project-serum/anchor';
-import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
-
 import * as SolanaInteractions from '../../services/anchor/programs';
+import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { formatTaxonomyAccounts, loadSolanaConfig, sleep, wallet } from '../../services/solana';
-import { Keypair } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
 import { PlayaArgs } from '../../types/core';
-import { Taxonomy, TaxonomyPayload, TaxonomyOutput } from '../../types/taxonomy';
+import { Taxonomy, TaxonomyCreatePayload, TaxonomyUpdatePayload, TaxonomyOutput, TaxonomyQueues } from '../../types/taxonomy';
 import { validateCreateTaxonomySchema, validateGetTaxonomiesSchema, validateUpdateTaxonomySchema } from '../../validators/taxonomy';
 
-let CREATE_QUEUE: TaxonomyPayload[] = [];
-let UPDATE_QUEUE: TaxonomyPayload[] = [];
+let CREATE_QUEUE: TaxonomyCreatePayload[] = [];
+let UPDATE_QUEUE: TaxonomyUpdatePayload[] = [];
 
-const createTaxonomy = (payload: TaxonomyPayload): TaxonomyPayload => {
+const createTaxonomy = (payload: TaxonomyCreatePayload): TaxonomyCreatePayload => {
   validateCreateTaxonomySchema(payload);
-
   CREATE_QUEUE.push(payload);
-
   return payload;
 };
 
@@ -25,15 +22,17 @@ const getTaxonomies = (publicKeys: string[] = []): Taxonomy[] => {
   return [];
 };
 
-const getTaxonomiesCreateQueue = (): TaxonomyPayload[] => {
+const getTaxonomiesCreateQueue = (): TaxonomyCreatePayload[] => {
   return CREATE_QUEUE;
 };
 
-const getTaxonomiesUpdateQueue = (): TaxonomyPayload[] => {
+const getTaxonomiesUpdateQueue = (): TaxonomyCreatePayload[] => {
   return UPDATE_QUEUE;
 };
 
-const processTaxonomies = async (owner: Keypair, args: PlayaArgs): Promise<any> => {
+const getTaxonomiesQueues = (): TaxonomyQueues => ({create: CREATE_QUEUE, update: UPDATE_QUEUE});
+
+const processTaxonomies = async (args: PlayaArgs): Promise<any> => {
   // const createdTaxonomies: Taxonomy[] = [];
   // const updatedTaxonomies: Taxonomy[] = [];
 
@@ -47,12 +46,15 @@ const processTaxonomies = async (owner: Keypair, args: PlayaArgs): Promise<any> 
     'devnet'
   );
 
+  let mutatedTaxonomyIds: PublicKey[] = [];
+
   for (const createTaxonomyFromQueue of CREATE_QUEUE) { 
     const createdTaxonomy = await new SolanaInteractions.Taxonomy(sdk).createTaxonomy(
       createTaxonomyFromQueue.label,
       createTaxonomyFromQueue.owner,
       createTaxonomyFromQueue.parent,
     );
+    mutatedTaxonomyIds.push(createdTaxonomy.publicKey);
   }
 
   for (const updateTaxonomyFromQueue of UPDATE_QUEUE) {
@@ -64,36 +66,30 @@ const processTaxonomies = async (owner: Keypair, args: PlayaArgs): Promise<any> 
       updateTaxonomyFromQueue.owner,
       updateTaxonomyFromQueue.parent
     );
+    mutatedTaxonomyIds.push(updatedTaxonomy.publicKey);
   }
 
   CREATE_QUEUE = [];
   UPDATE_QUEUE= [];
 
   await sleep(8000);
-
-  let taxonomyAccounts: any = await new SolanaInteractions.Taxonomy(sdk).getTaxonomyAll(owner); 
-  taxonomyAccounts = formatTaxonomyAccounts(taxonomyAccounts);   // TODO VV: properly set as return  
-
-  // const uploadToArweave = () => { // TODO: add to dedicated services folder for ARWEAVE
-  //   // do something
-  //   return {
-  //       id: "222222222222222222222222"
-  //   };
-  // };
-
-  // const r1 = createSolanaRecords();
-  // const r2 = uploadToArweave();
+  let taxonomyAccounts: any = await new SolanaInteractions.Taxonomy(sdk).getTaxonomy(mutatedTaxonomyIds); 
+  taxonomyAccounts = formatTaxonomyAccounts(taxonomyAccounts);   
+  resetTaxonomiesCreateQueue();
+  resetTaxonomiesUpdateQueue();
+  return taxonomyAccounts
 
   // return { success: true, ...r1, ...r2 };
 
-  return {
-    assets: [],
-    entries: [],
-    payer,
-    owner,
-    taxonomies: taxonomyAccounts,
-    templates: [],
-  };
+
+  // {
+  //   assets: [],
+  //   entries: [],
+  //   payer,
+  //   owner,
+  //   taxonomies: taxonomyAccounts,
+  //   templates: [],
+  // };
 };
 
 const resetTaxonomiesCreateQueue = (): void => {
@@ -104,7 +100,7 @@ const resetTaxonomiesUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
-const updateTaxonomy = (payload: TaxonomyPayload): TaxonomyPayload => {
+const updateTaxonomy = (payload: TaxonomyUpdatePayload): TaxonomyUpdatePayload => {
   validateUpdateTaxonomySchema(payload);
 
   UPDATE_QUEUE.push(payload);
@@ -117,6 +113,7 @@ export {
   getTaxonomies,
   getTaxonomiesCreateQueue,
   getTaxonomiesUpdateQueue,
+  getTaxonomiesQueues,
   processTaxonomies,
   resetTaxonomiesCreateQueue,
   resetTaxonomiesUpdateQueue,

@@ -1,7 +1,7 @@
 {
-  "name": "playa",
+  "name": "urchin",
   "version": "0.0.1",
-  "description": "The Playa Node library provides convenient access to the Playa API from applications written in JavaScript.",
+  "description": "An SDK and protocal layer for headless content and file mananagement for decentralized applications and web apps. Built on Solana, Arweave, and Bundlr.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -9,8 +9,8 @@
     "build": "rm -rf dist && tsc"
   },
   "keywords": [],
-  "author": "juicebox-technologies",
-  "license": "ISC",
+  "author": "juicebox technologies, inc.",
+  "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",

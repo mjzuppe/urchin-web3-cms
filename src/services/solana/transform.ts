@@ -4,10 +4,10 @@ import { TaxonomyOutput } from "../../types/taxonomy"
 export const formatTaxonomyAccounts = (source:TaxonomyOutput[]) => {
     return source.map((taxonomy) => {
         return {
-            publicKey: taxonomy.publickey.toString(),
-            label: taxonomy.account.label,
-            owner: taxonomy.account.owner.toString(),
-            parent: taxonomy.account.parent? taxonomy.account.parent.toString() : null,
+            publicKey: taxonomy.publicKey.toString(),
+            label: taxonomy.label,
+            owner: taxonomy.owner.toString(),
+            parent: taxonomy.parent? taxonomy.parent.toString() : null,
         }
     })
 }

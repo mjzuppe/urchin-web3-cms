@@ -1,16 +1,48 @@
-import { expect } from 'chai';
-import { createTaxonomy } from '../core/actions/taxonomy';
- 
+import urchin from '../index';
+import { Keypair, Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import fs from "fs";
+
 describe('Manage taxonomy', () => {
-  it('Create a new taxonomy successfully', () => {
-    const taxonomy = createTaxonomy({ label: 'Test label 1' });
 
-    expect(taxonomy).to.deep.equal({ label: 'Test label 1' });
-  });
+  const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");
 
-  it('Create a new taxonomy with invalid payload', () => {
-    const fn = () => createTaxonomy({ label: '' });
+const payer = Keypair.fromSecretKey(
+  Buffer.from(JSON.parse(jsonKeypair))
+);
 
-    expect(fn).to.throw('"label" is not allowed to be empty');
-  });
+let pubkey:PublicKey = payer.publicKey;
+
+  it("should create a new taxonomy", async () => {
+      const u = urchin({
+          payer,
+          cluster: "devnet",
+      });
+      u.taxonomy.create({label: "new label", owner: payer})
+
+      const preflight = await u.preflight();
+      console.log("PREFLIGHT::", preflight);
+
+      const r = await u.process();
+      console.log("PROCESS::", r);
+      pubkey = new PublicKey(r.taxonomy[0].publicKey);
+
+  }).timeout(100000);
+
+  it("should update a new taxonomy", async () => {
+    const u = urchin({
+        payer,
+        cluster: "devnet",
+    });
+    u.taxonomy.update({publicKey: pubkey,label: "newer label", owner: payer})
+
+    const preflight = await u.preflight();
+    console.log("PREFLIGHT::", preflight);
+
+    const r = await u.process();
+    console.log("PROCESS::", r);
+
+}).timeout(100000);
+
 });
+
+

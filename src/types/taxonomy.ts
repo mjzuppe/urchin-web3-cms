@@ -9,22 +9,31 @@ type Taxonomy = {
     updated: number;
 };
 
-type TaxonomyPayload = {
+type TaxonomyCreatePayload = {
     label: string;
     owner: Keypair;
     parent?: PublicKey;
     publicKey?: PublicKey;
 };
 
-type TaxonomyAccount = {
+type TaxonomyUpdatePayload = {
+    publicKey: PublicKey;
+    label: string;
+    owner: Keypair;
+    parent?: PublicKey;
+
+};
+
+type TaxonomyQueues = {
+    create: TaxonomyCreatePayload[];
+    update: TaxonomyUpdatePayload[];
+}
+
+type TaxonomyOutput = {
+    publicKey: PublicKey,
     owner: PublicKey,
     label: string,
     parent: PublicKey | null,
 };
 
-type TaxonomyOutput = {
-    publickey: PublicKey,
-    account: TaxonomyAccount
-};
-
-export type { Taxonomy, TaxonomyPayload, TaxonomyOutput };
+export type { Taxonomy, TaxonomyCreatePayload, TaxonomyUpdatePayload, TaxonomyOutput, TaxonomyQueues };

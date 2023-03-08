@@ -12,10 +12,11 @@ export class Taxonomy {
   async createTaxonomy(
     label: string,
     owner: anchor.web3.Keypair,
-    parent?: anchor.web3.PublicKey | null,
+    parent?: anchor.web3.PublicKey | undefined,
   ) {
     const accountInit = anchor.web3.Keypair.generate();
-    const tx = await this.sdk.program.methods.createTaxonomy(label, parent || undefined).accounts({
+
+    const tx = await this.sdk.program.methods.createTaxonomy(label, parent || null).accounts({ //fialing with parent
       taxonomy: accountInit.publicKey,
       payer: this.sdk.provider.wallet.publicKey,
       owner: owner.publicKey,
@@ -24,9 +25,11 @@ export class Taxonomy {
     return ({ tx, publicKey: accountInit.publicKey })
   };
 
-  async getTaxonomyOne(owner: anchor.web3.Keypair, publicKey: anchor.web3.PublicKey) {
-    const r = await this.sdk.program.account.taxonomyAccount.fetch(publicKey);
-    if (r.owner.toString() !== owner.publicKey.toString()) throw Error("owner mismatch");
+  async getTaxonomy(publicKeys: anchor.web3.PublicKey[]) {
+    let r:any = await this.sdk.program.account.taxonomyAccount.fetchMultiple(publicKeys);
+    r = r.map((r:any, i:number) => ({publicKey: publicKeys[i], ...r}));
+    return r;
+    // if (r.owner.toString() !== owner.publicKey.toString()) throw Error("owner mismatch"); //TODO MZ: add validation for owner?
   };
 
   async getTaxonomyAll(owner: anchor.web3.Keypair) {
@@ -48,11 +51,12 @@ export class Taxonomy {
     owner: anchor.web3.Keypair,
     parent?: anchor.web3.PublicKey | undefined,
   ) {
-    return await this.sdk.program.methods.updateTaxonomy(label, parent || null).accounts({
+    const tx = await this.sdk.program.methods.updateTaxonomy(label, parent || null).accounts({
       taxonomy: publicKey,
       payer: this.sdk.provider.wallet.publicKey,
       owner: owner.publicKey,
     }).signers([owner]).rpc();
+    return ({ tx, publicKey })
   };
 
 

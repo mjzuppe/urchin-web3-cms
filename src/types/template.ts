@@ -1,7 +1,7 @@
-import { PublicKey } from '@solana/web3.js';
+import { PublicKey, Keypair } from '@solana/web3.js';
 import Joi from 'joi';
 
-type CreateTemplatePayload = {
+type TemplateCreatePayload = {
   inputs: {
     label: string;
     options?: string[];
@@ -10,28 +10,49 @@ type CreateTemplatePayload = {
   }[];
   private?: boolean;
   title: string;
+  owner?: Keypair;
+  arweaveId: string;
+  original: PublicKey;
+  archived: boolean;
 };
 
 type Template = {
-  inputs: {
-    label: string;
-    options?: string[];
-    type: 'file' | 'numeric' | 'text' | 'textArea' | 'select';
-  }[];
-  title: string;
-};
-
-type UpdateTemplatePayload = {
-  inputs: {
-    label: string;
-    options?: string[];
-    type: 'file' | 'numeric' | 'text' | 'textArea' | 'select';
-    validation?: Joi.ObjectSchema;
-  }[];
-  private?: boolean;
   publicKey: PublicKey;
+  owner: Keypair;
+  inputs: {
+    label: string;
+    options?: string[];
+    type: 'file' | 'numeric' | 'text' | 'textArea' | 'select';
+  }[];
   title: string;
+  arweaveId: string;
+  original: PublicKey;
+  archived: boolean;
+  version: number;
 };
 
-export type { CreateTemplatePayload, Template, UpdateTemplatePayload };
+type TemplateQueues = {
+  create: TemplateCreatePayload[];
+  update: TemplateUpdatePayload[];
+}
+
+type TemplateUpdatePayload = {
+  publicKey: PublicKey;
+  archived: boolean;
+  owner?: Keypair;
+  // inputs: {
+  //   label: string;
+  //   options?: string[];
+  //   type: 'file' | 'numeric' | 'text' | 'textArea' | 'select';
+  //   validation?: Joi.ObjectSchema;
+  // }[];
+
+  // title: string;
+  // private?: boolean;
+
+  // arweaveId: string;
+  // original: PublicKey;
+};
+
+export type { TemplateCreatePayload, Template, TemplateUpdatePayload };
   

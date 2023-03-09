@@ -2,7 +2,7 @@ import { createAsset, getAssets } from './core/actions/asset';
 import { createEntry, getEntries} from './core/actions/entry';
 import { processAll, queryAll } from './core/actions/global';
 import { createTaxonomy, getTaxonomies, updateTaxonomy, getTaxonomiesQueues } from './core/actions/taxonomy';
-import { createTemplate, getTemplates } from './core/actions/template';
+import { createTemplate, getTemplates, updateTemplate } from './core/actions/template';
 import { PlayaArgs } from './types/core';
 
 const urchin = (args: PlayaArgs) => {
@@ -26,6 +26,7 @@ const urchin = (args: PlayaArgs) => {
     },
     template: {
       create: createTemplate,
+      update: updateTemplate,
       get: getTemplates,
     },
   };

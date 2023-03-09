@@ -5,19 +5,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateUpdateTemplateSchema = exports.validateGetTemplatesSchema = exports.validateCreateTemplateSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
-const CREATE_TEMPLATE_SCHEMA = joi_1.default.array().items(joi_1.default.object({
+const CREATE_TEMPLATE_SCHEMA = joi_1.default.array().items(//need a different valiation if 
+joi_1.default.object({
     inputs: joi_1.default.array().items(joi_1.default.object({
         label: joi_1.default.string().min(1).max(24).required(),
-        options: joi_1.default.string().min(1).max(24),
+        options: joi_1.default.array().items(joi_1.default.string().min(1).max(24)),
         type: joi_1.default.string().valid('file', 'numeric', 'text', 'textArea', 'select').required(),
+        validation: joi_1.default.object({
+            type: joi_1.default.string().required(),
+            min: joi_1.default.number().min(1).required(),
+            max: joi_1.default.number().required(),
+        }),
     })),
     private: joi_1.default.boolean().default(false),
     title: joi_1.default.string().min(1).max(100).required(),
-    validation: joi_1.default.object({
-        type: joi_1.default.string().required(),
-        min: joi_1.default.number().min(1).required(),
-        max: joi_1.default.number().required(),
-    }),
     taxonomy: joi_1.default.array().items(joi_1.default.any()),
     original: joi_1.default.any(),
     archived: joi_1.default.boolean(),

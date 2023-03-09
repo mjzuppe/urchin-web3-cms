@@ -1,17 +1,15 @@
 import { PublicKey, Keypair } from '@solana/web3.js';
-import Joi from 'joi';
 type TemplateCreatePayload = {
     inputs: {
         label: string;
         options?: string[];
         type: 'file' | 'numeric' | 'text' | 'textArea' | 'select';
-        validation?: Joi.ObjectSchema;
+        validation?: TemplateInputValidation;
     }[];
     private?: boolean;
     title: string;
     owner?: Keypair;
     archived: boolean;
-    validation?: TemplateInputValidation;
     taxonomy?: PublicKey[];
     original?: PublicKey;
 };

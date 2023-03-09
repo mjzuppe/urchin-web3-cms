@@ -7,11 +7,16 @@ import { PublicKey } from "@solana/web3.js";
 import  testKeypair  from "./test-wallet";
 
 
-const wallet = new anchor.Wallet(testKeypair);
+
+
+
 
 const rpcConnection = new anchor.web3.Connection(
   "https://api.devnet.solana.com"
 );
+
+const provider = new anchor.AnchorProvider(rpcConnection,testKeypair, {commitment: "confirmed", preflightCommitment: "confirmed"});
+const wallet = provider.wallet;
 
 const preflightCommitment = "confirmed" as anchor.web3.ConfirmOptions;
 

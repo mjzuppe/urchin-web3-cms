@@ -26,7 +26,7 @@ describe('Manage template', () => {
                     ], 
                     original: payer.publicKey, 
                     archived: false, 
-                    taxonomy: [payer.publicKey],
+                    taxonomies: [payer.publicKey],
                     
                 }
             ]

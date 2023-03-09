@@ -22,21 +22,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loadSolanaConfig = void 0;
 // import fs from "fs";
 const web3_js_1 = require("@solana/web3.js");
 const anchor = __importStar(require("@project-serum/anchor"));
-const loadSolanaConfig = (args) => __awaiter(void 0, void 0, void 0, function* () {
+const loadSolanaConfig = (args) => {
     const cluster = args.cluster || "devnet";
     const defaultRpc = cluster === "devnet" ? "https://api.devnet.solana.com" : "https://api.mainnet-beta.solana.com";
     const rpc = new web3_js_1.Connection(args.rpc || defaultRpc, "confirmed");
@@ -44,7 +35,7 @@ const loadSolanaConfig = (args) => __awaiter(void 0, void 0, void 0, function* (
     const wallet = new anchor.Wallet(payer);
     const preflightCommitment = "confirmed";
     return { cluster, rpc, payer, wallet, preflightCommitment };
-});
+};
 exports.loadSolanaConfig = loadSolanaConfig;
 const testPayer = () => {
     // const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");

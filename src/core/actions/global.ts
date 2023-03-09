@@ -2,7 +2,8 @@ import { loadSolanaConfig } from '../../services/solana';
 import { getAssetsQueues } from './asset';
 import { getEntriesQueues } from './entry';
 import { getTaxonomiesQueues, processTaxonomies } from './taxonomy';
-import { getTemplatesQueues } from './template';
+import { getTemplatesQueues, processTemplates } from './template';
+
 
 const processAll = async (props:any) => {
   return {
@@ -10,7 +11,7 @@ const processAll = async (props:any) => {
     completed: true, //TODO MZ: inner logic if fails
     // entry: await processEntries(props),
     taxonomy: await processTaxonomies(props),
-    // template: await processTemplates(props),
+    template: await processTemplates(props),
   };
 };
 

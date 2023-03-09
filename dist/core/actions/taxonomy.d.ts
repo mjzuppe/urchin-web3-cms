@@ -1,6 +1,6 @@
 import { PlayaArgs } from '../../types/core';
 import { Taxonomy, TaxonomyCreatePayload, TaxonomyUpdatePayload, TaxonomyQueues } from '../../types/taxonomy';
-declare const createTaxonomy: (payload: TaxonomyCreatePayload) => TaxonomyCreatePayload;
+declare const createTaxonomy: (payload: TaxonomyCreatePayload[]) => TaxonomyCreatePayload[];
 declare const getTaxonomies: (publicKeys?: string[]) => Taxonomy[];
 declare const getTaxonomiesCreateQueue: () => TaxonomyCreatePayload[];
 declare const getTaxonomiesUpdateQueue: () => TaxonomyCreatePayload[];

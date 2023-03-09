@@ -22,7 +22,7 @@ declare const urchin: (args: PlayaArgs) => {
         taxonomy: any;
     }>;
     taxonomy: {
-        create: (payload: import("./types/taxonomy").TaxonomyCreatePayload) => import("./types/taxonomy").TaxonomyCreatePayload;
+        create: (payload: import("./types/taxonomy").TaxonomyCreatePayload[]) => import("./types/taxonomy").TaxonomyCreatePayload[];
         queue: () => import("./types/taxonomy").TaxonomyQueues;
         get: (publicKeys?: string[]) => import("./types/taxonomy").Taxonomy[];
         update: (payload: import("./types/taxonomy").TaxonomyUpdatePayload) => import("./types/taxonomy").TaxonomyUpdatePayload;

@@ -1,6 +1,4 @@
 import { PublicKey, Keypair } from '@solana/web3.js';
-import Joi from 'joi';
-
 
 type TemplateCreatePayload = {
   inputs: {
@@ -13,7 +11,7 @@ type TemplateCreatePayload = {
   title: string;
   owner?: Keypair;
   archived: boolean;
-  taxonomy?: PublicKey[];
+  taxonomies?: PublicKey[];
   original?: PublicKey;
 };
 
@@ -31,16 +29,15 @@ type Template = {
   archived: boolean;
   version: number;
   validation?: TemplateInputValidation;
-  taxonomy?: PublicKey[];
+  taxonomies?: PublicKey[];
 };
 
 type TemplateQueues = {
   create: TemplateCreatePayload[];
   update: TemplateUpdatePayload[];
-}
+};
 
 type TemplateUpdatePayload = {
-
   publicKey: PublicKey;
   archived: boolean;
   owner?: Keypair;
@@ -62,9 +59,6 @@ type TemplateInputValidation = {
   type: 'text' | 'textArea';
   min: number;
   max: number;
-}
-
+};
 
 export type { TemplateCreatePayload, Template, TemplateQueues, TemplateUpdatePayload };
-
-  

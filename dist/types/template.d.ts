@@ -10,7 +10,7 @@ type TemplateCreatePayload = {
     title: string;
     owner?: Keypair;
     archived: boolean;
-    taxonomy?: PublicKey[];
+    taxonomies?: PublicKey[];
     original?: PublicKey;
 };
 type Template = {
@@ -27,7 +27,7 @@ type Template = {
     archived: boolean;
     version: number;
     validation?: TemplateInputValidation;
-    taxonomy?: PublicKey[];
+    taxonomies?: PublicKey[];
 };
 type TemplateQueues = {
     create: TemplateCreatePayload[];

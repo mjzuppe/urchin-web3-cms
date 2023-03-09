@@ -16,7 +16,7 @@ const CREATE_TEMPLATE_SCHEMA = Joi.array().items( //need a different valiation i
     ),
     private: Joi.boolean().default(false),
     title: Joi.string().min(1).max(100).required(),
-    taxonomy: Joi.array().items(Joi.any()),
+    taxonomies: Joi.array().items(Joi.any()),
     original: Joi.any(),
     archived: Joi.boolean(),
     owner: Joi.any(), 

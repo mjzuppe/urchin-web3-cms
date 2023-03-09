@@ -19,7 +19,7 @@ joi_1.default.object({
     })),
     private: joi_1.default.boolean().default(false),
     title: joi_1.default.string().min(1).max(100).required(),
-    taxonomy: joi_1.default.array().items(joi_1.default.any()),
+    taxonomies: joi_1.default.array().items(joi_1.default.any()),
     original: joi_1.default.any(),
     archived: joi_1.default.boolean(),
     owner: joi_1.default.any(),

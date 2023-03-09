@@ -1,6 +1,9 @@
 import { loadSolanaConfig } from '../../services/solana';
+import { getAssetsQueues } from './asset';
+import { getEntriesQueues } from './entry';
 import { getTaxonomiesQueues, processTaxonomies } from './taxonomy';
 import { getTemplatesQueues, processTemplates } from './template';
+
 
 const processAll = async (props:any) => {
   return {
@@ -15,9 +18,9 @@ const processAll = async (props:any) => {
 const queryAll = async (props:any) => {
   const { cluster, payer, rpc } = await loadSolanaConfig(props);
   return {
-    // asset: getAssetsQueues(),
+    asset: getAssetsQueues(),
     cluster,
-    // entry: getEntriesQueues(),
+    entry: getEntriesQueues(),
     payer: payer.publicKey.toString(),
     rpc: rpc.rpcEndpoint,
     taxonomy: getTaxonomiesQueues(),

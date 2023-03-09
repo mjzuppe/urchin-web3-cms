@@ -37,6 +37,7 @@ type TemplateQueues = {
 }
 
 type TemplateUpdatePayload = {
+
   publicKey: PublicKey;
   archived: boolean;
   owner?: Keypair;
@@ -54,5 +55,7 @@ type TemplateUpdatePayload = {
   // original: PublicKey;
 };
 
+
 export type { TemplateCreatePayload, Template, TemplateUpdatePayload };
+
   

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateEntry = exports.getEntries = exports.createEntry = void 0;
+exports.updateEntry = exports.getEntriesQueues = exports.getEntries = exports.createEntry = void 0;
 const entry_1 = require("../../validators/entry");
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
@@ -39,6 +39,8 @@ const getEntries = (publicKeys = []) => {
     return [];
 };
 exports.getEntries = getEntries;
+const getEntriesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
+exports.getEntriesQueues = getEntriesQueues;
 // const processEntries = async (args: PlayaArgs): Promise<any> => {
 //   const { cluster, payer, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
 //   const sdk = new SolanaInteractions.AnchorSDK(

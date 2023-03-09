@@ -32,6 +32,7 @@ const getTemplates = (publicKeys: string[] = []): Template[] => {
   return [];
 };
 
+
 const getTemplateCreateQueue = (): TemplateCreatePayload[] => {
   return CREATE_QUEUE;
 };
@@ -96,4 +97,6 @@ const updateTemplate = (payload: TemplateUpdatePayload): TemplateUpdatePayload =
   return payload;
 };
 
+
 export { createTemplate, getTemplates, getTemplatesQueues, updateTemplate, processTemplates };
+

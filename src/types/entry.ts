@@ -30,6 +30,11 @@ type Entry = {
   version: number;
 };
 
+type EntryQueues = {
+  create: CreateEntryPayload[];
+  update: UpdateEntryPayload[];
+};
+
 type UpdateEntryPayload = {
   immutable?: boolean;
   inputs?: {
@@ -42,4 +47,4 @@ type UpdateEntryPayload = {
   template: string;
 };
 
-export type { CreateEntryPayload, Entry, UpdateEntryPayload };
+export type { CreateEntryPayload, Entry, EntryQueues, UpdateEntryPayload };

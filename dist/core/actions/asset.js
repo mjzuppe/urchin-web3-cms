@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAsset = exports.getAssetsUpdateQueue = exports.getAssetsCreateQueue = exports.getAssets = exports.createAsset = void 0;
+exports.updateAsset = exports.getAssetsUpdateQueue = exports.getAssetsQueues = exports.getAssetsCreateQueue = exports.getAssets = exports.createAsset = void 0;
 const asset_1 = require("../../validators/asset");
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
@@ -25,6 +25,8 @@ const getAssetsCreateQueue = () => {
     return CREATE_QUEUE;
 };
 exports.getAssetsCreateQueue = getAssetsCreateQueue;
+const getAssetsQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
+exports.getAssetsQueues = getAssetsQueues;
 const getAssetsUpdateQueue = () => {
     return UPDATE_QUEUE;
 };

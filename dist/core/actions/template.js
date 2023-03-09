@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTemplate = exports.getTemplates = exports.createTemplate = void 0;
+exports.updateTemplate = exports.getTemplatesQueues = exports.getTemplates = exports.createTemplate = void 0;
 const template_1 = require("../../validators/template");
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
@@ -21,6 +21,8 @@ const getTemplates = (publicKeys = []) => {
     return [];
 };
 exports.getTemplates = getTemplates;
+const getTemplatesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
+exports.getTemplatesQueues = getTemplatesQueues;
 // const processTemplates = async (args: PlayaArgs): Promise<any> => {
 //   const { cluster, payer, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
 //   const sdk = new SolanaInteractions.AnchorSDK(

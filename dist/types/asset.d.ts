@@ -5,6 +5,10 @@ type Asset = {
     updated: number;
     url: string;
 };
+type AssetQueues = {
+    create: CreateAssetPayload[];
+    update: UpdateAssetPayload[];
+};
 type CreateAssetPayload = {
     original: string;
 };
@@ -12,4 +16,4 @@ type UpdateAssetPayload = {
     original: string;
     publicKey: PublicKey;
 };
-export type { Asset, CreateAssetPayload, UpdateAssetPayload };
+export type { Asset, AssetQueues, CreateAssetPayload, UpdateAssetPayload };

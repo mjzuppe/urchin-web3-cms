@@ -3,7 +3,7 @@ import * as anchor from "@project-serum/anchor";
 export declare class Template {
     readonly sdk: AnchorSDK;
     constructor(sdk: AnchorSDK);
-    createTemplate(owner: anchor.web3.Keypair, arweave_id: string, original: anchor.web3.PublicKey, archived: boolean): Promise<{
+    createTemplate(owner: anchor.web3.Keypair, arweave_id: string, archived: boolean, original?: anchor.web3.PublicKey): Promise<{
         tx: string;
         publicKey: anchor.web3.PublicKey;
     }>;

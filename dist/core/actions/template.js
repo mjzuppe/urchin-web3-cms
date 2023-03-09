@@ -68,7 +68,8 @@ const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* (
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'template', 'devnet');
     let mutatedTemplateIds = [];
     for (const createTemplateFromQueue of CREATE_QUEUE) {
-        const createdTemplate = yield new SolanaInteractions.Template(sdk).createTemplate(createTemplateFromQueue.owner || payer, createTemplateFromQueue.arweaveId, createTemplateFromQueue.original, createTemplateFromQueue.archived);
+        const createdTemplate = yield new SolanaInteractions.Template(sdk).createTemplate(createTemplateFromQueue.owner || payer, "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
+        createTemplateFromQueue.archived, createTemplateFromQueue.original);
         mutatedTemplateIds.push(createdTemplate.publicKey);
     }
     for (const updateTemplateFromQueue of UPDATE_QUEUE) {

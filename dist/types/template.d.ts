@@ -10,9 +10,10 @@ type TemplateCreatePayload = {
     private?: boolean;
     title: string;
     owner?: Keypair;
-    arweaveId: string;
-    original: PublicKey;
     archived: boolean;
+    validation?: TemplateInputValidation;
+    taxonomy?: PublicKey[];
+    original?: PublicKey;
 };
 type Template = {
     publicKey: PublicKey;
@@ -27,6 +28,8 @@ type Template = {
     original: PublicKey;
     archived: boolean;
     version: number;
+    validation?: TemplateInputValidation;
+    taxonomy?: PublicKey[];
 };
 type TemplateQueues = {
     create: TemplateCreatePayload[];
@@ -36,5 +39,10 @@ type TemplateUpdatePayload = {
     publicKey: PublicKey;
     archived: boolean;
     owner?: Keypair;
+};
+type TemplateInputValidation = {
+    type: 'text' | 'textArea';
+    min: number;
+    max: number;
 };
 export type { TemplateCreatePayload, Template, TemplateQueues, TemplateUpdatePayload };

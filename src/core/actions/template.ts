@@ -59,9 +59,10 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
   for (const createTemplateFromQueue of CREATE_QUEUE) { 
     const createdTemplate = await new SolanaInteractions.Template(sdk).createTemplate(
       createTemplateFromQueue.owner || payer,
-      createTemplateFromQueue.arweaveId,
+      "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
+      createTemplateFromQueue.archived,
       createTemplateFromQueue.original,
-      createTemplateFromQueue.archived
+     
     );
     mutatedTemplateIds.push(createdTemplate.publicKey);
   }

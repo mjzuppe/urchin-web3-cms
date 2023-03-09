@@ -1,16 +1,25 @@
 import Joi from 'joi';
 
-const CREATE_TEMPLATE_SCHEMA = Joi.array().items(
+const CREATE_TEMPLATE_SCHEMA = Joi.array().items( //need a different valiation if 
   Joi.object({
     inputs: Joi.array().items(
       Joi.object({
         label: Joi.string().min(1).max(24).required(),
-        options: Joi.string().min(1).max(24),
+        options: Joi.array().items(Joi.string().min(1).max(24)),
         type: Joi.string().valid('file', 'numeric', 'text', 'textArea', 'select').required(),
+        validation: Joi.object({
+          type: Joi.string().required(),
+          min: Joi.number().min(1).required(),
+          max: Joi.number().required(),
+        }),
       }),
     ),
     private: Joi.boolean().default(false),
     title: Joi.string().min(1).max(100).required(),
+    taxonomy: Joi.array().items(Joi.any()),
+    original: Joi.any(),
+    archived: Joi.boolean(),
+    owner: Joi.any(), 
   }),
 ).min(1);
 
@@ -20,16 +29,18 @@ const GET_TEMPLATES_SCHEMA = Joi.object({
 
 const UPDATE_TEMPLATE_SCHEMA = Joi.array().items(
   Joi.object({
-    inputs: Joi.array().items(
-      Joi.object({
-        label: Joi.string().min(1).max(24).required(),
-        options: Joi.string().min(1).max(24),
-        type: Joi.string().valid('file', 'numeric', 'text', 'textArea', 'select').required(),
-      }),
-    ),
-    private: Joi.boolean().default(false),
-    publicKeys: Joi.string().required(),
-    title: Joi.string().min(1).max(100).required(),
+    // inputs: Joi.array().items(
+    //   Joi.object({
+    //     label: Joi.string().min(1).max(24).required(),
+    //     options: Joi.string().min(1).max(24),
+    //     type: Joi.string().valid('file', 'numeric', 'text', 'textArea', 'select').required(),
+    //   }),
+    // ),
+    // private: Joi.boolean().default(false),
+    publicKey: Joi.any(),
+    archived: Joi.boolean(),
+    owner: Joi.any(), 
+    // title: Joi.string().min(1).max(100).required(),
   }),
 ).min(1);
 

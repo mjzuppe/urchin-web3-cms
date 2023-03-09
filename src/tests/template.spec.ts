@@ -4,32 +4,49 @@ import testKeypair from './test-wallet';
 
 describe('Manage template', () => {
 
-const payer = testKeypair;
+    const payer = testKeypair;
 
-let pubkey:PublicKey = payer.publicKey;
+    let pubkey: PublicKey = payer.publicKey;
 
-  it("should create a new template", async () => {
-      const u = urchin({
-          payer,
-          cluster: "devnet",
-      });
-      u.template.create({title: "field1", inputs:[{label: "text", type: "text"}], arweaveId: "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", original: payer.publicKey, archived: false});
+    it("should create a new template", async () => {
+        const u = urchin({
+            payer,
+            cluster: "devnet",
+        });
+        u.template.create(
+            [
+                { 
+                    title: "field1", 
+                    inputs: [
+                        { label: "text", type: "text", validation: { 
+                            type: "text", 
+                            min: 1, 
+                            max: 100 
+                        }  }
+                    ], 
+                    original: payer.publicKey, 
+                    archived: false, 
+                    taxonomy: [payer.publicKey],
+                    
+                }
+            ]
+        )
 
-      const preflight = await u.preflight();
-      console.log("PREFLIGHT::", preflight);
+const preflight = await u.preflight();
+console.log("PREFLIGHT::", preflight);
 
-      const r = await u.process();
-      console.log("PROCESS::", r);
-      pubkey = new PublicKey(r.template[0].publicKey);
+const r = await u.process();
+console.log("PROCESS::", r);
+pubkey = new PublicKey(r.template[0].publicKey);
 
   }).timeout(100000);
 
-  it("should update a new template", async () => {
+it("should update a new template", async () => {
     const u = urchin({
         payer,
         cluster: "devnet",
     });
-    u.template.update({publicKey: pubkey, archived: true, owner: payer})
+    u.template.update([{ publicKey: pubkey, archived: true, owner: payer }])
 
     const preflight = await u.preflight();
     console.log("PREFLIGHT::", preflight);

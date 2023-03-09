@@ -1,19 +1,20 @@
 import { PublicKey, Keypair } from '@solana/web3.js';
 import Joi from 'joi';
 
+
 type TemplateCreatePayload = {
   inputs: {
     label: string;
     options?: string[];
     type: 'file' | 'numeric' | 'text' | 'textArea' | 'select';
-    validation?: Joi.ObjectSchema;
+    validation?: TemplateInputValidation;
   }[];
   private?: boolean;
   title: string;
   owner?: Keypair;
-  arweaveId: string;
-  original: PublicKey;
   archived: boolean;
+  taxonomy?: PublicKey[];
+  original?: PublicKey;
 };
 
 type Template = {
@@ -29,6 +30,8 @@ type Template = {
   original: PublicKey;
   archived: boolean;
   version: number;
+  validation?: TemplateInputValidation;
+  taxonomy?: PublicKey[];
 };
 
 type TemplateQueues = {
@@ -54,6 +57,12 @@ type TemplateUpdatePayload = {
   // arweaveId: string;
   // original: PublicKey;
 };
+
+type TemplateInputValidation = {
+  type: 'text' | 'textArea';
+  min: number;
+  max: number;
+}
 
 
 export type { TemplateCreatePayload, Template, TemplateQueues, TemplateUpdatePayload };

@@ -56,6 +56,6 @@ type TemplateUpdatePayload = {
 };
 
 
-export type { TemplateCreatePayload, Template, TemplateUpdatePayload };
+export type { TemplateCreatePayload, Template, TemplateQueues, TemplateUpdatePayload };
 
   

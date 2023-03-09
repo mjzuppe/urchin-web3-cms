@@ -1,6 +1,6 @@
 import * as anchor from '@project-serum/anchor';
 import * as SolanaInteractions from '../../services/anchor/programs';
-import { TemplateCreatePayload, Template, TemplateUpdatePayload } from '../../types/template';
+import { TemplateCreatePayload, Template, TemplateUpdatePayload, TemplateQueues } from '../../types/template';
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PublicKey } from '@solana/web3.js';
@@ -18,10 +18,10 @@ const _resetTemplatesUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
-const createTemplate = (payload: TemplateCreatePayload): TemplateCreatePayload => {
-  // validateCreateTemplateSchema(payload);
+const createTemplate = (payload: TemplateCreatePayload[]): TemplateCreatePayload[] => {
+  validateCreateTemplateSchema(payload);
 
-  CREATE_QUEUE.push(payload);
+  CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
 
   return payload;    
 };
@@ -42,7 +42,6 @@ const getTemplateUpdateQueue = (): TemplateUpdatePayload[] => {
 };
 
 const getTemplatesQueues = (): TemplateQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
-
 
 const processTemplates = async (args: PlayaArgs): Promise<any> => {
   const { cluster, payer, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
@@ -89,14 +88,12 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
   return templateAccounts;
 };
 
-const updateTemplate = (payload: TemplateUpdatePayload): TemplateUpdatePayload => {
-  // validateUpdateTemplateSchema(payload);
+const updateTemplate = (payload: TemplateUpdatePayload[]): TemplateUpdatePayload[] => {
+  validateUpdateTemplateSchema(payload);
 
-  UPDATE_QUEUE.push(payload);
+  UPDATE_QUEUE = [...UPDATE_QUEUE, ...payload];
 
   return payload;
 };
 
-
 export { createTemplate, getTemplates, getTemplatesQueues, updateTemplate, processTemplates };
-

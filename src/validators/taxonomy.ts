@@ -1,21 +1,25 @@
 import Joi from 'joi';
 
-const CREATE_TAXONOMY_SCHEMA = Joi.array().items(Joi.object({
-  label: Joi.string().required(),
-  owner: Joi.any(), //TODO VV: how to validate a Keypair class
-  parent: Joi.string(),
-}));
+const CREATE_TAXONOMY_SCHEMA = Joi.array().items(
+  Joi.object({
+    label: Joi.string().required(),
+    owner: Joi.any(), //TODO VV: how to validate a Keypair class
+    parent: Joi.string(),
+  }),
+).min(1);
 
 const GET_TAXONOMIES_SCHEMA = Joi.object({
   publicKeys: Joi.array().items(Joi.string()),
 });
 
-const CREATE_UPDATE_SCHEMA = Joi.object({
-  publicKey: Joi.any(), //TODO VV: how to validate a PublicKey class
-  label: Joi.string().required(),
-  owner: Joi.any(), //TODO VV: how to validate a Keypair class
-  parent: Joi.string(),
-});
+const CREATE_UPDATE_SCHEMA = Joi.array().items(
+  Joi.object({
+    publicKey: Joi.any(), //TODO VV: how to validate a PublicKey class
+    label: Joi.string().required(),
+    owner: Joi.any(), //TODO VV: how to validate a Keypair class
+    parent: Joi.string(),
+  }),
+).min(1);
 
 const validateCreateTaxonomySchema = (data: any): boolean => {
   const { error } = CREATE_TAXONOMY_SCHEMA.validate(data);

@@ -1,14 +1,14 @@
 import * as anchor from '@project-serum/anchor';
 import * as SolanaInteractions from '../../services/anchor/programs';
-import { Asset, AssetQueues, CreateAssetPayload, UpdateAssetPayload } from '../../types/asset';
+import { Asset, AssetQueues, AssetCreatePayload, AssetUpdatePayload } from '../../types/asset';
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PublicKey } from '@solana/web3.js';
 import { validateCreateAssetSchema, validateGetAssetsSchema, validateUpdateAssetSchema } from '../../validators/asset';
 import { PlayaArgs } from '../../types/core';
 
-let CREATE_QUEUE: CreateAssetPayload[] = [];
-let UPDATE_QUEUE: UpdateAssetPayload[] = [];
+let CREATE_QUEUE: AssetCreatePayload[] = [];
+let UPDATE_QUEUE: AssetUpdatePayload[] = [];
 
 const _resetAssetsCreateQueue = (): void => {
   CREATE_QUEUE = [];
@@ -18,10 +18,10 @@ const _resetAssetsUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
-const createAsset = (payload: CreateAssetPayload): CreateAssetPayload => {
+const createAsset = (payload: AssetCreatePayload[]): AssetCreatePayload[] => {
   validateCreateAssetSchema(payload);
 
-  CREATE_QUEUE.push(payload);
+  CREATE_QUEUE = [...UPDATE_QUEUE, ...payload];
 
   return payload;
 };
@@ -32,13 +32,13 @@ const getAssets = (publicKeys: string[] = []): Asset[] => {
   return [];
 };
 
-const getAssetsCreateQueue = (): CreateAssetPayload[] => {
+const getAssetsCreateQueue = (): AssetCreatePayload[] => {
   return CREATE_QUEUE;
 };
 
 const getAssetsQueues = (): AssetQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 
-const getAssetsUpdateQueue = (): UpdateAssetPayload[] => {
+const getAssetsUpdateQueue = (): AssetUpdatePayload[] => {
   return UPDATE_QUEUE;
 };
 
@@ -85,10 +85,10 @@ const getAssetsUpdateQueue = (): UpdateAssetPayload[] => {
 //   return assetAccounts;
 // };
 
-const updateAsset = (payload: UpdateAssetPayload): UpdateAssetPayload => {
+const updateAsset = (payload: AssetUpdatePayload[]): AssetUpdatePayload[] => {
   validateUpdateAssetSchema(payload);
 
-  UPDATE_QUEUE.push(payload);
+  UPDATE_QUEUE = [...UPDATE_QUEUE, ...payload];
 
   return payload;
 };

@@ -9,16 +9,16 @@ const CREATE_TAXONOMY_SCHEMA = joi_1.default.array().items(joi_1.default.object(
     label: joi_1.default.string().required(),
     owner: joi_1.default.any(),
     parent: joi_1.default.string(),
-}));
+})).min(1);
 const GET_TAXONOMIES_SCHEMA = joi_1.default.object({
     publicKeys: joi_1.default.array().items(joi_1.default.string()),
 });
-const CREATE_UPDATE_SCHEMA = joi_1.default.object({
+const CREATE_UPDATE_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     publicKey: joi_1.default.any(),
     label: joi_1.default.string().required(),
     owner: joi_1.default.any(),
     parent: joi_1.default.string(),
-});
+})).min(1);
 const validateCreateTaxonomySchema = (data) => {
     const { error } = CREATE_TAXONOMY_SCHEMA.validate(data);
     if (error)

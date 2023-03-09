@@ -1,16 +1,20 @@
 import Joi from 'joi';
 
-const CREATE_ASSET_SCHEMA = Joi.object({
-  original: Joi.string().required(),
-});
+const CREATE_ASSET_SCHEMA = Joi.array().items(
+  Joi.object({
+    original: Joi.string().required(),
+  })
+).min(1);
 
 const GET_ASSETS_SCHEMA = Joi.object({
   publicKeys: Joi.array().items(Joi.string()),
 });
 
-const UPDATE_ASSET_SCHEMA = Joi.object({
-  original: Joi.string().required(),
-});
+const UPDATE_ASSET_SCHEMA = Joi.array().items(
+  Joi.object({
+    original: Joi.string().required(),
+  })
+).min(1);
 
 const validateCreateAssetSchema = (data: any): boolean => {
   const { error } = CREATE_ASSET_SCHEMA.validate(data);

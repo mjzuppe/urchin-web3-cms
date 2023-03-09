@@ -26,6 +26,7 @@ const urchin = (args) => {
         },
         template: {
             create: template_1.createTemplate,
+            update: template_1.updateTemplate,
             get: template_1.getTemplates,
         },
     };

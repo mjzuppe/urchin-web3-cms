@@ -12,26 +12,8 @@ const _resetEntriesUpdateQueue = () => {
 };
 const createEntry = (payload) => {
     (0, entry_1.validateCreateEntrySchema)(payload);
-    return {
-        immutable: false,
-        inputs: [
-            {
-                body: '',
-                featuredImage: {
-                    publicKey: '',
-                    url: 'url://',
-                },
-                headline: '',
-                stage: 'published',
-            }
-        ],
-        owner: '',
-        private: false,
-        publicKey: '',
-        taxonomy: [],
-        template: '5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd',
-        version: 0,
-    };
+    CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
+    return payload;
 };
 exports.createEntry = createEntry;
 const getEntries = (publicKeys = []) => {
@@ -74,7 +56,7 @@ exports.getEntriesQueues = getEntriesQueues;
 // };
 const updateEntry = (payload) => {
     (0, entry_1.validateUpdateEntrySchema)(payload);
-    UPDATE_QUEUE.push(payload);
+    UPDATE_QUEUE = [...UPDATE_QUEUE, ...payload];
     return payload;
 };
 exports.updateEntry = updateEntry;

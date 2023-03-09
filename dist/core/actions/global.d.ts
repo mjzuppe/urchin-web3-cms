@@ -1,6 +1,7 @@
 declare const processAll: (props: any) => Promise<{
     completed: boolean;
     taxonomy: any;
+    template: any;
 }>;
 declare const queryAll: (props: any) => Promise<{
     asset: import("../../types/asset").AssetQueues;

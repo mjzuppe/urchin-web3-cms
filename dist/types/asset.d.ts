@@ -6,14 +6,14 @@ type Asset = {
     url: string;
 };
 type AssetQueues = {
-    create: CreateAssetPayload[];
-    update: UpdateAssetPayload[];
+    create: AssetCreatePayload[];
+    update: AssetUpdatePayload[];
 };
-type CreateAssetPayload = {
+type AssetCreatePayload = {
     original: string;
 };
-type UpdateAssetPayload = {
+type AssetUpdatePayload = {
     original: string;
     publicKey: PublicKey;
 };
-export type { Asset, AssetQueues, CreateAssetPayload, UpdateAssetPayload };
+export type { Asset, AssetQueues, AssetCreatePayload, AssetUpdatePayload };

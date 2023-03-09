@@ -1,14 +1,14 @@
 import * as anchor from '@project-serum/anchor';
 import * as SolanaInteractions from '../../services/anchor/programs';
-import { Entry, CreateEntryPayload, UpdateEntryPayload, EntryQueues } from '../../types/entry';
+import { Entry, EntryCreatePayload, EntryUpdatePayload, EntryQueues } from '../../types/entry';
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PlayaArgs } from '../../types/core';
 import { PublicKey } from '@solana/web3.js';
 import { validateCreateEntrySchema, validateGetEntriesSchema, validateUpdateEntrySchema } from '../../validators/entry';
 
-let CREATE_QUEUE: CreateEntryPayload[] = [];
-let UPDATE_QUEUE: UpdateEntryPayload[] = [];
+let CREATE_QUEUE: EntryCreatePayload[] = [];
+let UPDATE_QUEUE: EntryUpdatePayload[] = [];
 
 const _resetEntriesCreateQueue = (): void => {
   CREATE_QUEUE = [];
@@ -18,29 +18,12 @@ const _resetEntriesUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
-const createEntry = (payload: CreateEntryPayload): Entry => {
+const createEntry = (payload: EntryCreatePayload[]): EntryCreatePayload[] => {
   validateCreateEntrySchema(payload);
 
-  return {
-    immutable: false,
-    inputs: [
-      {
-        body: '',
-        featuredImage: {
-          publicKey: '',
-          url: 'url://',
-        },
-        headline: '',
-        stage: 'published',
-      }
-    ],
-    owner: '',
-    private: false,
-    publicKey: '',
-    taxonomy: [],
-    template: '5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd',
-    version: 0,
-  };    
+  CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
+
+  return payload;
 };
 
 const getEntries = (publicKeys: string[] = []): Entry[] => {
@@ -94,10 +77,10 @@ const getEntriesQueues = (): EntryQueues => ({ create: CREATE_QUEUE, update: UPD
 //   return entryAccounts;
 // };
 
-const updateEntry = (payload: UpdateEntryPayload): UpdateEntryPayload => {
+const updateEntry = (payload: EntryUpdatePayload[]): EntryUpdatePayload[] => {
   validateUpdateEntrySchema(payload);
 
-  UPDATE_QUEUE.push(payload);
+  UPDATE_QUEUE = [...UPDATE_QUEUE, ...payload];
 
   return payload;
 };

@@ -31,15 +31,9 @@ const loadSolanaConfig = (args) => {
     const cluster = args.cluster || "devnet";
     const defaultRpc = cluster === "devnet" ? "https://api.devnet.solana.com" : "https://api.mainnet-beta.solana.com";
     const rpc = new web3_js_1.Connection(args.rpc || defaultRpc, "confirmed");
-    const payer = args.payer || testPayer();
+    const payer = args.payer;
     const wallet = new anchor.Wallet(payer);
     const preflightCommitment = "confirmed";
     return { cluster, rpc, payer, wallet, preflightCommitment };
 };
 exports.loadSolanaConfig = loadSolanaConfig;
-const testPayer = () => {
-    // const jsonKeypair = fs.readFileSync("src/tests/burner-wallet.json", "utf8");
-    // const keypair = Keypair.fromSecretKey(
-    //     Buffer.from(JSON.parse(jsonKeypair))
-    // );
-};

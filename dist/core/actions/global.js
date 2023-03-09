@@ -21,7 +21,7 @@ const processAll = (props) => __awaiter(void 0, void 0, void 0, function* () {
         completed: true,
         // entry: await processEntries(props),
         taxonomy: yield (0, taxonomy_1.processTaxonomies)(props),
-        // template: await processTemplates(props),
+        template: yield (0, template_1.processTemplates)(props),
     };
 });
 exports.processAll = processAll;

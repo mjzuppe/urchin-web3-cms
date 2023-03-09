@@ -1,11 +1,11 @@
 import { PlayaArgs } from './types/core';
 declare const urchin: (args: PlayaArgs) => {
     asset: {
-        create: (payload: import("./types/asset").CreateAssetPayload) => import("./types/asset").CreateAssetPayload;
+        create: (payload: import("./types/asset").AssetCreatePayload[]) => import("./types/asset").AssetCreatePayload[];
         get: (publicKeys?: string[]) => import("./types/asset").Asset[];
     };
     entry: {
-        create: (payload: import("./types/entry").CreateEntryPayload) => import("./types/entry").Entry;
+        create: (payload: import("./types/entry").EntryCreatePayload[]) => import("./types/entry").EntryCreatePayload[];
         get: (publicKeys?: string[]) => import("./types/entry").Entry[];
     };
     preflight: () => Promise<{
@@ -20,6 +20,7 @@ declare const urchin: (args: PlayaArgs) => {
     process: () => Promise<{
         completed: boolean;
         taxonomy: any;
+        template: any;
     }>;
     taxonomy: {
         create: (payload: import("./types/taxonomy").TaxonomyCreatePayload[]) => import("./types/taxonomy").TaxonomyCreatePayload[];
@@ -28,7 +29,8 @@ declare const urchin: (args: PlayaArgs) => {
         update: (payload: import("./types/taxonomy").TaxonomyUpdatePayload) => import("./types/taxonomy").TaxonomyUpdatePayload;
     };
     template: {
-        create: (payload: import("./types/template").CreateTemplatePayload) => import("./types/template").Template;
+        create: (payload: import("./types/template").TemplateCreatePayload[]) => import("./types/template").TemplateCreatePayload[];
+        update: (payload: import("./types/template").TemplateUpdatePayload[]) => import("./types/template").TemplateUpdatePayload[];
         get: (publicKeys?: string[]) => import("./types/template").Template[];
     };
 };

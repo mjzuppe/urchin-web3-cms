@@ -12,7 +12,7 @@ const _resetAssetsUpdateQueue = () => {
 };
 const createAsset = (payload) => {
     (0, asset_1.validateCreateAssetSchema)(payload);
-    CREATE_QUEUE.push(payload);
+    CREATE_QUEUE = [...UPDATE_QUEUE, ...payload];
     return payload;
 };
 exports.createAsset = createAsset;
@@ -64,7 +64,7 @@ exports.getAssetsUpdateQueue = getAssetsUpdateQueue;
 // };
 const updateAsset = (payload) => {
     (0, asset_1.validateUpdateAssetSchema)(payload);
-    UPDATE_QUEUE.push(payload);
+    UPDATE_QUEUE = [...UPDATE_QUEUE, ...payload];
     return payload;
 };
 exports.updateAsset = updateAsset;

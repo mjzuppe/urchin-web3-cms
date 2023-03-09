@@ -3,7 +3,7 @@ type TemplateCreatePayload = {
     inputs: {
         label: string;
         options?: string[];
-        type: 'file' | 'numeric' | 'text' | 'textArea' | 'select';
+        type: 'file' | 'numeric' | 'text' | 'textarea' | 'select';
         validation?: TemplateInputValidation;
     }[];
     private?: boolean;
@@ -19,7 +19,7 @@ type Template = {
     inputs: {
         label: string;
         options?: string[];
-        type: 'file' | 'numeric' | 'text' | 'textArea' | 'select';
+        type: 'file' | 'numeric' | 'text' | 'textarea' | 'select';
     }[];
     title: string;
     arweaveId: string;
@@ -39,7 +39,7 @@ type TemplateUpdatePayload = {
     owner?: Keypair;
 };
 type TemplateInputValidation = {
-    type: 'text' | 'textArea';
+    type: 'text' | 'textarea';
     min: number;
     max: number;
 };

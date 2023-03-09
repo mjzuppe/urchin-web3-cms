@@ -19,7 +19,7 @@ const connection.template.create([...templateInput]);
 | private                | only permit entries to this template from owner | boolean                                     | true    |                                             |
 | inputs\*               | array of objects                                | \[object]                                   | \[]     |                                             |
 | inputs[i].label\*      | field input label                               | string                                      |         | length 1-24                                 |
-| inputs[i].type\*       | field input type                                | string                                      | "text"  | "text","textArea","select","numeric","file" |
+| inputs[i].type\*       | field input type                                | string                                      | "text"  | "text","textarea","select","numeric","file" |
 | inputs[i].options      | options when using type "select"                | \[string]                                   |         | string length 1-24                          |
 | inputs[i].validation\* | method to validate input                        | [Joi Object](https://joi.dev/api/?v=17.8.1) |         |                                             |
 
@@ -48,7 +48,7 @@ const connection.template.create([...templateInput]);
       },
       {
       	label: "body",
-        type: "textArea"
+        type: "textarea"
       }
       }
     ]

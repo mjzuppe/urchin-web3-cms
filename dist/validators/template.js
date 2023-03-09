@@ -10,7 +10,7 @@ joi_1.default.object({
     inputs: joi_1.default.array().items(joi_1.default.object({
         label: joi_1.default.string().min(1).max(24).required(),
         options: joi_1.default.array().items(joi_1.default.string().min(1).max(24)),
-        type: joi_1.default.string().valid('file', 'numeric', 'text', 'textArea', 'select').required(),
+        type: joi_1.default.string().valid('file', 'numeric', 'text', 'textarea', 'select').required(),
         validation: joi_1.default.object({
             type: joi_1.default.string().required(),
             min: joi_1.default.number().min(1).required(),
@@ -32,7 +32,7 @@ const UPDATE_TEMPLATE_SCHEMA = joi_1.default.array().items(joi_1.default.object(
     //   Joi.object({
     //     label: Joi.string().min(1).max(24).required(),
     //     options: Joi.string().min(1).max(24),
-    //     type: Joi.string().valid('file', 'numeric', 'text', 'textArea', 'select').required(),
+    //     type: Joi.string().valid('file', 'numeric', 'text', 'textarea', 'select').required(),
     //   }),
     // ),
     // private: Joi.boolean().default(false),

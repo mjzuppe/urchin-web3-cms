@@ -6,7 +6,7 @@ const CREATE_TEMPLATE_SCHEMA = Joi.array().items( //need a different valiation i
       Joi.object({
         label: Joi.string().min(1).max(24).required(),
         options: Joi.array().items(Joi.string().min(1).max(24)),
-        type: Joi.string().valid('file', 'numeric', 'text', 'textArea', 'select').required(),
+        type: Joi.string().valid('file', 'numeric', 'text', 'textarea', 'select').required(),
         validation: Joi.object({
           type: Joi.string().required(),
           min: Joi.number().min(1).required(),
@@ -33,7 +33,7 @@ const UPDATE_TEMPLATE_SCHEMA = Joi.array().items(
     //   Joi.object({
     //     label: Joi.string().min(1).max(24).required(),
     //     options: Joi.string().min(1).max(24),
-    //     type: Joi.string().valid('file', 'numeric', 'text', 'textArea', 'select').required(),
+    //     type: Joi.string().valid('file', 'numeric', 'text', 'textarea', 'select').required(),
     //   }),
     // ),
     // private: Joi.boolean().default(false),

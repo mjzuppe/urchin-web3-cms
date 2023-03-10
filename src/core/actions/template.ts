@@ -44,7 +44,7 @@ const getTemplateUpdateQueue = (): TemplateUpdatePayload[] => {
 const getTemplatesQueues = (): TemplateQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 
 const processTemplates = async (args: PlayaArgs): Promise<any> => {
-  const { cluster, payer, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
+  const { cluster, payer, rpc, wallet, preflightCommitment, owner } = await loadSolanaConfig(args);
 
   const sdk = new SolanaInteractions.AnchorSDK(
     wallet as NodeWallet,
@@ -58,7 +58,7 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
 
   for (const createTemplateFromQueue of CREATE_QUEUE) { 
     const createdTemplate = await new SolanaInteractions.Template(sdk).createTemplate(
-      createTemplateFromQueue.owner || payer,
+      owner || payer,
       "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
       createTemplateFromQueue.archived,
       createTemplateFromQueue.original,
@@ -72,7 +72,7 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
 
     const updatedTemplate = await new SolanaInteractions.Template(sdk).updateTemplate(
       updateTemplateFromQueue.publicKey,
-      updateTemplateFromQueue.owner || payer,
+      owner || payer,
       updateTemplateFromQueue.archived
     );
     mutatedTemplateIds.push(updatedTemplate.publicKey);

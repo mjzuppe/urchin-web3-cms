@@ -10,8 +10,9 @@ const CREATE_ENTRY_SCHEMA = Joi.array().items(
       }),
     ),
     private: Joi.boolean().default(false),
-    taxonomy: Joi.array().items(Joi.string()).max(4),
-    template: Joi.string().required(),
+    taxonomies: Joi.array().items(Joi.any()).max(3),
+    template: Joi.any().required(),
+    archived: Joi.boolean().default(false),
   }),
 ).min(1);
 
@@ -29,8 +30,10 @@ const UPDATE_ENTRY_SCHEMA =  Joi.array().items(
       }),
     ),
     private: Joi.boolean().default(false),
-    taxonomy: Joi.array().items(Joi.string()).max(4),
-    template: Joi.string().required(),
+    taxonomies: Joi.array().items(Joi.any()).max(3),
+    template: Joi.any().required(),
+    publicKey: Joi.any().required(),
+    archived: Joi.boolean().default(false),
   })
 ).min(1);
 

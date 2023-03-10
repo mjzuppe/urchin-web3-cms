@@ -3,15 +3,17 @@ import { getAssetsQueues } from './asset';
 import { getEntriesQueues } from './entry';
 import { getTaxonomiesQueues, processTaxonomies } from './taxonomy';
 import { getTemplatesQueues, processTemplates } from './template';
+import { processEntries } from './entry';
+import { processAssets } from './asset';
 
 
 const processAll = async (props:any) => {
   return {
-    // asset: await processAssets(props),
     completed: true, //TODO MZ: inner logic if fails
-    // entry: await processEntries(props),
     taxonomy: await processTaxonomies(props),
     template: await processTemplates(props),
+    entry: await processEntries(props),
+    asset: await processAssets(props),
   };
 };
 
@@ -25,6 +27,8 @@ const queryAll = async (props:any) => {
     rpc: rpc.rpcEndpoint,
     taxonomy: getTaxonomiesQueues(),
     template: getTemplatesQueues(),
+    assets: getAssetsQueues(),
+    entries: getEntriesQueues(),
   };
 };
 

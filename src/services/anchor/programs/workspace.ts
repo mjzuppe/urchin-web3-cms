@@ -20,7 +20,7 @@ const entryProgramAddress = new anchor.web3.PublicKey(
 export class AnchorSDK {
   readonly program: anchor.Program;
   readonly provider: anchor.AnchorProvider;
-  readonly model: "taxonomy" | "template";
+  readonly model: "taxonomy" | "template" | "asset" | "entry";
   readonly cluster: Cluster;
 
 
@@ -28,7 +28,7 @@ export class AnchorSDK {
     wallet: anchor.Wallet,
     connection: anchor.web3.Connection,
     opts: anchor.web3.ConfirmOptions,
-    model: "taxonomy" | "template",
+    model: "taxonomy" | "template" | "asset" | "entry",
     cluster: Cluster,
 
 

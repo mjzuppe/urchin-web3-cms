@@ -1,4 +1,4 @@
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, Keypair } from "@solana/web3.js";
 
 type Asset = {
   id: string;
@@ -8,17 +8,22 @@ type Asset = {
 };
 
 type AssetQueues = {
-  create: AssetCreatePayload[];
-  update: AssetUpdatePayload[];
+  create: AssetUserCreatePayload[];
+  update: AssetUserUpdatePayload[];
 };
 
-type AssetCreatePayload = {
+type AssetUserCreatePayload = {
   original: string;
+  immutable?: boolean;
+  archived?: boolean;
 };
 
-type AssetUpdatePayload = {
-  original: string;
+type AssetUserUpdatePayload = {
   publicKey: PublicKey;
+  original?: string;
+  immutable?: boolean;
+  archived?: boolean;
 };
 
-export type { Asset, AssetQueues, AssetCreatePayload, AssetUpdatePayload };
+
+export type { Asset, AssetQueues, AssetUserCreatePayload, AssetUserUpdatePayload };

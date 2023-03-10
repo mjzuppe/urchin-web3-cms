@@ -1,14 +1,14 @@
 import * as anchor from '@project-serum/anchor';
 import * as SolanaInteractions from '../../services/anchor/programs';
-import { Asset, AssetQueues, AssetCreatePayload, AssetUpdatePayload } from '../../types/asset';
+import { Asset, AssetQueues, AssetUserCreatePayload, AssetUserUpdatePayload } from '../../types/asset';
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PublicKey } from '@solana/web3.js';
 import { validateCreateAssetSchema, validateGetAssetsSchema, validateUpdateAssetSchema } from '../../validators/asset';
 import { PlayaArgs } from '../../types/core';
 
-let CREATE_QUEUE: AssetCreatePayload[] = [];
-let UPDATE_QUEUE: AssetUpdatePayload[] = [];
+let CREATE_QUEUE: AssetUserCreatePayload[] = [];
+let UPDATE_QUEUE: AssetUserUpdatePayload[] = [];
 
 const _resetAssetsCreateQueue = (): void => {
   CREATE_QUEUE = [];
@@ -18,10 +18,10 @@ const _resetAssetsUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
-const createAsset = (payload: AssetCreatePayload[]): AssetCreatePayload[] => {
+const createAsset = (payload: AssetUserCreatePayload[]): AssetUserCreatePayload[] => {
   validateCreateAssetSchema(payload);
 
-  CREATE_QUEUE = [...UPDATE_QUEUE, ...payload];
+  CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
 
   return payload;
 };
@@ -32,60 +32,66 @@ const getAssets = (publicKeys: string[] = []): Asset[] => {
   return [];
 };
 
-const getAssetsCreateQueue = (): AssetCreatePayload[] => {
+const getAssetsCreateQueue = (): AssetUserCreatePayload[] => {
   return CREATE_QUEUE;
 };
 
 const getAssetsQueues = (): AssetQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 
-const getAssetsUpdateQueue = (): AssetUpdatePayload[] => {
+const getAssetsUpdateQueue = (): AssetUserUpdatePayload[] => {
   return UPDATE_QUEUE;
 };
 
-// const processAssets = async (args: PlayaArgs): Promise<any> => {
-//   const { cluster, payer, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
+const processAssets = async (args: PlayaArgs): Promise<any> => {
+  const { cluster, payer, owner, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
 
-//   const sdk = new SolanaInteractions.AnchorSDK(
-//     wallet as NodeWallet,
-//     rpc,
-//     preflightCommitment as anchor.web3.ConfirmOptions,
-//     'asset',
-//     'devnet'
-//   );
+  const sdk = new SolanaInteractions.AnchorSDK(
+    wallet as NodeWallet,
+    rpc,
+    preflightCommitment as anchor.web3.ConfirmOptions,
+    'asset',
+    'devnet'
+  );
 
-//   let mutatedAssetIds: PublicKey[] = [];
+  let mutatedAssetIds: PublicKey[] = [];
 
-//   for (const createAssetFromQueue of CREATE_QUEUE) { 
-//     const createdAsset = await new SolanaInteractions.Asset(sdk).createAsset(
-//       createAssetFromQueue.original,
-//     );
+  for (const createAssetFromQueue of CREATE_QUEUE) { 
+    const createdAsset = await new SolanaInteractions.Asset(sdk).createAsset(
+      owner || payer,
+      "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
+      createAssetFromQueue.immutable || false,
+      createAssetFromQueue.archived || false
+    );
 
-//     mutatedAssetIds.push(createdAsset.publicKey);
-//   }
+    mutatedAssetIds.push(createdAsset.publicKey);
+  }
 
-//   for (const updateAssetFromQueue of UPDATE_QUEUE) {
-//     if (!updateAssetFromQueue.publicKey) continue;
+  for (const updateAssetFromQueue of UPDATE_QUEUE) {
+    if (!updateAssetFromQueue.publicKey) continue;
 
-//     const updatedAsset = await new SolanaInteractions.Asset(sdk).updateAsset(
-//       updateAssetFromQueue.original,
-//       updateAssetFromQueue.publicKey,
-//     );
+    const updatedAsset = await new SolanaInteractions.Asset(sdk).updateAsset(
+      updateAssetFromQueue.publicKey,
+      owner || payer,
+      "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
+      updateAssetFromQueue.immutable || false,
+      updateAssetFromQueue.archived || false
+    );
 
-//     mutatedAssetIds.push(updatedAsset.publicKey);
-//   }
+    mutatedAssetIds.push(updatedAsset.publicKey);
+  }
 
-//   await sleep(8000);
+  await sleep(8000);
 
-//   let assetAccounts: any = await new SolanaInteractions.Asset(sdk).getAsset(mutatedAssetIds); 
-//   assetAccounts = formatAssetAccounts(assetAccounts);   
+  let assetAccounts: any = await new SolanaInteractions.Asset(sdk).getAsset(mutatedAssetIds); 
+  // assetAccounts = formatAssetAccounts(assetAccounts);   
 
-//   _resetAssetsCreateQueue();
-//   _resetAssetsUpdateQueue();
+  _resetAssetsCreateQueue();
+  _resetAssetsUpdateQueue();
 
-//   return assetAccounts;
-// };
+  return assetAccounts;
+};
 
-const updateAsset = (payload: AssetUpdatePayload[]): AssetUpdatePayload[] => {
+const updateAsset = (payload: AssetUserUpdatePayload[]): AssetUserUpdatePayload[] => {
   validateUpdateAssetSchema(payload);
 
   UPDATE_QUEUE = [...UPDATE_QUEUE, ...payload];
@@ -99,5 +105,6 @@ export {
   getAssetsCreateQueue,
   getAssetsQueues,
   getAssetsUpdateQueue,
-  updateAsset
+  updateAsset,
+  processAssets
 };

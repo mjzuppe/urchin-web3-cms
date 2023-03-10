@@ -3,6 +3,8 @@ import Joi from 'joi';
 const CREATE_ASSET_SCHEMA = Joi.array().items(
   Joi.object({
     original: Joi.string().required(),
+    immutable: Joi.boolean().default(false),
+    archived: Joi.boolean().default(false),
   })
 ).min(1);
 
@@ -12,7 +14,10 @@ const GET_ASSETS_SCHEMA = Joi.object({
 
 const UPDATE_ASSET_SCHEMA = Joi.array().items(
   Joi.object({
+    publicKey: Joi.any().required(),
     original: Joi.string().required(),
+    immutable: Joi.boolean().default(false),
+    archived: Joi.boolean().default(false),
   })
 ).min(1);
 

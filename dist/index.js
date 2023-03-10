@@ -11,6 +11,7 @@ const urchin = (args) => {
         asset: {
             create: asset_1.createAsset,
             get: asset_1.getAssets,
+            update: asset_1.updateAsset
         },
         entry: {
             create: entry_1.createEntry,

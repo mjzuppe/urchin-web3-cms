@@ -6,6 +6,7 @@ export declare const loadSolanaConfig: (args: PlayaArgs) => {
     cluster: string;
     rpc: Connection;
     payer: Keypair;
+    owner: Keypair | undefined;
     wallet: LocalWallet;
     preflightCommitment: anchor.web3.ConfirmOptions;
 };

@@ -7,12 +7,17 @@ exports.validateUpdateAssetSchema = exports.validateGetAssetsSchema = exports.va
 const joi_1 = __importDefault(require("joi"));
 const CREATE_ASSET_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     original: joi_1.default.string().required(),
+    immutable: joi_1.default.boolean().default(false),
+    archived: joi_1.default.boolean().default(false),
 })).min(1);
 const GET_ASSETS_SCHEMA = joi_1.default.object({
     publicKeys: joi_1.default.array().items(joi_1.default.string()),
 });
 const UPDATE_ASSET_SCHEMA = joi_1.default.array().items(joi_1.default.object({
+    publicKey: joi_1.default.any().required(),
     original: joi_1.default.string().required(),
+    immutable: joi_1.default.boolean().default(false),
+    archived: joi_1.default.boolean().default(false),
 })).min(1);
 const validateCreateAssetSchema = (data) => {
     const { error } = CREATE_ASSET_SCHEMA.validate(data);

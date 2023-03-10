@@ -12,8 +12,9 @@ const CREATE_ENTRY_SCHEMA = joi_1.default.array().items(joi_1.default.object({
         value: joi_1.default.string(),
     })),
     private: joi_1.default.boolean().default(false),
-    taxonomy: joi_1.default.array().items(joi_1.default.string()).max(4),
-    template: joi_1.default.string().required(),
+    taxonomies: joi_1.default.array().items(joi_1.default.any()).max(3),
+    template: joi_1.default.any().required(),
+    archived: joi_1.default.boolean().default(false),
 })).min(1);
 const GET_ENTRIES_SCHEMA = joi_1.default.object({
     publicKeys: joi_1.default.array().items(joi_1.default.string()),
@@ -25,8 +26,10 @@ const UPDATE_ENTRY_SCHEMA = joi_1.default.array().items(joi_1.default.object({
         value: joi_1.default.string(),
     })),
     private: joi_1.default.boolean().default(false),
-    taxonomy: joi_1.default.array().items(joi_1.default.string()).max(4),
-    template: joi_1.default.string().required(),
+    taxonomies: joi_1.default.array().items(joi_1.default.any()).max(3),
+    template: joi_1.default.any().required(),
+    publicKey: joi_1.default.any().required(),
+    archived: joi_1.default.boolean().default(false),
 })).min(1);
 const validateCreateEntrySchema = (data) => {
     const { error } = CREATE_ENTRY_SCHEMA.validate(data);

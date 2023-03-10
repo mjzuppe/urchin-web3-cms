@@ -15,13 +15,15 @@ const asset_1 = require("./asset");
 const entry_1 = require("./entry");
 const taxonomy_1 = require("./taxonomy");
 const template_1 = require("./template");
+const entry_2 = require("./entry");
+const asset_2 = require("./asset");
 const processAll = (props) => __awaiter(void 0, void 0, void 0, function* () {
     return {
-        // asset: await processAssets(props),
         completed: true,
-        // entry: await processEntries(props),
         taxonomy: yield (0, taxonomy_1.processTaxonomies)(props),
         template: yield (0, template_1.processTemplates)(props),
+        entry: yield (0, entry_2.processEntries)(props),
+        asset: yield (0, asset_2.processAssets)(props),
     };
 });
 exports.processAll = processAll;
@@ -35,6 +37,8 @@ const queryAll = (props) => __awaiter(void 0, void 0, void 0, function* () {
         rpc: rpc.rpcEndpoint,
         taxonomy: (0, taxonomy_1.getTaxonomiesQueues)(),
         template: (0, template_1.getTemplatesQueues)(),
+        assets: (0, asset_1.getAssetsQueues)(),
+        entries: (0, entry_1.getEntriesQueues)(),
     };
 });
 exports.queryAll = queryAll;

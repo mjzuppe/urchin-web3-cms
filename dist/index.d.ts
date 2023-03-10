@@ -1,11 +1,12 @@
 import { PlayaArgs } from './types/core';
 declare const urchin: (args: PlayaArgs) => {
     asset: {
-        create: (payload: import("./types/asset").AssetCreatePayload[]) => import("./types/asset").AssetCreatePayload[];
+        create: (payload: import("./types/asset").AssetUserCreatePayload[]) => import("./types/asset").AssetUserCreatePayload[];
         get: (publicKeys?: string[]) => import("./types/asset").Asset[];
+        update: (payload: import("./types/asset").AssetUserUpdatePayload[]) => import("./types/asset").AssetUserUpdatePayload[];
     };
     entry: {
-        create: (payload: import("./types/entry").EntryCreatePayload[]) => import("./types/entry").EntryCreatePayload[];
+        create: (payload: import("./types/entry").EntryUserCreatePayload[]) => import("./types/entry").EntryUserCreatePayload[];
         get: (publicKeys?: string[]) => import("./types/entry").Entry[];
     };
     preflight: () => Promise<{
@@ -16,11 +17,15 @@ declare const urchin: (args: PlayaArgs) => {
         rpc: string;
         taxonomy: import("./types/taxonomy").TaxonomyQueues;
         template: import("./types/template").TemplateQueues;
+        assets: import("./types/asset").AssetQueues;
+        entries: import("./types/entry").EntryQueues;
     }>;
     process: () => Promise<{
         completed: boolean;
         taxonomy: any;
         template: any;
+        entry: any;
+        asset: any;
     }>;
     taxonomy: {
         create: (payload: import("./types/taxonomy").TaxonomyCreatePayload[]) => import("./types/taxonomy").TaxonomyCreatePayload[];

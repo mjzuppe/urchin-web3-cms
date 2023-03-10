@@ -1,6 +1,8 @@
-import { Entry, EntryCreatePayload, EntryUpdatePayload, EntryQueues } from '../../types/entry';
-declare const createEntry: (payload: EntryCreatePayload[]) => EntryCreatePayload[];
+import { Entry, EntryUserCreatePayload, EntryUserUpdatePayload, EntryQueues } from '../../types/entry';
+import { PlayaArgs } from '../../types/core';
+declare const createEntry: (payload: EntryUserCreatePayload[]) => EntryUserCreatePayload[];
 declare const getEntries: (publicKeys?: string[]) => Entry[];
 declare const getEntriesQueues: () => EntryQueues;
-declare const updateEntry: (payload: EntryUpdatePayload[]) => EntryUpdatePayload[];
-export { createEntry, getEntries, getEntriesQueues, updateEntry };
+declare const processEntries: (args: PlayaArgs) => Promise<any>;
+declare const updateEntry: (payload: EntryUserUpdatePayload[]) => EntryUserUpdatePayload[];
+export { createEntry, getEntries, getEntriesQueues, updateEntry, processEntries };

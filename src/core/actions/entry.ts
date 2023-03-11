@@ -1,14 +1,14 @@
 import * as anchor from '@project-serum/anchor';
 import * as SolanaInteractions from '../../services/anchor/programs';
-import { Entry, EntryUserCreatePayload, EntryUserUpdatePayload, EntryQueues } from '../../types/entry';
+import { Entry, EntryCreatePayload, EntryUpdatePayload, EntryQueues } from '../../types/entry';
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PlayaArgs } from '../../types/core';
 import { PublicKey } from '@solana/web3.js';
 import { validateCreateEntrySchema, validateGetEntriesSchema, validateUpdateEntrySchema } from '../../validators/entry';
 
-let CREATE_QUEUE: EntryUserCreatePayload[] = [];
-let UPDATE_QUEUE: EntryUserUpdatePayload[] = [];
+let CREATE_QUEUE: EntryCreatePayload[] = [];
+let UPDATE_QUEUE: EntryUpdatePayload[] = [];
 
 const _resetEntriesCreateQueue = (): void => {
   CREATE_QUEUE = [];
@@ -18,7 +18,7 @@ const _resetEntriesUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
-const createEntry = (payload: EntryUserCreatePayload[]): EntryUserCreatePayload[] => {
+const createEntry = (payload: EntryCreatePayload[]): EntryCreatePayload[] => {
   validateCreateEntrySchema(payload);
 
   CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
@@ -87,7 +87,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
   return entryAccounts;
 };
 
-const updateEntry = (payload: EntryUserUpdatePayload[]): EntryUserUpdatePayload[] => {
+const updateEntry = (payload: EntryUpdatePayload[]): EntryUpdatePayload[] => {
   validateUpdateEntrySchema(payload);
 
   UPDATE_QUEUE = [...UPDATE_QUEUE, ...payload];

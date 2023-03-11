@@ -10,11 +10,16 @@ describe('Manage taxonomy', () => {
   let pubkey: PublicKey = payer.publicKey;
   const key = new Keypair();
 
+  const connection = new Connection("https://api.devnet.solana.com", "confirmed");
+
+
   it("should create a new taxonomy", async () => {
     const u = urchin({
       payer,
       cluster: "devnet",
     });
+    const balance = await connection.getBalance(payer.publicKey);
+    console.log("Initial Balance: ", balance);
     u.taxonomy.create([{ label: "new label" }])
     const preflight = await u.preflight();
     const r = await u.process();
@@ -49,6 +54,8 @@ describe('Manage taxonomy', () => {
     u.taxonomy.update([{ publicKey: pubkey, label: "newer label" }])
     const preflight = await u.preflight();
     const r = await u.process();
+    const balance = await connection.getBalance(payer.publicKey);
+    console.log("Final Balance: ", balance);
     assert.equal(r.taxonomy[0].label, "newer label")
   }).timeout(100000);
 

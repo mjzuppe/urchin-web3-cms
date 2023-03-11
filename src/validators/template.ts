@@ -19,7 +19,6 @@ const CREATE_TEMPLATE_SCHEMA = Joi.array().items( //need a different valiation i
     taxonomies: Joi.array().items(Joi.any()),
     original: Joi.any(),
     archived: Joi.boolean(),
-    owner: Joi.any(), 
   }),
 ).min(1);
 
@@ -39,7 +38,6 @@ const UPDATE_TEMPLATE_SCHEMA = Joi.array().items(
     // private: Joi.boolean().default(false),
     publicKey: Joi.any(),
     archived: Joi.boolean(),
-    owner: Joi.any(), 
     // title: Joi.string().min(1).max(100).required(),
   }),
 ).min(1);

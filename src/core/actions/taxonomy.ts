@@ -92,6 +92,10 @@ const processTaxonomies = async (args: PlayaArgs): Promise<any> => {
       owner || payer,
       createTaxonomyFromQueue.parent,
     );
+    const {tx} = createdTaxonomy;
+    const data:any = await rpc.getTransaction(tx, {maxSupportedTransactionVersion:0});
+    const {postBalances, preBalances} = data.meta;
+    console.log("TXN COST:", postBalances[0] - preBalances[0]);
     mutatedTaxonomyIds.push(createdTaxonomy.publicKey);
   }
 
@@ -104,6 +108,10 @@ const processTaxonomies = async (args: PlayaArgs): Promise<any> => {
       owner || payer,
       updateTaxonomyFromQueue.parent
     );
+    const {tx} = updatedTaxonomy;
+    const data:any = await rpc.getTransaction(tx, {maxSupportedTransactionVersion:0});
+    const {postBalances, preBalances} = data.meta;
+    console.log("TXN COST:", postBalances[0] - preBalances[0]);
     mutatedTaxonomyIds.push(updatedTaxonomy.publicKey);
   }
 

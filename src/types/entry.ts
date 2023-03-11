@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 
-type EntryUserCreatePayload = {
+type EntryCreatePayload = {
   immutable?: boolean;
   inputs?: {
     label: string;
@@ -32,11 +32,11 @@ type Entry = {
 };
 
 type EntryQueues = {
-  create: EntryUserCreatePayload[];
-  update: EntryUserUpdatePayload[];
+  create: EntryCreatePayload[];
+  update: EntryUpdatePayload[];
 };
 
-type EntryUserUpdatePayload = {
+type EntryUpdatePayload = {
   immutable?: boolean;
   inputs?: {
     label: string;
@@ -48,4 +48,4 @@ type EntryUserUpdatePayload = {
   archived?: boolean;
 };
 
-export type { EntryUserCreatePayload, Entry, EntryQueues, EntryUserUpdatePayload };
+export type { EntryCreatePayload, Entry, EntryQueues, EntryUpdatePayload };

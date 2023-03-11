@@ -9,14 +9,12 @@ type Taxonomy = {
 
 type TaxonomyCreatePayload = {
     label: string;
-    owner?: Keypair;
     parent?: PublicKey;
 };
 
 type TaxonomyUpdatePayload = {
     publicKey: PublicKey;
     label: string;
-    owner?: Keypair;
     parent?: PublicKey;
 
 };

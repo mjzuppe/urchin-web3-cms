@@ -42,7 +42,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
     rpc,
     preflightCommitment as anchor.web3.ConfirmOptions,
     'entry',
-    'devnet'
+    cluster
   );
 
   let mutatedEntryIds: PublicKey[] = [];

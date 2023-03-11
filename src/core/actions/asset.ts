@@ -50,7 +50,7 @@ const processAssets = async (args: PlayaArgs): Promise<any> => {
     rpc,
     preflightCommitment as anchor.web3.ConfirmOptions,
     'asset',
-    'devnet'
+    cluster
   );
 
   let mutatedAssetIds: PublicKey[] = [];

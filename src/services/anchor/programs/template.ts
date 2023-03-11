@@ -17,14 +17,6 @@ export class Template {
   
   ) {
     const accountInit = anchor.web3.Keypair.generate();
-    console.log("CREATE TEMPLATE", {
-      arweave: arweave_id,
-      original,
-      archived,
-      template: accountInit.publicKey.toString(),
-      payer: this.sdk.provider.wallet.publicKey.toString(),
-      owner: owner.publicKey.toString(),
-    })
     const tx = await this.sdk.program.methods.createTemplate(arweave_id, original, archived).accounts({ 
       template: accountInit.publicKey,
       payer: this.sdk.provider.wallet.publicKey,

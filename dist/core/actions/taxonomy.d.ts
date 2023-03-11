@@ -1,7 +1,8 @@
+import { PublicKey } from '@solana/web3.js';
 import { PlayaArgs } from '../../types/core';
 import { Taxonomy, TaxonomyCreatePayload, TaxonomyUpdatePayload, TaxonomyQueues } from '../../types/taxonomy';
 declare const createTaxonomy: (payload: TaxonomyCreatePayload[]) => TaxonomyCreatePayload[];
-declare const getTaxonomies: (publicKeys?: string[]) => Taxonomy[];
+declare const getTaxonomies: (publicKeys?: PublicKey[]) => Taxonomy[];
 declare const getTaxonomiesCreateQueue: () => TaxonomyCreatePayload[];
 declare const getTaxonomiesUpdateQueue: () => TaxonomyCreatePayload[];
 declare const getTaxonomiesQueues: () => TaxonomyQueues;

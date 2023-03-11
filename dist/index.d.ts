@@ -1,3 +1,4 @@
+/// <reference types="@solana/web3.js" />
 import { PlayaArgs } from './types/core';
 declare const urchin: (args: PlayaArgs) => {
     asset: {
@@ -30,7 +31,7 @@ declare const urchin: (args: PlayaArgs) => {
     taxonomy: {
         create: (payload: import("./types/taxonomy").TaxonomyCreatePayload[]) => import("./types/taxonomy").TaxonomyCreatePayload[];
         queue: () => import("./types/taxonomy").TaxonomyQueues;
-        get: (publicKeys?: string[]) => import("./types/taxonomy").Taxonomy[];
+        get: (publicKeys?: import("@solana/web3.js").PublicKey[]) => import("./types/taxonomy").Taxonomy[];
         update: (payload: import("./types/taxonomy").TaxonomyUpdatePayload) => import("./types/taxonomy").TaxonomyUpdatePayload;
     };
     template: {

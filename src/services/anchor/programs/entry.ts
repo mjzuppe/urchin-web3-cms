@@ -29,9 +29,10 @@ export class Entry {
   };
 
   async getEntry(publicKeys: anchor.web3.PublicKey[]) {
-    let r:any = await this.sdk.program.account.entryAccount.fetchMultiple(publicKeys);
-    r = r.map((r:any, i:number) => ({publicKey: publicKeys[i], ...r}));
-    return r;
+    return [] // TODO MZ: fix this
+    // let r:any = await this.sdk.program.account.entryAccount.fetchMultiple(publicKeys);
+    // r = r.map((r:any, i:number) => ({publicKey: publicKeys[i], ...r}));
+    // return r;
     // if (r.owner.toString() !== owner.publicKey.toString()) throw Error("owner mismatch"); //TODO MZ: add validation for owner?
   };
 

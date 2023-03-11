@@ -55,6 +55,10 @@ const getTaxonomies = (publicKeys = []) => {
     return [];
 };
 exports.getTaxonomies = getTaxonomies;
+const getAllTaxonomies = (owner) => {
+    (0, taxonomy_1.validateGetTaxonomiesSchema)(owner);
+    return [];
+};
 const getTaxonomiesCreateQueue = () => {
     return CREATE_QUEUE;
 };

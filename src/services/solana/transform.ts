@@ -1,13 +1,14 @@
 import { PublicKey } from "@solana/web3.js"
 import { TaxonomyOutput } from "../../types/taxonomy"
 
-export const formatTaxonomyAccounts = (source:TaxonomyOutput[]) => {
-    return source.map((taxonomy) => {
-        return {
-            publicKey: taxonomy.publicKey.toString(),
-            label: taxonomy.label,
-            owner: taxonomy.owner.toString(),
-            parent: taxonomy.parent? taxonomy.parent.toString() : null,
-        }
-    })
+const formatTaxonomyAccounts = (source: any) => {
+    return source.map((taxonomy:any) =>
+    taxonomy.label? ({
+        publicKey: taxonomy.publicKey.toString(),
+        label: taxonomy.label,
+        owner: taxonomy.owner.toString(),
+        parent: taxonomy.parent !== null? taxonomy.parent.toString() : null,
+    }) : ({publicKey: taxonomy.publicKey.toString()})
+    )
 }
+export default(formatTaxonomyAccounts)

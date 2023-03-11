@@ -28,7 +28,7 @@ export class Taxonomy {
   async getTaxonomy(publicKeys: anchor.web3.PublicKey[]) {
     let r:any = await this.sdk.program.account.taxonomyAccount.fetchMultiple(publicKeys);
     r = r.map((r:any, i:number) => ({publicKey: publicKeys[i], ...r}));
-    return r;
+    return r
     // if (r.owner.toString() !== owner.publicKey.toString()) throw Error("owner mismatch"); //TODO MZ: add validation for owner?
   };
 

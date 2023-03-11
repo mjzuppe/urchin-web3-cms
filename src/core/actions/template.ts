@@ -51,7 +51,7 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
     rpc,
     preflightCommitment as anchor.web3.ConfirmOptions,
     'template',
-    'devnet'
+    cluster
   );
 
   let mutatedTemplateIds: PublicKey[] = [];

@@ -6,6 +6,8 @@ import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PublicKey } from '@solana/web3.js';
 import { PlayaArgs } from '../../types/core';
 import { validateCreateTemplateSchema, validateGetTemplatesSchema, validateUpdateTemplateSchema } from '../../validators/template';
+import { formatTemplateAccounts } from '../../services/solana/transform';
+import * as metadata from '../../services/arweave/metadata';
 
 let CREATE_QUEUE: TemplateCreatePayload[] = [];
 let UPDATE_QUEUE: TemplateUpdatePayload[] = [];
@@ -23,13 +25,39 @@ const createTemplate = (payload: TemplateCreatePayload[]): TemplateCreatePayload
 
   CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
 
-  return payload;    
+  return payload;
 };
 
-const getTemplates = (publicKeys: string[] = []): Template[] => {
+const getTemplates = async (args: PlayaArgs, publicKeys: PublicKey[] = []): Promise<Template[]> => {
   validateGetTemplatesSchema(publicKeys);
 
-  return [];
+  const { cluster, payer, rpc, wallet, preflightCommitment } = loadSolanaConfig(args);
+  const sdk = new SolanaInteractions.AnchorSDK(
+    wallet as NodeWallet,
+    rpc,
+    preflightCommitment as anchor.web3.ConfirmOptions,
+    'template',
+    cluster
+  );
+
+  let templateAccounts: any = await new SolanaInteractions.Template(sdk).getTemplate(publicKeys);
+  return formatTemplateAccounts(templateAccounts);
+};
+
+const getAllTemplates = async (args: PlayaArgs) => {
+
+  const { cluster, payer, owner, rpc, wallet, preflightCommitment } = loadSolanaConfig(args);
+  const sdk = new SolanaInteractions.AnchorSDK(
+    wallet as NodeWallet,
+    rpc,
+    preflightCommitment as anchor.web3.ConfirmOptions,
+    'template',
+    cluster
+  );
+
+  let templateAccounts: any = await new SolanaInteractions.Template(sdk).getTemplateAll(owner || payer);
+  return templateAccounts
+
 };
 
 
@@ -56,13 +84,22 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
 
   let mutatedTemplateIds: PublicKey[] = [];
 
-  for (const createTemplateFromQueue of CREATE_QUEUE) { 
+  for (const createTemplateFromQueue of CREATE_QUEUE) {
+    // Arweave
+    const arweaveData = { // TODO MJZ update
+      taxonomies: createTemplateFromQueue.taxonomies,
+      inputs: createTemplateFromQueue.inputs,
+      created: Date.now()
+    }
+    const arweaveResponse = await metadata.uploadData(payer.secretKey.toString(), cluster, arweaveData);
+    const arweaveId = arweaveResponse.id;
+
+    // Solana 
     const createdTemplate = await new SolanaInteractions.Template(sdk).createTemplate(
       owner || payer,
-      "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
+      arweaveId, 
       createTemplateFromQueue.archived,
-      createTemplateFromQueue.original,
-     
+      createTemplateFromQueue.original || null,
     );
     mutatedTemplateIds.push(createdTemplate.publicKey);
   }
@@ -73,15 +110,16 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
     const updatedTemplate = await new SolanaInteractions.Template(sdk).updateTemplate(
       updateTemplateFromQueue.publicKey,
       owner || payer,
-      updateTemplateFromQueue.archived
+      updateTemplateFromQueue.archived,
+      updateTemplateFromQueue.version
     );
     mutatedTemplateIds.push(updatedTemplate.publicKey);
   }
 
   await sleep(8000);
 
-  let templateAccounts: any = await new SolanaInteractions.Template(sdk).getTemplate(mutatedTemplateIds); 
-  // templateAccounts = formatTemplateAccounts(templateAccounts);   //TODO MJZ 
+  let templateAccounts: any = await new SolanaInteractions.Template(sdk).getTemplate(mutatedTemplateIds);
+  templateAccounts = formatTemplateAccounts(templateAccounts);   //TODO MJZ 
 
   _resetTemplatesCreateQueue();
   _resetTemplatesUpdateQueue();
@@ -97,4 +135,4 @@ const updateTemplate = (payload: TemplateUpdatePayload[]): TemplateUpdatePayload
   return payload;
 };
 
-export { createTemplate, getTemplates, getTemplatesQueues, updateTemplate, processTemplates };
+export { createTemplate, getTemplates, getTemplatesQueues, updateTemplate, processTemplates, getAllTemplates };

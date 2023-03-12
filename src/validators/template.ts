@@ -14,7 +14,6 @@ const CREATE_TEMPLATE_SCHEMA = Joi.array().items( //need a different valiation i
         }),
       }),
     ),
-    private: Joi.boolean().default(false),
     title: Joi.string().min(1).max(100).required(),
     taxonomies: Joi.array().items(Joi.any()),
     original: Joi.any(),
@@ -22,9 +21,7 @@ const CREATE_TEMPLATE_SCHEMA = Joi.array().items( //need a different valiation i
   }),
 ).min(1);
 
-const GET_TEMPLATES_SCHEMA = Joi.object({
-  publicKeys: Joi.array().items(Joi.string()),
-});
+const GET_TEMPLATES_SCHEMA = Joi.array().items(Joi.any());
 
 const UPDATE_TEMPLATE_SCHEMA = Joi.array().items(
   Joi.object({
@@ -38,6 +35,7 @@ const UPDATE_TEMPLATE_SCHEMA = Joi.array().items(
     // private: Joi.boolean().default(false),
     publicKey: Joi.any(),
     archived: Joi.boolean(),
+    version: Joi.number(),
     // title: Joi.string().min(1).max(100).required(),
   }),
 ).min(1);

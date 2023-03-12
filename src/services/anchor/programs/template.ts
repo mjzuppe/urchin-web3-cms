@@ -13,7 +13,7 @@ export class Template {
     owner: anchor.web3.Keypair,
     arweave_id: string,
     archived: boolean,
-    original?: anchor.web3.PublicKey,
+    original?: anchor.web3.PublicKey | null,
   
   ) {
     const accountInit = anchor.web3.Keypair.generate();
@@ -33,25 +33,26 @@ export class Template {
     // if (r.owner.toString() !== owner.publicKey.toString()) throw Error("owner mismatch"); //TODO MZ: add validation for owner?
   };
 
-  async getTemplateAll(owner: anchor.web3.Keypair) {
-    return await this.sdk.program.account.templateAccount.all(
-      [
-        {
-          memcmp: {
-            offset: 8, // Discriminator.
-            bytes: owner.publicKey.toBase58(),
-          }
-        }
-      ]
-    )
-  };
+  // async getTemplateAll(owner: anchor.web3.Keypair) {
+  //   return await this.sdk.program.account.templateAccount.all(
+  //     [
+  //       {
+  //         memcmp: {
+  //           offset: 8, // Discriminator.
+  //           bytes: owner.publicKey.toBase58(),
+  //         }
+  //       }
+  //     ]
+  //   )
+  // };
 
   async updateTemplate(
     publicKey: anchor.web3.PublicKey,
     owner: anchor.web3.Keypair,
     archived: boolean,
+    version?: number,
   ) {
-    const tx = await this.sdk.program.methods.updateTemplate(archived).accounts({
+    const tx = await this.sdk.program.methods.updateTemplate(archived, version).accounts({
       template: publicKey,
       payer: this.sdk.provider.wallet.publicKey,
       owner: owner.publicKey,

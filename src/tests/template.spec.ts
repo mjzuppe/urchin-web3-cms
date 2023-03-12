@@ -1,61 +1,73 @@
-// import urchin from '../index';
-// import { Keypair, Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-// import testKeypair from './test-wallet';
+import urchin from '../index';
+import { Keypair, Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import testKeypair from './test-wallet';
+import * as assert from "assert";
 
-// describe('Manage template', () => {
+describe('Manage template', () => {
 
-//     const payer = testKeypair;
+    const payer = testKeypair;
 
-//     let pubkey: PublicKey = payer.publicKey;
+    let pubkey: PublicKey = payer.publicKey;
 
-//     it("should create a new template", async () => {
-//         const u = urchin({
-//             payer,
-//             cluster: "devnet",
-//         });
-//         u.template.create(
-//             [
-//                 { 
-//                     title: "field1", 
-//                     inputs: [
-//                         { label: "text", type: "text", validation: { 
-//                             type: "text", 
-//                             min: 1, 
-//                             max: 100 
-//                         }  }
-//                     ], 
-//                     original: payer.publicKey, 
-//                     archived: false, 
-//                     taxonomies: [payer.publicKey],
+    it("should create a new template", async () => {
+        const u = urchin({
+            payer,
+            cluster: "devnet",
+        });
+        u.template.create(
+            [
+                { 
+                    title: "field1", 
+                    inputs: [
+                        { label: "text", type: "text", validation: { 
+                            type: "text", 
+                            min: 1, 
+                            max: 100 
+                        }  }
+                    ], 
+                    archived: false, 
+                    taxonomies: [payer.publicKey],
                     
-//                 }
-//             ]
-//         )
+                }
+            ]
+        )
 
-// const preflight = await u.preflight();
-// console.log("PREFLIGHT::", preflight);
+const preflight = await u.preflight();
 
-// const r = await u.process();
-// console.log("PROCESS::", r);
-// pubkey = new PublicKey(r.template[0].publicKey);
+const r = await u.process();
+pubkey = new PublicKey(r.template[0].publicKey);
 
-//   }).timeout(100000);
+  }).timeout(100000);
 
-// it("should update a new template", async () => {
-//     const u = urchin({
-//         payer,
-//         cluster: "devnet",
-//     });
-//     u.template.update([{ publicKey: pubkey, archived: true, owner: payer }])
+  it("should get a template", async () => {
+    const u = urchin({
+      payer,
+      cluster: "devnet",
+    });
+    const r = await u.template.get([pubkey]);
+    assert.equal(r.length, 1);
+  }).timeout(100000);
 
-//     const preflight = await u.preflight();
-//     console.log("PREFLIGHT::", preflight);
+  it("should get all templates", async () => {
+    const u = urchin({
+      payer,
+      cluster: "devnet",
+    });
+    const r = await u.template.getAll();
+    assert.ok(r.length > 0);
+  }).timeout(100000);
 
-//     const r = await u.process();
-//     console.log("PROCESS::", r);
+it("should update a new template", async () => {
+    const u = urchin({
+        payer,
+        cluster: "devnet",
+    });
+    u.template.update([{ publicKey: pubkey, archived: true, version: 1}])
+    const r = await u.process();
+    console.log("PROCESS::", r);
 
-// }).timeout(100000);
+}).timeout(100000);
 
-// });
+});
 
 

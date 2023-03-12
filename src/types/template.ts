@@ -39,6 +39,7 @@ type TemplateQueues = {
 type TemplateUpdatePayload = {
   publicKey: PublicKey;
   archived: boolean;
+  version?: number;
   // inputs: {
   //   label: string;
   //   options?: string[];

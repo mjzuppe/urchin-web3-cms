@@ -3,7 +3,15 @@ import { PublicKey, Keypair } from "@solana/web3.js";
 type SolanaTaxonomyCreateInput = {
     label: string;
     payer: Keypair;
-    owner?: PublicKey 
+    owner?: PublicKey ;
+    parent?: PublicKey;
+};
+
+type SolanaTaxonomyOutput = {
+    publicKey: PublicKey;
+    label: string;
+    payer: Keypair;
+    owner?: PublicKey;
     parent?: PublicKey;
 };
 
@@ -19,8 +27,18 @@ type SolanaAssetCreateInput = {
 type SolanaTemplateCreateInput = {
     arweaveId: string;
     payer: Keypair;
-    owner?: PublicKey 
-    private?: boolean;
+    original?: PublicKey; 
+    owner?: PublicKey ;
+    archived?: boolean;
+}
+
+type SolanaTemplateOutput = {
+    publicKey: PublicKey;
+    arweaveId: string;
+    payer: Keypair;
+    owner?: PublicKey ;
+    original?: PublicKey; 
+    archived?: boolean;
 }
 
 type SolanaEntryCreateInput = {
@@ -29,9 +47,9 @@ type SolanaEntryCreateInput = {
     owner?: PublicKey 
     private?: boolean;
     immutable?: boolean;
-    taxonomy?: PublicKey[]
+    taxonomy?: PublicKey[];
 }
 
 
 
-export type { SolanaTaxonomyCreateInput, SolanaAssetCreateInput, SolanaTemplateCreateInput, SolanaEntryCreateInput};
+export type { SolanaTaxonomyCreateInput, SolanaAssetCreateInput, SolanaTemplateCreateInput, SolanaEntryCreateInput, SolanaTaxonomyOutput, SolanaTemplateOutput};

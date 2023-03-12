@@ -6,7 +6,7 @@ import { PublicKey } from '@solana/web3.js';
 import { PlayaArgs } from '../../types/core';
 import { Taxonomy, TaxonomyCreatePayload, TaxonomyUpdatePayload, TaxonomyQueues } from '../../types/taxonomy';
 import { validateCreateTaxonomySchema, validateGetTaxonomiesSchema, validateUpdateTaxonomySchema, validateGetAllTaxonomiesSchema } from '../../validators/taxonomy';
-import formatTaxonomyAccounts from '../../services/solana/transform';
+import {formatTaxonomyAccounts} from '../../services/solana/transform';
 
 
 let CREATE_QUEUE: TaxonomyCreatePayload[] = [];

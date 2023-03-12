@@ -33,7 +33,9 @@
         },
         {
           "name": "original",
-          "type": "publicKey"
+          "type": {
+            "option": "publicKey"
+          }
         },
         {
           "name": "archived",
@@ -64,6 +66,10 @@
         {
           "name": "archived",
           "type": "bool"
+        },
+        {
+          "name": "version",
+          "type": "u8"
         }
       ]
     }
@@ -84,7 +90,9 @@
           },
           {
             "name": "original",
-            "type": "publicKey"
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
             "name": "archived",
@@ -103,6 +111,11 @@
       "code": 6000,
       "name": "IdIncorrectLength",
       "msg": "arweave_id is not the correct length."
+    },
+    {
+      "code": 6001,
+      "name": "InvalidVersion",
+      "msg": "this is an invalid version."
     }
   ],
   "metadata": {

@@ -133,7 +133,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
   await sleep(8000);
 
   let entryAccounts: any = await new SolanaInteractions.Entry(sdk).getEntry(mutatedEntryIds);
-  // entryAccounts = formatEntryAccounts(entryAccounts);   
+  entryAccounts = formatEntryAccounts(entryAccounts);   
 
   _resetEntriesCreateQueue();
   _resetEntriesUpdateQueue();

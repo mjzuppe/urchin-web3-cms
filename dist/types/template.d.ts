@@ -8,7 +8,6 @@ type TemplateCreatePayload = {
     }[];
     private?: boolean;
     title: string;
-    owner?: Keypair;
     archived: boolean;
     taxonomies?: PublicKey[];
     original?: PublicKey;
@@ -36,7 +35,7 @@ type TemplateQueues = {
 type TemplateUpdatePayload = {
     publicKey: PublicKey;
     archived: boolean;
-    owner?: Keypair;
+    version?: number;
 };
 type TemplateInputValidation = {
     type: 'text' | 'textarea';

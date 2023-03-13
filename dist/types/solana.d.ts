@@ -5,6 +5,13 @@ type SolanaTaxonomyCreateInput = {
     owner?: PublicKey;
     parent?: PublicKey;
 };
+type SolanaTaxonomyOutput = {
+    publicKey: PublicKey;
+    label: string;
+    payer: Keypair;
+    owner?: PublicKey;
+    parent?: PublicKey;
+};
 type SolanaAssetCreateInput = {
     arweaveId: string;
     payer: Keypair;
@@ -16,8 +23,17 @@ type SolanaAssetCreateInput = {
 type SolanaTemplateCreateInput = {
     arweaveId: string;
     payer: Keypair;
+    original?: PublicKey;
     owner?: PublicKey;
-    private?: boolean;
+    archived?: boolean;
+};
+type SolanaTemplateOutput = {
+    publicKey: PublicKey;
+    arweaveId: string;
+    payer: Keypair;
+    owner?: PublicKey;
+    original?: PublicKey;
+    archived?: boolean;
 };
 type SolanaEntryCreateInput = {
     arweaveId: string;
@@ -27,4 +43,4 @@ type SolanaEntryCreateInput = {
     immutable?: boolean;
     taxonomy?: PublicKey[];
 };
-export type { SolanaTaxonomyCreateInput, SolanaAssetCreateInput, SolanaTemplateCreateInput, SolanaEntryCreateInput };
+export type { SolanaTaxonomyCreateInput, SolanaAssetCreateInput, SolanaTemplateCreateInput, SolanaEntryCreateInput, SolanaTaxonomyOutput, SolanaTemplateOutput };

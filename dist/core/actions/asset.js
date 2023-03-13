@@ -67,7 +67,7 @@ const getAssetsUpdateQueue = () => {
 exports.getAssetsUpdateQueue = getAssetsUpdateQueue;
 const processAssets = (args) => __awaiter(void 0, void 0, void 0, function* () {
     const { cluster, payer, owner, rpc, wallet, preflightCommitment } = yield (0, solana_1.loadSolanaConfig)(args);
-    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'asset', 'devnet');
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'asset', cluster);
     let mutatedAssetIds = [];
     for (const createAssetFromQueue of CREATE_QUEUE) {
         const createdAsset = yield new SolanaInteractions.Asset(sdk).createAsset(owner || payer, "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS

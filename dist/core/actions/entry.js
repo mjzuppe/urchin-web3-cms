@@ -59,7 +59,7 @@ const getEntriesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 exports.getEntriesQueues = getEntriesQueues;
 const processEntries = (args) => __awaiter(void 0, void 0, void 0, function* () {
     const { cluster, payer, owner, rpc, wallet, preflightCommitment } = yield (0, solana_1.loadSolanaConfig)(args);
-    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'entry', 'devnet');
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'entry', cluster);
     let mutatedEntryIds = [];
     for (const createEntryFromQueue of CREATE_QUEUE) {
         const createdEntry = yield new SolanaInteractions.Entry(sdk).createEntry(owner || payer, "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS

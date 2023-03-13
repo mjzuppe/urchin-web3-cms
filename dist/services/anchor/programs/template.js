@@ -74,9 +74,9 @@ class Template {
         });
     }
     ;
-    updateTemplate(publicKey, owner, archived) {
+    updateTemplate(publicKey, owner, archived, version) {
         return __awaiter(this, void 0, void 0, function* () {
-            const tx = yield this.sdk.program.methods.updateTemplate(archived).accounts({
+            const tx = yield this.sdk.program.methods.updateTemplate(archived, version).accounts({
                 template: publicKey,
                 payer: this.sdk.provider.wallet.publicKey,
                 owner: owner.publicKey,

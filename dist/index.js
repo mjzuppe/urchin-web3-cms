@@ -22,13 +22,15 @@ const urchin = (args) => {
         taxonomy: {
             create: taxonomy_1.createTaxonomy,
             queue: taxonomy_1.getTaxonomiesQueues,
-            get: taxonomy_1.getTaxonomies,
+            get: (props) => (0, taxonomy_1.getTaxonomies)(args, props),
+            getAll: () => (0, taxonomy_1.getAllTaxonomies)(args),
             update: taxonomy_1.updateTaxonomy,
         },
         template: {
             create: template_1.createTemplate,
             update: template_1.updateTemplate,
-            get: template_1.getTemplates,
+            get: (props) => (0, template_1.getTemplates)(args, props),
+            getAll: () => (0, template_1.getAllTemplates)(args),
         },
     };
 };

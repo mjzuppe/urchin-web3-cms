@@ -1,7 +1,2 @@
-import { TaxonomyOutput } from "../../types/taxonomy";
-export declare const formatTaxonomyAccounts: (source: TaxonomyOutput[]) => {
-    publicKey: string;
-    label: string;
-    owner: string;
-    parent: string | null;
-}[];
+export declare const formatTaxonomyAccounts: (source: any) => any;
+export declare const formatTemplateAccounts: (source: any) => Promise<any[]>;

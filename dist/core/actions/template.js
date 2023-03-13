@@ -32,10 +32,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.processTemplates = exports.updateTemplate = exports.getTemplatesQueues = exports.getTemplates = exports.createTemplate = void 0;
+exports.getAllTemplates = exports.processTemplates = exports.updateTemplate = exports.getTemplatesQueues = exports.getTemplates = exports.createTemplate = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
 const template_1 = require("../../validators/template");
+const transform_1 = require("../../services/solana/transform");
+const metadata = __importStar(require("../../services/arweave/metadata"));
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
 const _resetTemplatesCreateQueue = () => {
@@ -50,11 +52,21 @@ const createTemplate = (payload) => {
     return payload;
 };
 exports.createTemplate = createTemplate;
-const getTemplates = (publicKeys = []) => {
+const getTemplates = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, function* () {
     (0, template_1.validateGetTemplatesSchema)(publicKeys);
-    return [];
-};
+    const { cluster, payer, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'template', cluster);
+    let templateAccounts = yield new SolanaInteractions.Template(sdk).getTemplate(publicKeys);
+    return (0, transform_1.formatTemplateAccounts)(templateAccounts);
+});
 exports.getTemplates = getTemplates;
+const getAllTemplates = (args) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cluster, payer, owner, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'template', cluster);
+    let templateAccounts = yield new SolanaInteractions.Template(sdk).getTemplateAll(owner || payer);
+    return templateAccounts;
+});
+exports.getAllTemplates = getAllTemplates;
 const getTemplateCreateQueue = () => {
     return CREATE_QUEUE;
 };
@@ -65,22 +77,30 @@ const getTemplatesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE }
 exports.getTemplatesQueues = getTemplatesQueues;
 const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* () {
     const { cluster, payer, rpc, wallet, preflightCommitment, owner } = yield (0, solana_1.loadSolanaConfig)(args);
-    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'template', 'devnet');
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'template', cluster);
     let mutatedTemplateIds = [];
     for (const createTemplateFromQueue of CREATE_QUEUE) {
-        const createdTemplate = yield new SolanaInteractions.Template(sdk).createTemplate(owner || payer, "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
-        createTemplateFromQueue.archived, createTemplateFromQueue.original);
+        // Arweave
+        const arweaveData = {
+            taxonomies: createTemplateFromQueue.taxonomies,
+            inputs: createTemplateFromQueue.inputs,
+            created: Date.now()
+        };
+        const arweaveResponse = yield metadata.uploadData(payer.secretKey.toString(), cluster, arweaveData);
+        const arweaveId = arweaveResponse.id;
+        // Solana 
+        const createdTemplate = yield new SolanaInteractions.Template(sdk).createTemplate(owner || payer, arweaveId, createTemplateFromQueue.archived, createTemplateFromQueue.original || null);
         mutatedTemplateIds.push(createdTemplate.publicKey);
     }
     for (const updateTemplateFromQueue of UPDATE_QUEUE) {
         if (!updateTemplateFromQueue.publicKey)
             continue;
-        const updatedTemplate = yield new SolanaInteractions.Template(sdk).updateTemplate(updateTemplateFromQueue.publicKey, owner || payer, updateTemplateFromQueue.archived);
+        const updatedTemplate = yield new SolanaInteractions.Template(sdk).updateTemplate(updateTemplateFromQueue.publicKey, owner || payer, updateTemplateFromQueue.archived, updateTemplateFromQueue.version);
         mutatedTemplateIds.push(updatedTemplate.publicKey);
     }
     yield (0, solana_1.sleep)(8000);
     let templateAccounts = yield new SolanaInteractions.Template(sdk).getTemplate(mutatedTemplateIds);
-    // templateAccounts = formatTemplateAccounts(templateAccounts);   //TODO MJZ 
+    templateAccounts = (0, transform_1.formatTemplateAccounts)(templateAccounts); //TODO MJZ 
     _resetTemplatesCreateQueue();
     _resetTemplatesUpdateQueue();
     return templateAccounts;

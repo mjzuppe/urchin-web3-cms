@@ -7,7 +7,7 @@ export declare class Entry {
         tx: string;
         publicKey: anchor.web3.PublicKey;
     }>;
-    getEntry(publicKeys: anchor.web3.PublicKey[]): Promise<any>;
+    getEntry(publicKeys: anchor.web3.PublicKey[]): Promise<never[]>;
     getEntryAll(owner: anchor.web3.Keypair): Promise<anchor.ProgramAccount<{
         [x: string]: any;
     }>[]>;

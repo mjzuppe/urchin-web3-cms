@@ -7,15 +7,12 @@ exports.validateUpdateTaxonomySchema = exports.validateGetTaxonomiesSchema = exp
 const joi_1 = __importDefault(require("joi"));
 const CREATE_TAXONOMY_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     label: joi_1.default.string().required(),
-    owner: joi_1.default.any(),
     parent: joi_1.default.string(),
 })).min(1);
 const GET_TAXONOMIES_SCHEMA = joi_1.default.array().items(joi_1.default.any());
-const GET_ALL_TAXONOMIES_SCHEMA = joi_1.default.object({ owner: joi_1.default.any() });
 const CREATE_UPDATE_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     publicKey: joi_1.default.any(),
     label: joi_1.default.string().required(),
-    owner: joi_1.default.any(),
     parent: joi_1.default.string(),
 })).min(1);
 const validateCreateTaxonomySchema = (data) => {
@@ -32,12 +29,6 @@ const validateGetTaxonomiesSchema = (data) => {
     return true;
 };
 exports.validateGetTaxonomiesSchema = validateGetTaxonomiesSchema;
-const validateGetAllTaxonomiesSchema = (data) => {
-    const { error } = GET_ALL_TAXONOMIES_SCHEMA.validate(data);
-    if (error)
-        throw new Error(error === null || error === void 0 ? void 0 : error.details[0].message);
-    return true;
-};
 const validateUpdateTaxonomySchema = (data) => {
     const { error } = CREATE_UPDATE_SCHEMA.validate(data);
     if (error)

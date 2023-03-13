@@ -7,7 +7,7 @@ export declare class Asset {
         tx: string;
         publicKey: anchor.web3.PublicKey;
     }>;
-    getAsset(publicKeys: anchor.web3.PublicKey[]): Promise<any>;
+    getAsset(publicKeys: anchor.web3.PublicKey[]): Promise<never[]>;
     getAssetAll(owner: anchor.web3.Keypair): Promise<anchor.ProgramAccount<{
         [x: string]: any;
     }>[]>;

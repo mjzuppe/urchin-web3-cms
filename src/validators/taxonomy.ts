@@ -41,4 +41,4 @@ const validateUpdateTaxonomySchema = (data: any): boolean => {
   return true;
 };
 
-export { validateCreateTaxonomySchema, validateGetTaxonomiesSchema, validateUpdateTaxonomySchema, validateGetAllTaxonomiesSchema };
+export { validateCreateTaxonomySchema, validateGetTaxonomiesSchema, validateUpdateTaxonomySchema,  };

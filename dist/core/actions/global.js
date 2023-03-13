@@ -37,7 +37,6 @@ const queryAll = (props) => __awaiter(void 0, void 0, void 0, function* () {
         rpc: rpc.rpcEndpoint,
         taxonomy: (0, taxonomy_1.getTaxonomiesQueues)(),
         template: (0, template_1.getTemplatesQueues)(),
-        assets: (0, asset_1.getAssetsQueues)(),
         entries: (0, entry_1.getEntriesQueues)(),
     };
 });

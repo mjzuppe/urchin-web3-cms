@@ -17,16 +17,12 @@ joi_1.default.object({
             max: joi_1.default.number().required(),
         }),
     })),
-    private: joi_1.default.boolean().default(false),
     title: joi_1.default.string().min(1).max(100).required(),
     taxonomies: joi_1.default.array().items(joi_1.default.any()),
     original: joi_1.default.any(),
     archived: joi_1.default.boolean(),
-    owner: joi_1.default.any(),
 })).min(1);
-const GET_TEMPLATES_SCHEMA = joi_1.default.object({
-    publicKeys: joi_1.default.array().items(joi_1.default.string()),
-});
+const GET_TEMPLATES_SCHEMA = joi_1.default.array().items(joi_1.default.any());
 const UPDATE_TEMPLATE_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     // inputs: Joi.array().items(
     //   Joi.object({
@@ -38,7 +34,7 @@ const UPDATE_TEMPLATE_SCHEMA = joi_1.default.array().items(joi_1.default.object(
     // private: Joi.boolean().default(false),
     publicKey: joi_1.default.any(),
     archived: joi_1.default.boolean(),
-    owner: joi_1.default.any(),
+    version: joi_1.default.number(),
     // title: Joi.string().min(1).max(100).required(),
 })).min(1);
 const validateCreateTemplateSchema = (data) => {

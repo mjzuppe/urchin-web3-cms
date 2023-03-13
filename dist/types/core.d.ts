@@ -1,10 +1,10 @@
-import { Keypair } from '@solana/web3.js';
+import { Cluster, Keypair } from '@solana/web3.js';
 import { ApiVersions } from './api';
 type PlayaArgs = {
     apiVersion?: ApiVersions;
     payer: Keypair;
     owner?: Keypair;
-    cluster?: string;
+    cluster?: Cluster;
     rpc?: string;
     ping?: any;
     taxonomy?: any;

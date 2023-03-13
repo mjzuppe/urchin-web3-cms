@@ -93,8 +93,8 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
       created: Date.now()
     }
 
-    const arweaveResponse = await metadata.uploadData(bs58.encode( new Uint8Array(payer.secretKey)), cluster, arweaveData);
-    const arweaveId = arweaveResponse.id;
+    // const arweaveResponse = await metadata.uploadData(bs58.encode( new Uint8Array(payer.secretKey)), cluster, arweaveData);
+    const arweaveId = "2222222222222222222222222222222222222222222" // arweaveResponse.id;
 
     // Solana 
     const createdTemplate = await new SolanaInteractions.Template(sdk).createTemplate(

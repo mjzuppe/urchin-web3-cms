@@ -8,6 +8,7 @@ import { PlayaArgs } from '../../types/core';
 import { validateCreateTemplateSchema, validateGetTemplatesSchema, validateUpdateTemplateSchema } from '../../validators/template';
 import { formatTemplateAccounts } from '../../services/solana/transform';
 import * as metadata from '../../services/arweave/metadata';
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
 let CREATE_QUEUE: TemplateCreatePayload[] = [];
 let UPDATE_QUEUE: TemplateUpdatePayload[] = [];
@@ -91,19 +92,20 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
       inputs: createTemplateFromQueue.inputs,
       created: Date.now()
     }
-    const arweaveResponse = await metadata.uploadData(payer.secretKey.toString(), cluster, arweaveData);
+
+    const arweaveResponse = await metadata.uploadData(bs58.encode( new Uint8Array(payer.secretKey)), cluster, arweaveData);
     const arweaveId = arweaveResponse.id;
 
     // Solana 
     const createdTemplate = await new SolanaInteractions.Template(sdk).createTemplate(
       owner || payer,
-      arweaveId, 
+      arweaveId,
       createTemplateFromQueue.archived,
       createTemplateFromQueue.original || null,
     );
-    const {tx} = createdTemplate;
-    const data:any = await rpc.getTransaction(tx, {maxSupportedTransactionVersion:0});
-    const {postBalances, preBalances} = data.meta;
+    const { tx } = createdTemplate;
+    const data: any = await rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
+    const { postBalances, preBalances } = data.meta;
     console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
     mutatedTemplateIds.push(createdTemplate.publicKey);
   }
@@ -117,9 +119,9 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
       updateTemplateFromQueue.archived,
       updateTemplateFromQueue.version
     );
-    const {tx} = updatedTemplate;
-    const data:any = await rpc.getTransaction(tx, {maxSupportedTransactionVersion:0});
-    const {postBalances, preBalances} = data.meta;
+    const { tx } = updatedTemplate;
+    const data: any = await rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
+    const { postBalances, preBalances } = data.meta;
     console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
     mutatedTemplateIds.push(updatedTemplate.publicKey);
   }

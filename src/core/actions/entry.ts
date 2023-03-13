@@ -8,6 +8,7 @@ import { PublicKey } from '@solana/web3.js';
 import { validateCreateEntrySchema, validateGetEntriesSchema, validateUpdateEntrySchema } from '../../validators/entry';
 import { formatEntryAccounts } from '../../services/solana/transform';
 import * as metadata from '../../services/arweave/metadata';
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
 let CREATE_QUEUE: EntryCreatePayload[] = [];
 let UPDATE_QUEUE: EntryUpdatePayload[] = [];
@@ -83,7 +84,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
       inputs: createEntryFromQueue.inputs,
       created: Date.now()
     }
-    const arweaveResponse = await metadata.uploadData(payer.secretKey.toString(), cluster, arweaveData);
+    const arweaveResponse = await metadata.uploadData(bs58.encode( new Uint8Array(payer.secretKey)), cluster, arweaveData);
     const arweaveId = arweaveResponse.id;
 
     // Solana 
@@ -111,7 +112,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
       inputs: updateEntryFromQueue.inputs,
       created: Date.now()
     }
-    const arweaveResponse = await metadata.uploadData(payer.secretKey.toString(), cluster, arweaveData);
+    const arweaveResponse = await metadata.uploadData(bs58.encode( new Uint8Array(payer.secretKey)), cluster, arweaveData);
     const arweaveId = arweaveResponse.id;
 
     // Solana

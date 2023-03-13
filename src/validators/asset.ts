@@ -2,20 +2,20 @@ import Joi from 'joi';
 
 const CREATE_ASSET_SCHEMA = Joi.array().items(
   Joi.object({
-    original: Joi.string().required(),
+    // original: Joi.string().required(),
     immutable: Joi.boolean().default(false),
     archived: Joi.boolean().default(false),
+    arweaveId: Joi.string().required(),
   })
 ).min(1);
 
-const GET_ASSETS_SCHEMA = Joi.object({
-  publicKeys: Joi.array().items(Joi.string()),
-});
+const GET_ASSETS_SCHEMA = Joi.array().items(Joi.any()).min(1);
 
 const UPDATE_ASSET_SCHEMA = Joi.array().items(
   Joi.object({
     publicKey: Joi.any().required(),
-    original: Joi.string().required(),
+    arweaveId: Joi.string().required(),
+    // original: Joi.string().required(),
     immutable: Joi.boolean().default(false),
     archived: Joi.boolean().default(false),
   })

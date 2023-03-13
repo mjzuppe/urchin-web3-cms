@@ -32,10 +32,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.processAssets = exports.updateAsset = exports.getAssetsUpdateQueue = exports.getAssetsQueues = exports.getAssetsCreateQueue = exports.getAssets = exports.createAsset = void 0;
+exports.getAllAssets = exports.processAssets = exports.updateAsset = exports.getAssetsUpdateQueue = exports.getAssetsQueues = exports.getAssetsCreateQueue = exports.getAssets = exports.createAsset = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
 const asset_1 = require("../../validators/asset");
+const transform_1 = require("../../services/solana/transform");
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
 const _resetAssetsCreateQueue = () => {
@@ -50,11 +51,21 @@ const createAsset = (payload) => {
     return payload;
 };
 exports.createAsset = createAsset;
-const getAssets = (publicKeys = []) => {
+const getAssets = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, function* () {
     (0, asset_1.validateGetAssetsSchema)(publicKeys);
-    return [];
-};
+    const { cluster, payer, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'asset', cluster);
+    let AssetAccounts = yield new SolanaInteractions.Asset(sdk).getAsset(publicKeys);
+    return (0, transform_1.formatAssetAccounts)(AssetAccounts);
+});
 exports.getAssets = getAssets;
+const getAllAssets = (args) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cluster, payer, owner, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'asset', cluster);
+    let AssetAccounts = yield new SolanaInteractions.Asset(sdk).getAssetAll(owner || payer);
+    return AssetAccounts;
+});
+exports.getAllAssets = getAllAssets;
 const getAssetsCreateQueue = () => {
     return CREATE_QUEUE;
 };
@@ -70,20 +81,26 @@ const processAssets = (args) => __awaiter(void 0, void 0, void 0, function* () {
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'asset', cluster);
     let mutatedAssetIds = [];
     for (const createAssetFromQueue of CREATE_QUEUE) {
-        const createdAsset = yield new SolanaInteractions.Asset(sdk).createAsset(owner || payer, "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
-        createAssetFromQueue.immutable || false, createAssetFromQueue.archived || false);
+        const createdAsset = yield new SolanaInteractions.Asset(sdk).createAsset(owner || payer, createAssetFromQueue.arweaveId, createAssetFromQueue.immutable || false, createAssetFromQueue.archived || false);
+        const { tx } = createdAsset;
+        const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
+        const { postBalances, preBalances } = data.meta;
+        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedAssetIds.push(createdAsset.publicKey);
     }
     for (const updateAssetFromQueue of UPDATE_QUEUE) {
         if (!updateAssetFromQueue.publicKey)
             continue;
-        const updatedAsset = yield new SolanaInteractions.Asset(sdk).updateAsset(updateAssetFromQueue.publicKey, owner || payer, "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
-        updateAssetFromQueue.immutable || false, updateAssetFromQueue.archived || false);
+        const updatedAsset = yield new SolanaInteractions.Asset(sdk).updateAsset(updateAssetFromQueue.publicKey, owner || payer, updateAssetFromQueue.arweaveId, updateAssetFromQueue.immutable || false, updateAssetFromQueue.archived || false);
+        const { tx } = updatedAsset;
+        const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
+        const { postBalances, preBalances } = data.meta;
+        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedAssetIds.push(updatedAsset.publicKey);
     }
     yield (0, solana_1.sleep)(8000);
     let assetAccounts = yield new SolanaInteractions.Asset(sdk).getAsset(mutatedAssetIds);
-    // assetAccounts = formatAssetAccounts(assetAccounts);   
+    assetAccounts = (0, transform_1.formatAssetAccounts)(assetAccounts);
     _resetAssetsCreateQueue();
     _resetAssetsUpdateQueue();
     return assetAccounts;

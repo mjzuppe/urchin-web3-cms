@@ -10,7 +10,8 @@ const urchin = (args) => {
     return {
         asset: {
             create: asset_1.createAsset,
-            get: asset_1.getAssets,
+            get: (props) => (0, asset_1.getAssets)(args, props),
+            getAll: () => (0, asset_1.getAllAssets)(args),
             update: asset_1.updateAsset
         },
         entry: {

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatEntryAccounts = exports.formatTemplateAccounts = exports.formatTaxonomyAccounts = void 0;
+exports.formatEntryAccounts = exports.formatTemplateAccounts = exports.formatAssetAccounts = exports.formatTaxonomyAccounts = void 0;
 const formatTaxonomyAccounts = (source) => {
     return source.map((taxonomy) => taxonomy.label ? ({
         publicKey: taxonomy.publicKey.toString(),
@@ -19,6 +19,17 @@ const formatTaxonomyAccounts = (source) => {
     }) : ({ publicKey: taxonomy.publicKey.toString() }));
 };
 exports.formatTaxonomyAccounts = formatTaxonomyAccounts;
+const formatAssetAccounts = (source) => {
+    return source.map((asset) => asset.arweaveId ? ({
+        publicKey: asset.publicKey.toString(),
+        owner: asset.owner.toString(),
+        arweaveId: asset.arweaveId,
+        url: "https://arweave.net/" + asset.arweaveId,
+        archived: asset.archived,
+        immutable: asset.immutable,
+    }) : ({ publicKey: asset.publicKey.toString() }));
+};
+exports.formatAssetAccounts = formatAssetAccounts;
 const formatTemplateAccounts = (source) => __awaiter(void 0, void 0, void 0, function* () {
     const result = [];
     for (const template of source) {

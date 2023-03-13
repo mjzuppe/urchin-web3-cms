@@ -6,16 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateUpdateAssetSchema = exports.validateGetAssetsSchema = exports.validateCreateAssetSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 const CREATE_ASSET_SCHEMA = joi_1.default.array().items(joi_1.default.object({
-    original: joi_1.default.string().required(),
+    // original: Joi.string().required(),
     immutable: joi_1.default.boolean().default(false),
     archived: joi_1.default.boolean().default(false),
+    arweaveId: joi_1.default.string().required(),
 })).min(1);
-const GET_ASSETS_SCHEMA = joi_1.default.object({
-    publicKeys: joi_1.default.array().items(joi_1.default.string()),
-});
+const GET_ASSETS_SCHEMA = joi_1.default.array().items(joi_1.default.any()).min(1);
 const UPDATE_ASSET_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     publicKey: joi_1.default.any().required(),
-    original: joi_1.default.string().required(),
+    arweaveId: joi_1.default.string().required(),
+    // original: Joi.string().required(),
     immutable: joi_1.default.boolean().default(false),
     archived: joi_1.default.boolean().default(false),
 })).min(1);

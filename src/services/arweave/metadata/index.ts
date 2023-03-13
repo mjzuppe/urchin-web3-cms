@@ -1,1 +1,1 @@
-export {uploadData } from "./template";
+export {uploadData } from "./upload-data";

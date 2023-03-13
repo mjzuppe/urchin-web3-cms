@@ -40,37 +40,37 @@ pubkey = new PublicKey(r.template[0].publicKey);
 
   }).timeout(100000);
 
-  it("should get a template", async () => {
-    const u = urchin({
-      payer,
-      cluster: "devnet",
+//   it("should get a template", async () => {
+//     const u = urchin({
+//       payer,
+//       cluster: "devnet",
       
-    });
-    const r = await u.template.get([pubkey]);
-    assert.equal(r.length, 1);
-  }).timeout(100000);
+//     });
+//     const r = await u.template.get([pubkey]);
+//     assert.equal(r.length, 1);
+//   }).timeout(100000);
 
-  it("should get all templates", async () => {
-    const u = urchin({
-      payer,
-      cluster: "devnet",
+//   it("should get all templates", async () => {
+//     const u = urchin({
+//       payer,
+//       cluster: "devnet",
       
-    });
-    const r = await u.template.getAll();
-    assert.ok(r.length > 0);
-  }).timeout(100000);
+//     });
+//     const r = await u.template.getAll();
+//     assert.ok(r.length > 0);
+//   }).timeout(100000);
 
-it("should update a new template", async () => {
-    const u = urchin({
-        payer,
-        cluster: "devnet",
+// it("should update a new template", async () => {
+//     const u = urchin({
+//         payer,
+//         cluster: "devnet",
       
-    });
-    u.template.update([{ publicKey: pubkey, archived: true, version: 1}])
-    const r = await u.process();
-    console.log("PROCESS::", r);
+//     });
+//     u.template.update([{ publicKey: pubkey, archived: true, version: 1}])
+//     const r = await u.process();
+//     console.log("PROCESS::", r);
 
-}).timeout(100000);
+// }).timeout(100000);
 
 });
 

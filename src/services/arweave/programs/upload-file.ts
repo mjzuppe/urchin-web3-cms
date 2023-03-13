@@ -10,6 +10,5 @@ export const uploadMockFile = async (files: string[] //, payer: Keypair
 
 const test = async () => {
   const r = await uploadMockFile(['a', 'b', 'c']);
-  console.log(r);
 }
 test();

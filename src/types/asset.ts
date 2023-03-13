@@ -5,6 +5,7 @@ type Asset = {
   publicKey: string;
   updated: number;
   url: string;
+  arweaveId: string;
 };
 
 type AssetQueues = {
@@ -13,16 +14,18 @@ type AssetQueues = {
 };
 
 type AssetUserCreatePayload = {
-  original: string;
+  // original: string;
   immutable?: boolean;
   archived?: boolean;
+  arweaveId: string;
 };
 
 type AssetUserUpdatePayload = {
   publicKey: PublicKey;
-  original?: string;
+  // original?: string;
   immutable?: boolean;
   archived?: boolean;
+  arweaveId: string;
 };
 
 

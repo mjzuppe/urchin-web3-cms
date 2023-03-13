@@ -24,7 +24,6 @@ describe('Manage entry', () => {
             ]
         )
 const r:any = await u.process();
-console.log("R", r);
 pubkey = new PublicKey(r.entry[0].publicKey);
 assert.equal(r.entry[0].template.toString(), payer.publicKey.toString())
   }).timeout(100000);

@@ -16,7 +16,7 @@ export class Asset {
     archived: boolean,
   ) {
     const accountInit = anchor.web3.Keypair.generate();
-    const tx = await this.sdk.program.methods.createAsset(arweave_id, immutable, archived).accounts({ 
+    const tx = await this.sdk.program.methods.createAsset(arweave_id, immutable, archived).accounts({
       asset: accountInit.publicKey,
       payer: this.sdk.provider.wallet.publicKey,
       owner: owner.publicKey,
@@ -25,11 +25,11 @@ export class Asset {
     return ({ tx, publicKey: accountInit.publicKey })
   };
 
+
   async getAsset(publicKeys: anchor.web3.PublicKey[]) {
-    return [] // TODO MZ: fix this
-    // let r:any = await this.sdk.program.account.assetAccount.fetchMultiple(publicKeys);
-    // r = r.map((r:any, i:number) => ({publicKey: publicKeys[i], ...r}));
-    // return r;
+    let r: any = await this.sdk.program.account.assetAccount.fetchMultiple(publicKeys);
+    r = r.map((r: any, i: number) => ({ publicKey: publicKeys[i], ...r }));
+    return r
     // if (r.owner.toString() !== owner.publicKey.toString()) throw Error("owner mismatch"); //TODO MZ: add validation for owner?
   };
 

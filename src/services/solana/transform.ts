@@ -12,6 +12,19 @@ export const formatTaxonomyAccounts = (source: any) => {
     )
 }
 
+export const formatAssetAccounts = (source: any) => {
+    return source.map((asset: any) =>
+        asset.arweaveId ? ({
+            publicKey: asset.publicKey.toString(),
+            owner: asset.owner.toString(),
+            arweaveId: asset.arweaveId,
+            url: "https://arweave.net/" + asset.arweaveId,
+            archived: asset.archived,
+            immutable: asset.immutable,
+        }) : ({ publicKey: asset.publicKey.toString() })
+    )
+}
+
 export const formatTemplateAccounts = async (source: any) => {
     const result = [];
     for (const template of source) {
@@ -22,16 +35,16 @@ export const formatTemplateAccounts = async (source: any) => {
             const arweaveData = await fetch(`https://arweave.net/${template.arweaveId}`);
             const arweaveJson = await arweaveData.json();
             result.push(
-                    {
-                        publicKey: template.publicKey.toString(),
-                        title: template.title,
-                        owner: template.owner.toString(),
-                        archived: template.archived,
-                        arweaveId: template.arweaveId,
-                        original: template.original !== null ? template.original.toString() : null,
-                        ...arweaveJson
-                    })
-         
+                {
+                    publicKey: template.publicKey.toString(),
+                    title: template.title,
+                    owner: template.owner.toString(),
+                    archived: template.archived,
+                    arweaveId: template.arweaveId,
+                    original: template.original !== null ? template.original.toString() : null,
+                    ...arweaveJson
+                })
+
         }
     }
     return result;
@@ -47,17 +60,17 @@ export const formatEntryAccounts = async (source: any) => {
             const arweaveData = await fetch(`https://arweave.net/${entry.arweaveId}`);
             const arweaveJson = await arweaveData.json();
             result.push(
-                    {
-                        publicKey: entry.publicKey.toString(),
-                        owner: entry.owner.toString(),
-                        template: entry.template.toString(),
-                        taxonomy: entry.taxonomy.map((tax:PublicKey)=>tax.toString()),
-                        archived: entry.archived,
-                        immutable: entry.immutable,
-                        arweaveId: entry.arweaveId,
-                        ...arweaveJson
-                    })
-         
+                {
+                    publicKey: entry.publicKey.toString(),
+                    owner: entry.owner.toString(),
+                    template: entry.template.toString(),
+                    taxonomy: entry.taxonomy.map((tax: PublicKey) => tax.toString()),
+                    archived: entry.archived,
+                    immutable: entry.immutable,
+                    arweaveId: entry.arweaveId,
+                    ...arweaveJson
+                })
+
         }
     }
     return result;

@@ -27,7 +27,6 @@ const queryAll = async (props:any) => {
     rpc: rpc.rpcEndpoint,
     taxonomy: getTaxonomiesQueues(),
     template: getTemplatesQueues(),
-    entries: getEntriesQueues(),
   };
 };
 

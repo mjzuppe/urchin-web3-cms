@@ -14,6 +14,5 @@ declare const queryAll: (props: any) => Promise<{
     rpc: string;
     taxonomy: import("../../types/taxonomy").TaxonomyQueues;
     template: import("../../types/template").TemplateQueues;
-    entries: import("../../types/entry").EntryQueues;
 }>;
 export { processAll, queryAll };

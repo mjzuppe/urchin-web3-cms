@@ -5,7 +5,6 @@ type EntryCreatePayload = {
         label: string;
         value: any;
     }[];
-    private?: boolean;
     taxonomies?: PublicKey[];
     template: PublicKey;
     archived?: boolean;
@@ -22,7 +21,6 @@ type Entry = {
         stage: 'published';
     }[];
     owner: string;
-    private: boolean;
     publicKey: string;
     taxonomy: string[];
     template: string;
@@ -38,7 +36,6 @@ type EntryUpdatePayload = {
         label: string;
         value: any;
     }[];
-    private?: boolean;
     publicKey: PublicKey;
     taxonomies?: PublicKey[];
     archived?: boolean;

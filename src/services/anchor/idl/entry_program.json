@@ -28,6 +28,10 @@
       ],
       "args": [
         {
+          "name": "template",
+          "type": "publicKey"
+        },
+        {
           "name": "arweaveId",
           "type": "string"
         },
@@ -100,6 +104,10 @@
         "fields": [
           {
             "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "template",
             "type": "publicKey"
           },
           {

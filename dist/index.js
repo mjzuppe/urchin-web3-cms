@@ -15,7 +15,10 @@ const urchin = (args) => {
         },
         entry: {
             create: entry_1.createEntry,
-            get: entry_1.getEntries,
+            queue: entry_1.getEntriesQueues,
+            get: (props) => (0, entry_1.getEntries)(args, props),
+            getAll: () => (0, entry_1.getAllEntries)(args),
+            update: entry_1.updateEntry,
         },
         preflight: () => (0, global_1.queryAll)(args),
         process: () => (0, global_1.processAll)(args),

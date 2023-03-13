@@ -37,6 +37,32 @@ export const formatTemplateAccounts = async (source: any) => {
     return result;
 }
 
+export const formatEntryAccounts = async (source: any) => {
+    const result = [];
+    for (const entry of source) {
+        if (!entry.arweaveId) {
+            result.push({ publicKey: entry.publicKey.toString() });
+        }
+        else {
+            const arweaveData = await fetch(`https://arweave.net/${entry.arweaveId}`);
+            const arweaveJson = await arweaveData.json();
+            result.push(
+                    {
+                        publicKey: entry.publicKey.toString(),
+                        owner: entry.owner.toString(),
+                        template: entry.template.toString(),
+                        taxonomy: entry.taxonomy.map((tax:PublicKey)=>tax.toString()),
+                        archived: entry.archived,
+                        immutable: entry.immutable,
+                        arweaveId: entry.arweaveId,
+                        ...arweaveJson
+                    })
+         
+        }
+    }
+    return result;
+}
+
 
 
 

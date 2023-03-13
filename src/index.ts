@@ -1,5 +1,5 @@
 import { createAsset, getAssets, updateAsset } from './core/actions/asset';
-import { createEntry, getEntries} from './core/actions/entry';
+import { createEntry, getEntries, getEntriesQueues, getAllEntries, updateEntry} from './core/actions/entry';
 import { processAll, queryAll } from './core/actions/global';
 import { createTaxonomy, getTaxonomies, getAllTaxonomies, updateTaxonomy, getTaxonomiesQueues } from './core/actions/taxonomy';
 import { createTemplate, getTemplates, getAllTemplates, updateTemplate } from './core/actions/template';
@@ -15,7 +15,10 @@ const urchin = (args: PlayaArgs) => {
     },
     entry: {
       create: createEntry,
-      get: getEntries,
+      queue: getEntriesQueues, 
+      get: (props:any) => getEntries(args, props),
+      getAll: () => getAllEntries(args),
+      update: updateEntry,
     },
     preflight: () => queryAll(args),
     process: () => processAll(args),

@@ -13,7 +13,7 @@ describe('Manage template', () => {
         const u = urchin({
             payer,
             cluster: "devnet",
-            rpc: "http://localhost:8899",
+      
         });
         u.template.create(
             [
@@ -44,7 +44,7 @@ pubkey = new PublicKey(r.template[0].publicKey);
     const u = urchin({
       payer,
       cluster: "devnet",
-            rpc: "http://localhost:8899",
+      
     });
     const r = await u.template.get([pubkey]);
     assert.equal(r.length, 1);
@@ -54,7 +54,7 @@ pubkey = new PublicKey(r.template[0].publicKey);
     const u = urchin({
       payer,
       cluster: "devnet",
-            rpc: "http://localhost:8899",
+      
     });
     const r = await u.template.getAll();
     assert.ok(r.length > 0);
@@ -64,7 +64,7 @@ it("should update a new template", async () => {
     const u = urchin({
         payer,
         cluster: "devnet",
-            rpc: "http://localhost:8899",
+      
     });
     u.template.update([{ publicKey: pubkey, archived: true, version: 1}])
     const r = await u.process();

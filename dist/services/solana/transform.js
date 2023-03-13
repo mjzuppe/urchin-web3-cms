@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatTemplateAccounts = exports.formatTaxonomyAccounts = void 0;
+exports.formatEntryAccounts = exports.formatTemplateAccounts = exports.formatTaxonomyAccounts = void 0;
 const formatTaxonomyAccounts = (source) => {
     return source.map((taxonomy) => taxonomy.label ? ({
         publicKey: taxonomy.publicKey.toString(),
@@ -34,3 +34,18 @@ const formatTemplateAccounts = (source) => __awaiter(void 0, void 0, void 0, fun
     return result;
 });
 exports.formatTemplateAccounts = formatTemplateAccounts;
+const formatEntryAccounts = (source) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = [];
+    for (const entry of source) {
+        if (!entry.arweaveId) {
+            result.push({ publicKey: entry.publicKey.toString() });
+        }
+        else {
+            const arweaveData = yield fetch(`https://arweave.net/${entry.arweaveId}`);
+            const arweaveJson = yield arweaveData.json();
+            result.push(Object.assign({ publicKey: entry.publicKey.toString(), owner: entry.owner.toString(), template: entry.template.toString(), taxonomy: entry.taxonomy.map((tax) => tax.toString()), archived: entry.archived, immutable: entry.immutable, arweaveId: entry.arweaveId }, arweaveJson));
+        }
+    }
+    return result;
+});
+exports.formatEntryAccounts = formatEntryAccounts;

@@ -90,12 +90,20 @@ const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* (
         const arweaveId = arweaveResponse.id;
         // Solana 
         const createdTemplate = yield new SolanaInteractions.Template(sdk).createTemplate(owner || payer, arweaveId, createTemplateFromQueue.archived, createTemplateFromQueue.original || null);
+        const { tx } = createdTemplate;
+        const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
+        const { postBalances, preBalances } = data.meta;
+        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedTemplateIds.push(createdTemplate.publicKey);
     }
     for (const updateTemplateFromQueue of UPDATE_QUEUE) {
         if (!updateTemplateFromQueue.publicKey)
             continue;
         const updatedTemplate = yield new SolanaInteractions.Template(sdk).updateTemplate(updateTemplateFromQueue.publicKey, owner || payer, updateTemplateFromQueue.archived, updateTemplateFromQueue.version);
+        const { tx } = updatedTemplate;
+        const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
+        const { postBalances, preBalances } = data.meta;
+        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedTemplateIds.push(updatedTemplate.publicKey);
     }
     yield (0, solana_1.sleep)(8000);

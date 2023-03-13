@@ -8,7 +8,10 @@ declare const urchin: (args: PlayaArgs) => {
     };
     entry: {
         create: (payload: import("./types/entry").EntryCreatePayload[]) => import("./types/entry").EntryCreatePayload[];
-        get: (publicKeys?: string[]) => import("./types/entry").Entry[];
+        queue: () => import("./types/entry").EntryQueues;
+        get: (props: any) => Promise<import("./types/entry").Entry[]>;
+        getAll: () => Promise<import("./types/entry").Entry[]>;
+        update: (payload: import("./types/entry").EntryUpdatePayload[]) => import("./types/entry").EntryUpdatePayload[];
     };
     preflight: () => Promise<{
         asset: import("./types/asset").AssetQueues;
@@ -18,7 +21,6 @@ declare const urchin: (args: PlayaArgs) => {
         rpc: string;
         taxonomy: import("./types/taxonomy").TaxonomyQueues;
         template: import("./types/template").TemplateQueues;
-        entries: import("./types/entry").EntryQueues;
     }>;
     process: () => Promise<{
         completed: boolean;

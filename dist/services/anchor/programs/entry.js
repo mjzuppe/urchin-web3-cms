@@ -42,7 +42,7 @@ class Entry {
     createEntry(owner, arweave_id, template, taxonomy, immutable, archived) {
         return __awaiter(this, void 0, void 0, function* () {
             const accountInit = anchor.web3.Keypair.generate();
-            const tx = yield this.sdk.program.methods.createEntry(arweave_id, taxonomy, immutable, archived).accounts({
+            const tx = yield this.sdk.program.methods.createEntry(template, arweave_id, taxonomy, immutable, archived).accounts({
                 entry: accountInit.publicKey,
                 payer: this.sdk.provider.wallet.publicKey,
                 owner: owner.publicKey,
@@ -54,10 +54,9 @@ class Entry {
     ;
     getEntry(publicKeys) {
         return __awaiter(this, void 0, void 0, function* () {
-            return []; // TODO MZ: fix this
-            // let r:any = await this.sdk.program.account.entryAccount.fetchMultiple(publicKeys);
-            // r = r.map((r:any, i:number) => ({publicKey: publicKeys[i], ...r}));
-            // return r;
+            let r = yield this.sdk.program.account.entryAccount.fetchMultiple(publicKeys);
+            r = r.map((r, i) => (Object.assign({ publicKey: publicKeys[i] }, r)));
+            return r;
             // if (r.owner.toString() !== owner.publicKey.toString()) throw Error("owner mismatch"); //TODO MZ: add validation for owner?
         });
     }
@@ -75,10 +74,10 @@ class Entry {
         });
     }
     ;
-    updateEntry(publicKey, owner, arweave_id, template, taxonomy, immutable, archived) {
+    updateEntry(publicKey, owner, arweave_id, taxonomy, immutable, archived) {
         return __awaiter(this, void 0, void 0, function* () {
             const tx = yield this.sdk.program.methods.updateEntry(arweave_id, immutable, taxonomy, archived).accounts({
-                template: publicKey,
+                entry: publicKey,
                 payer: this.sdk.provider.wallet.publicKey,
                 owner: owner.publicKey,
             }).signers([owner]).rpc();

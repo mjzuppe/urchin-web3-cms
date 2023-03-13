@@ -16,9 +16,7 @@ const CREATE_ENTRY_SCHEMA = Joi.array().items(
   }),
 ).min(1);
 
-const GET_ENTRIES_SCHEMA = Joi.object({
-  publicKeys: Joi.array().items(Joi.string()),
-});
+const GET_ENTRIES_SCHEMA = Joi.array().items(Joi.any()).min(1);
 
 const UPDATE_ENTRY_SCHEMA =  Joi.array().items(
   Joi.object({
@@ -29,9 +27,7 @@ const UPDATE_ENTRY_SCHEMA =  Joi.array().items(
         value: Joi.string(),
       }),
     ),
-    private: Joi.boolean().default(false),
     taxonomies: Joi.array().items(Joi.any()).max(3),
-    template: Joi.any().required(),
     publicKey: Joi.any().required(),
     archived: Joi.boolean().default(false),
   })

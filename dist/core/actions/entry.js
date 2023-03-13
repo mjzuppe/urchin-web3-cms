@@ -32,10 +32,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.processEntries = exports.updateEntry = exports.getEntriesQueues = exports.getEntries = exports.createEntry = void 0;
+exports.getAllEntries = exports.processEntries = exports.updateEntry = exports.getEntriesQueues = exports.getEntries = exports.createEntry = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
 const entry_1 = require("../../validators/entry");
+const transform_1 = require("../../services/solana/transform");
+const metadata = __importStar(require("../../services/arweave/metadata"));
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
 const _resetEntriesCreateQueue = () => {
@@ -50,11 +52,22 @@ const createEntry = (payload) => {
     return payload;
 };
 exports.createEntry = createEntry;
-const getEntries = (publicKeys = []) => {
+const getEntries = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, function* () {
     (0, entry_1.validateGetEntriesSchema)(publicKeys);
-    return [];
-};
+    const { cluster, payer, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'entry', cluster);
+    let entryAccounts = yield new SolanaInteractions.Entry(sdk).getEntry(publicKeys);
+    return (0, transform_1.formatEntryAccounts)(entryAccounts);
+});
 exports.getEntries = getEntries;
+const getAllEntries = (args) => __awaiter(void 0, void 0, void 0, function* () {
+    // validateGetAllTaxonomiesSchema(owner);
+    const { cluster, payer, owner, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'entry', cluster);
+    let entryAccounts = yield new SolanaInteractions.Entry(sdk).getEntryAll(owner || payer);
+    return (0, transform_1.formatEntryAccounts)(entryAccounts);
+});
+exports.getAllEntries = getAllEntries;
 const getEntriesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 exports.getEntriesQueues = getEntriesQueues;
 const processEntries = (args) => __awaiter(void 0, void 0, void 0, function* () {
@@ -62,17 +75,38 @@ const processEntries = (args) => __awaiter(void 0, void 0, void 0, function* () 
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'entry', cluster);
     let mutatedEntryIds = [];
     for (const createEntryFromQueue of CREATE_QUEUE) {
-        const createdEntry = yield new SolanaInteractions.Entry(sdk).createEntry(owner || payer, "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
-        createEntryFromQueue.template, createEntryFromQueue.taxonomies || [], createEntryFromQueue.immutable || false, createEntryFromQueue.archived || false);
+        // Arweave
+        const arweaveData = {
+            inputs: createEntryFromQueue.inputs,
+            created: Date.now()
+        };
+        const arweaveResponse = yield metadata.uploadData(payer.secretKey.toString(), cluster, arweaveData);
+        const arweaveId = arweaveResponse.id;
+        // Solana 
+        const createdEntry = yield new SolanaInteractions.Entry(sdk).createEntry(owner || payer, arweaveId, createEntryFromQueue.template, createEntryFromQueue.taxonomies || [], createEntryFromQueue.immutable || false, createEntryFromQueue.archived || false);
+        const { tx } = createdEntry;
+        const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
+        const { postBalances, preBalances } = data.meta;
+        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedEntryIds.push(createdEntry.publicKey);
     }
     for (const updateEntryFromQueue of UPDATE_QUEUE) {
         if (!updateEntryFromQueue.publicKey)
             continue;
-        const updatedAsset = yield new SolanaInteractions.Entry(sdk).updateEntry(updateEntryFromQueue.publicKey, owner || payer, "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892", // TODO MJZ URGENT REMOVE THIS
-        payer.publicKey, // TODO MJZ URGENT, Template?
-        updateEntryFromQueue.taxonomies || [], updateEntryFromQueue.immutable || false, updateEntryFromQueue.archived || false);
-        mutatedEntryIds.push(updatedAsset.publicKey);
+        // Arweave
+        const arweaveData = {
+            inputs: updateEntryFromQueue.inputs,
+            created: Date.now()
+        };
+        const arweaveResponse = yield metadata.uploadData(payer.secretKey.toString(), cluster, arweaveData);
+        const arweaveId = arweaveResponse.id;
+        // Solana
+        const updatedEntry = yield new SolanaInteractions.Entry(sdk).updateEntry(updateEntryFromQueue.publicKey, owner || payer, arweaveId, updateEntryFromQueue.taxonomies || [], updateEntryFromQueue.immutable || false, updateEntryFromQueue.archived || false);
+        const { tx } = updatedEntry;
+        const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
+        const { postBalances, preBalances } = data.meta;
+        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
+        mutatedEntryIds.push(updatedEntry.publicKey);
     }
     yield (0, solana_1.sleep)(8000);
     let entryAccounts = yield new SolanaInteractions.Entry(sdk).getEntry(mutatedEntryIds);

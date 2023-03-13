@@ -13,10 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.uploadData = void 0;
+// import Bundlr from "@bundlr-network/client";
 const client_1 = __importDefault(require("@bundlr-network/client"));
-const bs58_1 = __importDefault(require("bs58"));
 const uploadData = (secret, cluster, data) => __awaiter(void 0, void 0, void 0, function* () {
-    const bundlr = new client_1.default("https://devnet.bundlr.network", "solana", bs58_1.default.decode(secret), { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet
+    // const bundlr = new WebBundlr("https://devnet.bundlr.network", "solana", {}, {providerUrl: "https://api.devnet.solana.com"}); // TODO dynamic for mainnet
+    const bundlr = new client_1.default("https://devnet.bundlr.network", "solana", secret, { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet
     yield bundlr.fund(100000);
     return yield bundlr.upload(JSON.stringify(data));
 });

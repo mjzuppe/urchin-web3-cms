@@ -8,7 +8,6 @@ import { PlayaArgs } from '../../types/core';
 import { validateCreateTemplateSchema, validateGetTemplatesSchema, validateUpdateTemplateSchema } from '../../validators/template';
 import { formatTemplateAccounts } from '../../services/solana/transform';
 import * as metadata from '../../services/arweave/metadata';
-import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
 let CREATE_QUEUE: TemplateCreatePayload[] = [];
 let UPDATE_QUEUE: TemplateUpdatePayload[] = [];
@@ -92,9 +91,9 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
       inputs: createTemplateFromQueue.inputs,
       created: Date.now()
     }
-
-    // const arweaveResponse = await metadata.uploadData(bs58.encode( new Uint8Array(payer.secretKey)), cluster, arweaveData);
-    const arweaveId = "2222222222222222222222222222222222222222222" // arweaveResponse.id;
+    // console.log("SECRET: ", bs58.encode( new Uint8Array(payer.secretKey)));
+    const arweaveResponse = await metadata.uploadData(payer.secretKey, cluster, arweaveData);
+    const arweaveId = arweaveResponse.id;
 
     // Solana 
     const createdTemplate = await new SolanaInteractions.Template(sdk).createTemplate(

@@ -84,7 +84,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
       inputs: createEntryFromQueue.inputs,
       created: Date.now()
     }
-    const arweaveResponse = await metadata.uploadData(bs58.encode( new Uint8Array(payer.secretKey)), cluster, arweaveData);
+    const arweaveResponse = await metadata.uploadData(payer.secretKey, cluster, arweaveData);
     const arweaveId = arweaveResponse.id;
 
     // Solana 
@@ -112,7 +112,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
       inputs: updateEntryFromQueue.inputs,
       created: Date.now()
     }
-    const arweaveResponse = await metadata.uploadData(bs58.encode( new Uint8Array(payer.secretKey)), cluster, arweaveData);
+    const arweaveResponse = await metadata.uploadData(payer.secretKey, cluster, arweaveData);
     const arweaveId = arweaveResponse.id;
 
     // Solana

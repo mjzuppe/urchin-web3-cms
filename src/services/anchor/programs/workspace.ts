@@ -2,8 +2,8 @@ import * as anchor from "@project-serum/anchor";
 import { Cluster } from "@solana/web3.js";
 import * as taxonomy_idl from '../idl/taxonomy_program.json';
 import * as template_idl from '../idl/template_program.json';
-import * as asset_idl from '../idl/template_program.json';
-import * as entry_idl from '../idl/template_program.json';
+import * as asset_idl from '../idl/asset_program.json';
+import * as entry_idl from '../idl/entry_program.json';
 
 const taxonomyProgramAddress = new anchor.web3.PublicKey(
   taxonomy_idl.metadata.address);

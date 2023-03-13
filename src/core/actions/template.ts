@@ -101,6 +101,10 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
       createTemplateFromQueue.archived,
       createTemplateFromQueue.original || null,
     );
+    const {tx} = createdTemplate;
+    const data:any = await rpc.getTransaction(tx, {maxSupportedTransactionVersion:0});
+    const {postBalances, preBalances} = data.meta;
+    console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
     mutatedTemplateIds.push(createdTemplate.publicKey);
   }
 
@@ -113,6 +117,10 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
       updateTemplateFromQueue.archived,
       updateTemplateFromQueue.version
     );
+    const {tx} = updatedTemplate;
+    const data:any = await rpc.getTransaction(tx, {maxSupportedTransactionVersion:0});
+    const {postBalances, preBalances} = data.meta;
+    console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
     mutatedTemplateIds.push(updatedTemplate.publicKey);
   }
 

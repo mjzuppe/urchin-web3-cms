@@ -58,8 +58,6 @@ const getAllTaxonomies = async (args: PlayaArgs): Promise<Taxonomy[]> => {
 
   let taxonomyAccounts: any = await new SolanaInteractions.Taxonomy(sdk).getTaxonomyAll(owner || payer);
   return formatTaxonomyAccounts(taxonomyAccounts);
-
-  return [];
 };
 
 
@@ -95,7 +93,7 @@ const processTaxonomies = async (args: PlayaArgs): Promise<any> => {
     const {tx} = createdTaxonomy;
     const data:any = await rpc.getTransaction(tx, {maxSupportedTransactionVersion:0});
     const {postBalances, preBalances} = data.meta;
-    console.log("TXN COST:", postBalances[0] - preBalances[0]);
+    console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
     mutatedTaxonomyIds.push(createdTaxonomy.publicKey);
   }
 
@@ -111,8 +109,8 @@ const processTaxonomies = async (args: PlayaArgs): Promise<any> => {
     const {tx} = updatedTaxonomy;
     const data:any = await rpc.getTransaction(tx, {maxSupportedTransactionVersion:0});
     const {postBalances, preBalances} = data.meta;
-    console.log("TXN COST:", postBalances[0] - preBalances[0]);
-    mutatedTaxonomyIds.push(updatedTaxonomy.publicKey);
+    console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
+    mutatedTaxonomyIds.push(updatedTaxonomy.publicKey); 
   }
 
   await sleep(8000);

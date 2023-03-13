@@ -1,57 +1,17 @@
-# Stripe Node.js Library
+# Urchin
 
-The Playa Node library provides convenient access to the Playa API from applications written in JavaScript.
+## What is Urchin?
+Urchin is a headless CMS protocol and SDK for dApp developers build on Solana, Arweave, and Bundlr.
 
-# Documentation
+## What does Urchin do?
+Blockchain developers aim to avoid using databases and centralized storage as much as possible. However, it's quite some extra lifting to build all of the interfacing to store and retrieve mixed content data (e.g. profiles and blog posts) and files (e.g. videos, images, audio). Urchin is a simple SDK so decentralized applications can stay on-chain and off the cloud.
 
-TODO
-
-# Requirements
-
-Node 18 or higher.
-
-# Installation
-
-```bash
-npm install stripe --save
-# or
-yarn add stripe
+## How to start
 ```
-
-# Usage
-
-The package needs to be configured with your account's secret key, which is available in the Stripe Dashboard. Require it with the key's value:
-
-```javascript
-const Playa = require('playa').default();
-const playa = new Playa({ apiKey: 'PL_**********', apiVersion: '2022-01-01' });
-
-// TODO: Put an example
-```
-
-Or using ES modules and async/await:
-
-```javascript
-import Playa from 'playa';
-const playa = new Playa({ apiKey: 'PL_**********', apiVersion: '2022-01-01' });
-
-// TODO: Put an example
-```
-
-# Configuration
-
-```javascript
-const playa = Playa({
-  apiKey: 'PL_**********',
-  apiVersion: '2022-01-01',
+const connection = urchin({
+  payer,
+  cluster: 'devnet',
 });
+
+const urchin.preflight();
 ```
-
-| Option     | Default  | Description |
-| :--------- | :------- | :---------- |
-| apiKey     | required | Playa API key to used. Need to be provided |
-| apiVersion | null     | Playa API version to be used. If not set the account's default version will be used. |
-
-# Support
-
-New features and bug fixes are released on the latest major version of the stripe package. If you are on an older major version, we recommend that you upgrade to the latest in order to use the new features and bug fixes including those for security vulnerabilities. Older major versions of the package will continue to be available for use, but will not be receiving any updates.

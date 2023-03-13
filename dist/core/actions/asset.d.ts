@@ -1,0 +1,10 @@
+import { Asset, AssetQueues, AssetUserCreatePayload, AssetUserUpdatePayload } from '../../types/asset';
+import { PlayaArgs } from '../../types/core';
+declare const createAsset: (payload: AssetUserCreatePayload[]) => AssetUserCreatePayload[];
+declare const getAssets: (publicKeys?: string[]) => Asset[];
+declare const getAssetsCreateQueue: () => AssetUserCreatePayload[];
+declare const getAssetsQueues: () => AssetQueues;
+declare const getAssetsUpdateQueue: () => AssetUserUpdatePayload[];
+declare const processAssets: (args: PlayaArgs) => Promise<any>;
+declare const updateAsset: (payload: AssetUserUpdatePayload[]) => AssetUserUpdatePayload[];
+export { createAsset, getAssets, getAssetsCreateQueue, getAssetsQueues, getAssetsUpdateQueue, updateAsset, processAssets };

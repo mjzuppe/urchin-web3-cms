@@ -3,7 +3,8 @@ import { PlayaArgs } from './types/core';
 declare const urchin: (args: PlayaArgs) => {
     asset: {
         create: (payload: import("./types/asset").AssetUserCreatePayload[]) => import("./types/asset").AssetUserCreatePayload[];
-        get: (publicKeys?: string[]) => import("./types/asset").Asset[];
+        get: (props: any) => Promise<import("./types/asset").Asset[]>;
+        getAll: () => Promise<any>;
         update: (payload: import("./types/asset").AssetUserUpdatePayload[]) => import("./types/asset").AssetUserUpdatePayload[];
     };
     entry: {

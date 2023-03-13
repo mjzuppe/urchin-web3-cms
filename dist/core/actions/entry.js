@@ -38,6 +38,7 @@ const solana_1 = require("../../services/solana");
 const entry_1 = require("../../validators/entry");
 const transform_1 = require("../../services/solana/transform");
 const metadata = __importStar(require("../../services/arweave/metadata"));
+const bytes_1 = require("@project-serum/anchor/dist/cjs/utils/bytes");
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
 const _resetEntriesCreateQueue = () => {
@@ -80,7 +81,7 @@ const processEntries = (args) => __awaiter(void 0, void 0, void 0, function* () 
             inputs: createEntryFromQueue.inputs,
             created: Date.now()
         };
-        const arweaveResponse = yield metadata.uploadData(payer.secretKey.toString(), cluster, arweaveData);
+        const arweaveResponse = yield metadata.uploadData(bytes_1.bs58.encode(new Uint8Array(payer.secretKey)), cluster, arweaveData);
         const arweaveId = arweaveResponse.id;
         // Solana 
         const createdEntry = yield new SolanaInteractions.Entry(sdk).createEntry(owner || payer, arweaveId, createEntryFromQueue.template, createEntryFromQueue.taxonomies || [], createEntryFromQueue.immutable || false, createEntryFromQueue.archived || false);
@@ -98,7 +99,7 @@ const processEntries = (args) => __awaiter(void 0, void 0, void 0, function* () 
             inputs: updateEntryFromQueue.inputs,
             created: Date.now()
         };
-        const arweaveResponse = yield metadata.uploadData(payer.secretKey.toString(), cluster, arweaveData);
+        const arweaveResponse = yield metadata.uploadData(bytes_1.bs58.encode(new Uint8Array(payer.secretKey)), cluster, arweaveData);
         const arweaveId = arweaveResponse.id;
         // Solana
         const updatedEntry = yield new SolanaInteractions.Entry(sdk).updateEntry(updateEntryFromQueue.publicKey, owner || payer, arweaveId, updateEntryFromQueue.taxonomies || [], updateEntryFromQueue.immutable || false, updateEntryFromQueue.archived || false);
@@ -110,7 +111,7 @@ const processEntries = (args) => __awaiter(void 0, void 0, void 0, function* () 
     }
     yield (0, solana_1.sleep)(8000);
     let entryAccounts = yield new SolanaInteractions.Entry(sdk).getEntry(mutatedEntryIds);
-    // entryAccounts = formatEntryAccounts(entryAccounts);   
+    entryAccounts = (0, transform_1.formatEntryAccounts)(entryAccounts);
     _resetEntriesCreateQueue();
     _resetEntriesUpdateQueue();
     return entryAccounts;

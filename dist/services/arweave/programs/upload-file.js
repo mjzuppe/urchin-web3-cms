@@ -20,6 +20,5 @@ const uploadMockFile = (files //, payer: Keypair
 exports.uploadMockFile = uploadMockFile;
 const test = () => __awaiter(void 0, void 0, void 0, function* () {
     const r = yield (0, exports.uploadMockFile)(['a', 'b', 'c']);
-    console.log(r);
 });
 test();

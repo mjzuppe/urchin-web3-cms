@@ -38,6 +38,7 @@ const solana_1 = require("../../services/solana");
 const template_1 = require("../../validators/template");
 const transform_1 = require("../../services/solana/transform");
 const metadata = __importStar(require("../../services/arweave/metadata"));
+const bytes_1 = require("@project-serum/anchor/dist/cjs/utils/bytes");
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
 const _resetTemplatesCreateQueue = () => {
@@ -86,7 +87,7 @@ const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* (
             inputs: createTemplateFromQueue.inputs,
             created: Date.now()
         };
-        const arweaveResponse = yield metadata.uploadData(payer.secretKey.toString(), cluster, arweaveData);
+        const arweaveResponse = yield metadata.uploadData(bytes_1.bs58.encode(new Uint8Array(payer.secretKey)), cluster, arweaveData);
         const arweaveId = arweaveResponse.id;
         // Solana 
         const createdTemplate = yield new SolanaInteractions.Template(sdk).createTemplate(owner || payer, arweaveId, createTemplateFromQueue.archived, createTemplateFromQueue.original || null);

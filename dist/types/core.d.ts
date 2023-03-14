@@ -10,5 +10,6 @@ type PlayaArgs = {
     taxonomy?: any;
     template?: any;
     entry?: any;
+    walletContextState?: any;
 };
 export type { PlayaArgs };

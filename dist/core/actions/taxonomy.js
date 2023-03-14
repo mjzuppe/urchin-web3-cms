@@ -86,7 +86,6 @@ const processTaxonomies = (args) => __awaiter(void 0, void 0, void 0, function* 
         const { tx } = createdTaxonomy;
         const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
         const { postBalances, preBalances } = data.meta;
-        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedTaxonomyIds.push(createdTaxonomy.publicKey);
     }
     for (const updateTaxonomyFromQueue of UPDATE_QUEUE) {
@@ -96,7 +95,6 @@ const processTaxonomies = (args) => __awaiter(void 0, void 0, void 0, function* 
         const { tx } = updatedTaxonomy;
         const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
         const { postBalances, preBalances } = data.meta;
-        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedTaxonomyIds.push(updatedTaxonomy.publicKey);
     }
     yield (0, solana_1.sleep)(8000);

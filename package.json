@@ -32,6 +32,7 @@
   "dependencies": {
     "@bundlr-network/client": "^0.10.3",
     "@project-serum/anchor": "^0.26.0",
+    "@solana/wallet-adapter-react": "^0.15.30",
     "@solana/web3.js": "^1.73.3",
     "arbundles": "^0.8.0",
     "arweave": "^1.11.0",

@@ -92,7 +92,7 @@ const processAssets = async (args: PlayaArgs): Promise<any> => {
     const { tx } = createdAsset;
     const data: any = await rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
     const { postBalances, preBalances } = data.meta;
-    console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
+    
     mutatedAssetIds.push(createdAsset.publicKey);
   }
 
@@ -109,7 +109,7 @@ const processAssets = async (args: PlayaArgs): Promise<any> => {
     const { tx } = updatedAsset;
     const data: any = await rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
     const { postBalances, preBalances } = data.meta;
-    console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
+    
     mutatedAssetIds.push(updatedAsset.publicKey);
   }
 

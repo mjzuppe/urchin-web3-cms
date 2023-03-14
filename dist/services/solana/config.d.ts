@@ -8,5 +8,6 @@ export declare const loadSolanaConfig: (args: PlayaArgs) => {
     payer: Keypair;
     owner: Keypair | undefined;
     wallet: LocalWallet;
+    walletContextState: any;
     preflightCommitment: anchor.web3.ConfirmOptions;
 };

@@ -72,7 +72,7 @@ const getTemplateUpdateQueue = (): TemplateUpdatePayload[] => {
 const getTemplatesQueues = (): TemplateQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 
 const processTemplates = async (args: PlayaArgs): Promise<any> => {
-  const { cluster, payer, rpc, wallet, preflightCommitment, owner } = await loadSolanaConfig(args);
+  const { cluster, payer, rpc, wallet, preflightCommitment, owner, walletContextState } = await loadSolanaConfig(args);
 
   const sdk = new SolanaInteractions.AnchorSDK(
     wallet as NodeWallet,
@@ -92,7 +92,7 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
       created: Date.now()
     }
     // console.log("SECRET: ", bs58.encode( new Uint8Array(payer.secretKey)));
-    const arweaveResponse = await metadata.uploadData(payer.secretKey, cluster, arweaveData);
+    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
     const arweaveId = arweaveResponse.id;
 
     // Solana 
@@ -105,7 +105,7 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
     const { tx } = createdTemplate;
     const data: any = await rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
     const { postBalances, preBalances } = data.meta;
-    console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
+    
     mutatedTemplateIds.push(createdTemplate.publicKey);
   }
 
@@ -121,7 +121,7 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
     const { tx } = updatedTemplate;
     const data: any = await rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
     const { postBalances, preBalances } = data.meta;
-    console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
+    
     mutatedTemplateIds.push(updatedTemplate.publicKey);
   }
 

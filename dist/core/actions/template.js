@@ -38,7 +38,6 @@ const solana_1 = require("../../services/solana");
 const template_1 = require("../../validators/template");
 const transform_1 = require("../../services/solana/transform");
 const metadata = __importStar(require("../../services/arweave/metadata"));
-const bytes_1 = require("@project-serum/anchor/dist/cjs/utils/bytes");
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
 const _resetTemplatesCreateQueue = () => {
@@ -77,7 +76,7 @@ const getTemplateUpdateQueue = () => {
 const getTemplatesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 exports.getTemplatesQueues = getTemplatesQueues;
 const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* () {
-    const { cluster, payer, rpc, wallet, preflightCommitment, owner } = yield (0, solana_1.loadSolanaConfig)(args);
+    const { cluster, payer, rpc, wallet, preflightCommitment, owner, walletContextState } = yield (0, solana_1.loadSolanaConfig)(args);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'template', cluster);
     let mutatedTemplateIds = [];
     for (const createTemplateFromQueue of CREATE_QUEUE) {
@@ -87,14 +86,14 @@ const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* (
             inputs: createTemplateFromQueue.inputs,
             created: Date.now()
         };
-        const arweaveResponse = yield metadata.uploadData(bytes_1.bs58.encode(new Uint8Array(payer.secretKey)), cluster, arweaveData);
+        // console.log("SECRET: ", bs58.encode( new Uint8Array(payer.secretKey)));
+        const arweaveResponse = yield metadata.uploadData(payer, cluster, arweaveData, walletContextState);
         const arweaveId = arweaveResponse.id;
         // Solana 
         const createdTemplate = yield new SolanaInteractions.Template(sdk).createTemplate(owner || payer, arweaveId, createTemplateFromQueue.archived, createTemplateFromQueue.original || null);
         const { tx } = createdTemplate;
         const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
         const { postBalances, preBalances } = data.meta;
-        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedTemplateIds.push(createdTemplate.publicKey);
     }
     for (const updateTemplateFromQueue of UPDATE_QUEUE) {
@@ -104,7 +103,6 @@ const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* (
         const { tx } = updatedTemplate;
         const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
         const { postBalances, preBalances } = data.meta;
-        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedTemplateIds.push(updatedTemplate.publicKey);
     }
     yield (0, solana_1.sleep)(8000);

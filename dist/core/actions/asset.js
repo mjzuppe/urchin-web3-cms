@@ -85,7 +85,6 @@ const processAssets = (args) => __awaiter(void 0, void 0, void 0, function* () {
         const { tx } = createdAsset;
         const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
         const { postBalances, preBalances } = data.meta;
-        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedAssetIds.push(createdAsset.publicKey);
     }
     for (const updateAssetFromQueue of UPDATE_QUEUE) {
@@ -95,7 +94,6 @@ const processAssets = (args) => __awaiter(void 0, void 0, void 0, function* () {
         const { tx } = updatedAsset;
         const data = yield rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
         const { postBalances, preBalances } = data.meta;
-        console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
         mutatedAssetIds.push(updatedAsset.publicKey);
     }
     yield (0, solana_1.sleep)(8000);

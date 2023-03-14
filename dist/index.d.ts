@@ -1,4 +1,3 @@
-/// <reference types="@solana/web3.js" />
 import { PlayaArgs } from './types/core';
 declare const urchin: (args: PlayaArgs) => {
     asset: {
@@ -14,22 +13,8 @@ declare const urchin: (args: PlayaArgs) => {
         getAll: () => Promise<import("./types/entry").Entry[]>;
         update: (payload: import("./types/entry").EntryUpdatePayload[]) => import("./types/entry").EntryUpdatePayload[];
     };
-    preflight: () => Promise<{
-        asset: import("./types/asset").AssetQueues;
-        cluster: import("@solana/web3.js").Cluster;
-        entry: import("./types/entry").EntryQueues;
-        payer: string;
-        rpc: string;
-        taxonomy: import("./types/taxonomy").TaxonomyQueues;
-        template: import("./types/template").TemplateQueues;
-    }>;
-    process: () => Promise<{
-        completed: boolean;
-        taxonomy: any;
-        template: any;
-        entry: any;
-        asset: any;
-    }>;
+    preflight: () => Promise<any>;
+    process: () => Promise<any>;
     taxonomy: {
         create: (payload: import("./types/taxonomy").TaxonomyCreatePayload[]) => import("./types/taxonomy").TaxonomyCreatePayload[];
         queue: () => import("./types/taxonomy").TaxonomyQueues;

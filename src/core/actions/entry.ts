@@ -66,7 +66,7 @@ const getAllEntries = async (args: PlayaArgs): Promise<Entry[]> => {
 const getEntriesQueues = (): EntryQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 
 const processEntries = async (args: PlayaArgs): Promise<any> => {
-  const { cluster, payer, owner, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
+  const { cluster, payer, owner, rpc, wallet, preflightCommitment, walletContextState } = await loadSolanaConfig(args);
 
   const sdk = new SolanaInteractions.AnchorSDK(
     wallet as NodeWallet,
@@ -84,7 +84,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
       inputs: createEntryFromQueue.inputs,
       created: Date.now()
     }
-    const arweaveResponse = await metadata.uploadData(bs58.encode( new Uint8Array(payer.secretKey)), cluster, arweaveData);
+    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
     const arweaveId = arweaveResponse.id;
 
     // Solana 
@@ -100,7 +100,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
     const { tx } = createdEntry;
     const data: any = await rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
     const { postBalances, preBalances } = data.meta;
-    console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
+    
     mutatedEntryIds.push(createdEntry.publicKey);
   }
 
@@ -112,7 +112,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
       inputs: updateEntryFromQueue.inputs,
       created: Date.now()
     }
-    const arweaveResponse = await metadata.uploadData(bs58.encode( new Uint8Array(payer.secretKey)), cluster, arweaveData);
+    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
     const arweaveId = arweaveResponse.id;
 
     // Solana
@@ -127,7 +127,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
     const { tx } = updatedEntry;
     const data: any = await rpc.getTransaction(tx, { maxSupportedTransactionVersion: 0 });
     const { postBalances, preBalances } = data.meta;
-    console.log("TXN COST:", postBalances[0] - preBalances[0]); // TODO: remove
+    
     mutatedEntryIds.push(updatedEntry.publicKey);
   }
 

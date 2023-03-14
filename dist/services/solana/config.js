@@ -16,6 +16,7 @@ const loadSolanaConfig = (args) => {
     const owner = args.owner;
     const wallet = new wallet_1.LocalWallet(payer);
     const preflightCommitment = "confirmed";
-    return { cluster, rpc, payer, owner, wallet, preflightCommitment };
+    const walletContextState = args.walletContextState;
+    return { cluster, rpc, payer, owner, wallet, walletContextState, preflightCommitment };
 };
 exports.loadSolanaConfig = loadSolanaConfig;

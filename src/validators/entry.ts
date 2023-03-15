@@ -1,3 +1,4 @@
+import { PublicKey } from '@solana/web3.js';
 import Joi from 'joi';
 
 const CREATE_ENTRY_SCHEMA = Joi.array().items(
@@ -28,7 +29,12 @@ const UPDATE_ENTRY_SCHEMA =  Joi.array().items(
       }),
     ),
     taxonomies: Joi.array().items(Joi.any()).max(3),
-    publicKey: Joi.any().required(),
+    publicKey: Joi.any()
+      .custom((value: any, helper: any) => {
+        if (!(value instanceof PublicKey)) return helper.message('Invalid public key input');
+
+        return true;
+      }).required(),
     archived: Joi.boolean().default(false),
   })
 ).min(1);

@@ -1,3 +1,4 @@
+import { PublicKey } from '@solana/web3.js';
 import Joi from 'joi';
 
 const CREATE_TAXONOMY_SCHEMA = Joi.array().items(
@@ -11,7 +12,12 @@ const GET_TAXONOMIES_SCHEMA = Joi.array().items(Joi.any())
 
 const CREATE_UPDATE_SCHEMA = Joi.array().items(
   Joi.object({
-    publicKey: Joi.any(), //TODO VV: how to validate a PublicKey class
+    publicKey: Joi.any()
+      .custom((value: any, helper: any) => {
+        if (!(value instanceof PublicKey)) return helper.message('Invalid public key input');
+
+        return true;
+      }).required(),
     label: Joi.string().required(),
     parent: Joi.string(),
   }),

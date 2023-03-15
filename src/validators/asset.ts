@@ -1,5 +1,5 @@
-import { PublicKey } from '@solana/web3.js';
 import Joi from 'joi';
+import { pubkey } from './custom';
 
 const CREATE_ASSET_SCHEMA = Joi.array().items(
   Joi.object({
@@ -14,12 +14,7 @@ const GET_ASSETS_SCHEMA = Joi.array().items(Joi.any()).min(1);
 
 const UPDATE_ASSET_SCHEMA = Joi.array().items(
   Joi.object({
-    publicKey: Joi.any()
-      .custom((value: any, helper: any) => {
-        if (!(value instanceof PublicKey)) return helper.message('Invalid public key input');
-
-        return true;
-      }).required(),
+    publicKey: pubkey().required(),
     arweaveId: Joi.string().required(),
     // original: Joi.string().required(),
     immutable: Joi.boolean().default(false),

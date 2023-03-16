@@ -20,6 +20,11 @@ const _resetTemplatesUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
+const cleanTemplates = () => {
+  _resetTemplatesCreateQueue();
+  _resetTemplatesUpdateQueue();
+};
+
 const createTemplate = (payload: TemplateCreatePayload[]): TemplateCreatePayload[] => {
   validateCreateTemplateSchema(payload);
 
@@ -59,7 +64,6 @@ const getAllTemplates = async (args: PlayaArgs) => {
   return templateAccounts
 
 };
-
 
 const getTemplateCreateQueue = (): TemplateCreatePayload[] => {
   return CREATE_QUEUE;
@@ -144,4 +148,14 @@ const updateTemplate = (payload: TemplateUpdatePayload[]): TemplateUpdatePayload
   return payload;
 };
 
-export { createTemplate, getTemplates, getTemplatesQueues, updateTemplate, processTemplates, getAllTemplates };
+export {
+  cleanTemplates,
+  createTemplate,
+  getTemplates,
+  getTemplateCreateQueue,
+  getTemplateUpdateQueue,
+  getTemplatesQueues,
+  updateTemplate,
+  processTemplates,
+  getAllTemplates
+};

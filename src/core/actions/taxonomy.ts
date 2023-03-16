@@ -8,7 +8,6 @@ import { Taxonomy, TaxonomyCreatePayload, TaxonomyUpdatePayload, TaxonomyQueues 
 import { validateCreateTaxonomySchema, validateGetTaxonomiesSchema, validateUpdateTaxonomySchema,  } from '../../validators/taxonomy';
 import {formatTaxonomyAccounts} from '../../services/solana/transform';
 
-
 let CREATE_QUEUE: TaxonomyCreatePayload[] = [];
 let UPDATE_QUEUE: TaxonomyUpdatePayload[] = [];
 
@@ -18,6 +17,11 @@ const _resetTaxonomiesCreateQueue = (): void => {
 
 const _resetTaxonomiesUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
+};
+
+const cleanTaxonomies = () => {
+  _resetTaxonomiesCreateQueue();
+  _resetTaxonomiesUpdateQueue();
 };
 
 const createTaxonomy = (payload: TaxonomyCreatePayload[]): TaxonomyCreatePayload[] => {
@@ -42,8 +46,6 @@ const getTaxonomies = async (args: PlayaArgs, publicKeys: PublicKey[] = []): Pro
   return formatTaxonomyAccounts(taxonomyAccounts);
 };
 
-
-
 const getAllTaxonomies = async (args: PlayaArgs): Promise<Taxonomy[]> => {
   // validateGetAllTaxonomiesSchema(owner);
 
@@ -59,7 +61,6 @@ const getAllTaxonomies = async (args: PlayaArgs): Promise<Taxonomy[]> => {
   let taxonomyAccounts: any = await new SolanaInteractions.Taxonomy(sdk).getTaxonomyAll(owner || payer);
   return formatTaxonomyAccounts(taxonomyAccounts);
 };
-
 
 const getTaxonomiesCreateQueue = (): TaxonomyCreatePayload[] => {
   return CREATE_QUEUE;
@@ -130,6 +131,7 @@ const updateTaxonomy = (payload: TaxonomyUpdatePayload[]): TaxonomyUpdatePayload
 };
 
 export {
+  cleanTaxonomies,
   createTaxonomy,
   getTaxonomies,
   getAllTaxonomies,

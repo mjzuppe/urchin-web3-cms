@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "node_modules/.bin/ts-mocha --file src/tests/*.spec.ts",
+    "test": "node_modules/.bin/ts-mocha --file src/tests/*.spec.ts --exclude src/tests/disabled",
+    "testone": "node_modules/.bin/ts-mocha",
     "build": "rm -rf dist && tsc"
   },
   "keywords": [],

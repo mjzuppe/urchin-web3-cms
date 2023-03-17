@@ -1,24 +1,7 @@
-import { PublicKey } from '@solana/web3.js';
 import { expect } from 'chai';
 
+import { basicCreateAssetPayload, basicUpdateAssetPayload, payer } from './_commonResources';
 import { cleanAssets, createAsset, getAllAssets, getAssets, getAssetsQueues, processAssets, updateAsset } from '../core/actions/asset';
-import testKeypair from './test-wallet';
-
-const _payer = testKeypair;
-const _pubkey: PublicKey = _payer.publicKey;
-
-const basicCreateAssetPayload: any = {
-  immutable: false,
-  archived: false,
-  arweaveId: '2222222222222222222222222222222222222222222',
-};
-
-const basicUpdateAssetPayload: any = {
-  immutable: false,
-  archived: false,
-  arweaveId: '2222222222222222222222222222222222222222222',
-  publicKey: _pubkey,
-};
 
 describe('Manage asset', () => {
   beforeEach(() => { cleanAssets(); });
@@ -31,13 +14,13 @@ describe('Manage asset', () => {
 
   // TODO: Fix error
   it('should get assets', async () => {
-    const assets = await getAssets({ cluster: 'devnet', payer: _payer }, []);
+    const assets = await getAssets({ cluster: 'devnet', payer: payer }, []);
 
     // TODO: Need a public key
   });
 
   it('should get all assets', async () => {
-    const assets = await getAllAssets({ cluster: 'devnet', payer: _payer });
+    const assets = await getAllAssets({ cluster: 'devnet', payer: payer });
 
     expect(assets.length).to.satisfy((count: number) => count > 0);
   });
@@ -54,7 +37,7 @@ describe('Manage asset', () => {
   it('should process assets', async () => {
     createAsset([basicCreateAssetPayload]);
 
-    const assets = await processAssets({ cluster: 'devnet', payer: _payer });
+    const assets = await processAssets({ cluster: 'devnet', payer: payer });
 
     expect(assets).to.deep.equal([
       {

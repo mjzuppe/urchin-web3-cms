@@ -1,20 +1,7 @@
-import { PublicKey } from '@solana/web3.js';
 import { expect } from 'chai';
 
+import { basicCreateTaxonomyPayload, basicUpdateTaxonomyPayload, payer } from './_commonResources';
 import { cleanTaxonomies, createTaxonomy, getAllTaxonomies, getTaxonomies, getTaxonomiesQueues, processTaxonomies, updateTaxonomy } from '../core/actions/taxonomy';
-import testKeypair from './test-wallet';
-
-const _payer = testKeypair;
-const _pubkey: PublicKey = _payer.publicKey;
-
-const basicCreateTaxonomyPayload: any = {
-  label: 'Test create',
-};
-
-const basicUpdateTaxonomyPayload: any = {
-  publicKey: _pubkey,
-  label: 'Test update',
-};
 
 describe('Manage taxonomy', () => {
   beforeEach(() => { cleanTaxonomies(); });
@@ -26,13 +13,13 @@ describe('Manage taxonomy', () => {
   });
 
   it('should get taxonomies', async () => {
-    const taxonomies = await getTaxonomies({ cluster: 'devnet', payer: _payer }, []);
+    const taxonomies = await getTaxonomies({ cluster: 'devnet', payer: payer }, []);
 
     // TODO: Need a public key
   });
 
   it('should get all taxonomies', async () => {
-    const taxonomies = await getAllTaxonomies({ cluster: 'devnet', payer: _payer });
+    const taxonomies = await getAllTaxonomies({ cluster: 'devnet', payer: payer });
 
     expect(taxonomies.length).to.satisfy((count: number) => count > 0);
   });
@@ -49,7 +36,7 @@ describe('Manage taxonomy', () => {
   it('should process taxonomies', async () => {
     createTaxonomy([basicCreateTaxonomyPayload]);
 
-    const taxonomies = await processTaxonomies({ cluster: 'devnet', payer: _payer });
+    const taxonomies = await processTaxonomies({ cluster: 'devnet', payer: payer });
 
     expect(taxonomies).to.deep.equal([
       {

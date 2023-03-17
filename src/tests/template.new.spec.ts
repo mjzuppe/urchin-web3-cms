@@ -1,27 +1,7 @@
-import { PublicKey } from '@solana/web3.js';
 import { expect } from 'chai';
 
+import { basicCreateTemplatePayload, basicUpdateTemplatePayload, payer } from './_commonResources';
 import { cleanTemplates, createTemplate, getAllTemplates, getTemplates, getTemplatesQueues, processTemplates, updateTemplate } from '../core/actions/template';
-import testKeypair from './test-wallet';
-
-const _payer = testKeypair;
-const _pubkey: PublicKey = _payer.publicKey;
-
-const basicCreateTemplatePayload: any = {
-  inputs: [
-    {
-      label: 'Test create',
-      type: 'text',
-    },
-  ],
-  title: 'Test create',
-  archived: false,
-};
-
-const basicUpdateTemplatePayload: any = {
-  publicKey: _pubkey,
-  archived: false,
-};
 
 describe('Manage template', () => {
   beforeEach(() => { cleanTemplates(); });
@@ -33,13 +13,13 @@ describe('Manage template', () => {
   });
 
   it('should get templates', async () => {
-    const templates = await getTemplates({ cluster: 'devnet', payer: _payer }, []);
+    const templates = await getTemplates({ cluster: 'devnet', payer: payer }, []);
 
     // TODO: Need a public key
   });
 
   it('should get all templates', async () => {
-    const templates = await getAllTemplates({ cluster: 'devnet', payer: _payer });
+    const templates = await getAllTemplates({ cluster: 'devnet', payer: payer });
 
     expect(templates.length).to.satisfy((count: number) => count > 0);
   });
@@ -56,7 +36,7 @@ describe('Manage template', () => {
   // TODO: Fix error
   // it('should process templates', async () => {
   //   createTemplate([basicCreateTemplatePayload]);
-  //   const templates = await processTemplates({ cluster: 'devnet', payer: _payer });
+  //   const templates = await processTemplates({ cluster: 'devnet', payer: payer });
 
   //   console.log(templates);
   // }).timeout(20000);

@@ -53,6 +53,7 @@ describe('Manage template', () => {
     expect(templatesQueues).to.deep.equal({ create: [basicCreateTemplatePayload], update: [basicUpdateTemplatePayload] });
   });
 
+  // TODO: Fix error
   // it('should process templates', async () => {
   //   createTemplate([basicCreateTemplatePayload]);
   //   const templates = await processTemplates({ cluster: 'devnet', payer: _payer });

@@ -21,6 +21,11 @@ const _resetEntriesUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
+const cleanEntries = () => {
+  _resetEntriesCreateQueue();
+  _resetEntriesUpdateQueue();
+};
+
 const createEntry = (payload: EntryCreatePayload[]): EntryCreatePayload[] => {
   validateCreateEntrySchema(payload);
 
@@ -150,4 +155,12 @@ const updateEntry = (payload: EntryUpdatePayload[]): EntryUpdatePayload[] => {
   return payload;
 };
 
-export { createEntry, getEntries, getEntriesQueues, updateEntry, processEntries, getAllEntries };
+export {
+  cleanEntries,
+  createEntry,
+  getEntries,
+  getEntriesQueues,
+  updateEntry,
+  processEntries,
+  getAllEntries
+};

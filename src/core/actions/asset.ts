@@ -19,6 +19,11 @@ const _resetAssetsUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
+const cleanAssets = () => {
+  _resetAssetsCreateQueue();
+  _resetAssetsUpdateQueue();
+};
+
 const createAsset = (payload: AssetUserCreatePayload[]): AssetUserCreatePayload[] => {
   validateCreateAssetSchema(payload);
 
@@ -135,6 +140,7 @@ const updateAsset = (payload: AssetUserUpdatePayload[]): AssetUserUpdatePayload[
 };
 
 export {
+  cleanAssets,
   createAsset,
   getAssets,
   getAssetsCreateQueue,

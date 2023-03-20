@@ -14,13 +14,13 @@ describe('Manage entry', () => {
 
   // TODO: Fix error
   it('should get entries', async () => {
-    const entries = await getEntries({ cluster: 'devnet', payer: payer }, []);
+    const entries = await getEntries({ cluster: 'devnet', payer }, []);
 
     // TODO: Need a public key
   });
 
   it('should get all entries', async () => {
-    const entries = await getAllEntries({ cluster: 'devnet', payer: payer });
+    const entries = await getAllEntries({ cluster: 'devnet', payer });
 
     expect(entries.length).to.satisfy((count: number) => count > 0);
   });
@@ -37,7 +37,7 @@ describe('Manage entry', () => {
   it('should process entries', async () => {
     createEntry([basicCreateEntryPayload]);
 
-    const entries = await processEntries({ cluster: 'devnet', payer: payer });
+    const entries = await processEntries({ cluster: 'devnet', payer });
 
     expect(entries).to.deep.equal([
       {

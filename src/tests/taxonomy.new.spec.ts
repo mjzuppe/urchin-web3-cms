@@ -13,13 +13,13 @@ describe('Manage taxonomy', () => {
   });
 
   it('should get taxonomies', async () => {
-    const taxonomies = await getTaxonomies({ cluster: 'devnet', payer: payer }, []);
+    const taxonomies = await getTaxonomies({ cluster: 'devnet', payer }, []);
 
     // TODO: Need a public key
   });
 
   it('should get all taxonomies', async () => {
-    const taxonomies = await getAllTaxonomies({ cluster: 'devnet', payer: payer });
+    const taxonomies = await getAllTaxonomies({ cluster: 'devnet', payer });
 
     expect(taxonomies.length).to.satisfy((count: number) => count > 0);
   });
@@ -36,7 +36,7 @@ describe('Manage taxonomy', () => {
   it('should process taxonomies', async () => {
     createTaxonomy([basicCreateTaxonomyPayload]);
 
-    const taxonomies = await processTaxonomies({ cluster: 'devnet', payer: payer });
+    const taxonomies = await processTaxonomies({ cluster: 'devnet', payer });
 
     expect(taxonomies).to.deep.equal([
       {

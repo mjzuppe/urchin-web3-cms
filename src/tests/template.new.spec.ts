@@ -13,13 +13,13 @@ describe('Manage template', () => {
   });
 
   it('should get templates', async () => {
-    const templates = await getTemplates({ cluster: 'devnet', payer: payer }, []);
+    const templates = await getTemplates({ cluster: 'devnet', payer }, []);
 
     // TODO: Need a public key
   });
 
   it('should get all templates', async () => {
-    const templates = await getAllTemplates({ cluster: 'devnet', payer: payer });
+    const templates = await getAllTemplates({ cluster: 'devnet', payer });
 
     expect(templates.length).to.satisfy((count: number) => count > 0);
   });
@@ -36,7 +36,7 @@ describe('Manage template', () => {
   // TODO: Fix error
   // it('should process templates', async () => {
   //   createTemplate([basicCreateTemplatePayload]);
-  //   const templates = await processTemplates({ cluster: 'devnet', payer: payer });
+  //   const templates = await processTemplates({ cluster: 'devnet', payer });
 
   //   console.log(templates);
   // }).timeout(20000);

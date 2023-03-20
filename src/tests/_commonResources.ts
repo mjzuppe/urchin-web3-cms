@@ -17,7 +17,6 @@ const basicCreateEntryPayload: any = {
   template: pubkey,
 };
 
-
 const basicCreateTaxonomyPayload: any = {
   label: 'Test create',
 };

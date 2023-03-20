@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { basicCreateAssetPayload, basicUpdateAssetPayload, payer } from './_commonResources';
+import { basicCreateAssetPayload, basicUpdateAssetPayload, payer, pubkey } from './_commonResources';
 import { cleanAssets, createAsset, getAllAssets, getAssets, getAssetsQueues, processAssets, updateAsset } from '../core/actions/asset';
 
 describe('Manage asset', () => {
@@ -14,13 +14,13 @@ describe('Manage asset', () => {
 
   // TODO: Fix error
   it('should get assets', async () => {
-    const assets = await getAssets({ cluster: 'devnet', payer: payer }, []);
+    const assets = await getAssets({ cluster: 'devnet', payer }, [pubkey]);
 
     // TODO: Need a public key
   });
 
   it('should get all assets', async () => {
-    const assets = await getAllAssets({ cluster: 'devnet', payer: payer });
+    const assets = await getAllAssets({ cluster: 'devnet', payer });
 
     expect(assets.length).to.satisfy((count: number) => count > 0);
   });
@@ -37,7 +37,7 @@ describe('Manage asset', () => {
   it('should process assets', async () => {
     createAsset([basicCreateAssetPayload]);
 
-    const assets = await processAssets({ cluster: 'devnet', payer: payer });
+    const assets = await processAssets({ cluster: 'devnet', payer });
 
     expect(assets).to.deep.equal([
       {

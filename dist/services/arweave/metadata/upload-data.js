@@ -16,6 +16,19 @@ exports.uploadData = void 0;
 // import Bundlr from "@bundlr-network/client";
 const client_1 = __importDefault(require("@bundlr-network/client"));
 const client_2 = require("@bundlr-network/client");
+// import { useAnchorWallet } from "@solana/wallet-adapter-react";
+// import {
+//     Program,
+//     AnchorProvider,
+//     BN,
+//     web3,
+//   } from '@project-serum/anchor'
+//   import {
+//     Connection,
+//     clusterApiUrl,
+//     PublicKey
+//   } from '@solana/web3.js'
+// import bs58 from "bs58";
 const uploadData = (secret, cluster, data, wallet = null) => __awaiter(void 0, void 0, void 0, function* () {
     if (wallet) {
         const bundlr = new client_2.WebBundlr("https://devnet.bundlr.network", "solana", wallet, { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet

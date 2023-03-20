@@ -1,6 +1,7 @@
 import { Asset, AssetQueues, AssetUserCreatePayload, AssetUserUpdatePayload } from '../../types/asset';
 import { PublicKey } from '@solana/web3.js';
 import { PlayaArgs } from '../../types/core';
+declare const cleanAssets: () => void;
 declare const createAsset: (payload: AssetUserCreatePayload[]) => AssetUserCreatePayload[];
 declare const getAssets: (args: PlayaArgs, publicKeys?: PublicKey[]) => Promise<Asset[]>;
 declare const getAllAssets: (args: PlayaArgs) => Promise<any>;
@@ -9,4 +10,4 @@ declare const getAssetsQueues: () => AssetQueues;
 declare const getAssetsUpdateQueue: () => AssetUserUpdatePayload[];
 declare const processAssets: (args: PlayaArgs) => Promise<any>;
 declare const updateAsset: (payload: AssetUserUpdatePayload[]) => AssetUserUpdatePayload[];
-export { createAsset, getAssets, getAssetsCreateQueue, getAssetsQueues, getAssetsUpdateQueue, updateAsset, processAssets, getAllAssets };
+export { cleanAssets, createAsset, getAssets, getAssetsCreateQueue, getAssetsQueues, getAssetsUpdateQueue, updateAsset, processAssets, getAllAssets };

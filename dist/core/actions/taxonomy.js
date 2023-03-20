@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTaxonomy = exports.processTaxonomies = exports.getTaxonomiesQueues = exports.getTaxonomiesUpdateQueue = exports.getTaxonomiesCreateQueue = exports.getAllTaxonomies = exports.getTaxonomies = exports.createTaxonomy = void 0;
+exports.updateTaxonomy = exports.processTaxonomies = exports.getTaxonomiesQueues = exports.getTaxonomiesUpdateQueue = exports.getTaxonomiesCreateQueue = exports.getAllTaxonomies = exports.getTaxonomies = exports.createTaxonomy = exports.cleanTaxonomies = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
 const taxonomy_1 = require("../../validators/taxonomy");
@@ -45,6 +45,11 @@ const _resetTaxonomiesCreateQueue = () => {
 const _resetTaxonomiesUpdateQueue = () => {
     UPDATE_QUEUE = [];
 };
+const cleanTaxonomies = () => {
+    _resetTaxonomiesCreateQueue();
+    _resetTaxonomiesUpdateQueue();
+};
+exports.cleanTaxonomies = cleanTaxonomies;
 const createTaxonomy = (payload) => {
     (0, taxonomy_1.validateCreateTaxonomySchema)(payload);
     CREATE_QUEUE = [...CREATE_QUEUE, ...payload];

@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEntries = exports.processEntries = exports.updateEntry = exports.getEntriesQueues = exports.getEntries = exports.createEntry = void 0;
+exports.getAllEntries = exports.processEntries = exports.updateEntry = exports.getEntriesQueues = exports.getEntries = exports.createEntry = exports.cleanEntries = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
 const entry_1 = require("../../validators/entry");
@@ -46,6 +46,11 @@ const _resetEntriesCreateQueue = () => {
 const _resetEntriesUpdateQueue = () => {
     UPDATE_QUEUE = [];
 };
+const cleanEntries = () => {
+    _resetEntriesCreateQueue();
+    _resetEntriesUpdateQueue();
+};
+exports.cleanEntries = cleanEntries;
 const createEntry = (payload) => {
     (0, entry_1.validateCreateEntrySchema)(payload);
     CREATE_QUEUE = [...CREATE_QUEUE, ...payload];

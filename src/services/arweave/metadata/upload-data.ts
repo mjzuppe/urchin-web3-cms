@@ -2,19 +2,19 @@
 import Bundlr from "@bundlr-network/client";
 import { Cluster, Keypair } from "@solana/web3.js";
 import { WebBundlr } from "@bundlr-network/client";
-import { useAnchorWallet } from "@solana/wallet-adapter-react";
-import {
-    Program,
-    AnchorProvider,
-    BN,
-    web3,
-  } from '@project-serum/anchor'
-  import {
-    Connection,
-    clusterApiUrl,
-    PublicKey
-  } from '@solana/web3.js'
-import bs58 from "bs58";
+// import { useAnchorWallet } from "@solana/wallet-adapter-react";
+// import {
+//     Program,
+//     AnchorProvider,
+//     BN,
+//     web3,
+//   } from '@project-serum/anchor'
+//   import {
+//     Connection,
+//     clusterApiUrl,
+//     PublicKey
+//   } from '@solana/web3.js'
+// import bs58 from "bs58";
 
 const uploadData = async (secret: Keypair, cluster: Cluster, data: any, wallet: any = null) => {
     if (wallet) {

@@ -1,10 +1,13 @@
 import { TemplateCreatePayload, Template, TemplateUpdatePayload, TemplateQueues } from '../../types/template';
 import { PublicKey } from '@solana/web3.js';
 import { PlayaArgs } from '../../types/core';
+declare const cleanTemplates: () => void;
 declare const createTemplate: (payload: TemplateCreatePayload[]) => TemplateCreatePayload[];
 declare const getTemplates: (args: PlayaArgs, publicKeys?: PublicKey[]) => Promise<Template[]>;
 declare const getAllTemplates: (args: PlayaArgs) => Promise<any>;
+declare const getTemplateCreateQueue: () => TemplateCreatePayload[];
+declare const getTemplateUpdateQueue: () => TemplateUpdatePayload[];
 declare const getTemplatesQueues: () => TemplateQueues;
 declare const processTemplates: (args: PlayaArgs) => Promise<any>;
 declare const updateTemplate: (payload: TemplateUpdatePayload[]) => TemplateUpdatePayload[];
-export { createTemplate, getTemplates, getTemplatesQueues, updateTemplate, processTemplates, getAllTemplates };
+export { cleanTemplates, createTemplate, getTemplates, getTemplateCreateQueue, getTemplateUpdateQueue, getTemplatesQueues, updateTemplate, processTemplates, getAllTemplates };

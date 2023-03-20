@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllAssets = exports.processAssets = exports.updateAsset = exports.getAssetsUpdateQueue = exports.getAssetsQueues = exports.getAssetsCreateQueue = exports.getAssets = exports.createAsset = void 0;
+exports.getAllAssets = exports.processAssets = exports.updateAsset = exports.getAssetsUpdateQueue = exports.getAssetsQueues = exports.getAssetsCreateQueue = exports.getAssets = exports.createAsset = exports.cleanAssets = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
 const asset_1 = require("../../validators/asset");
@@ -45,6 +45,11 @@ const _resetAssetsCreateQueue = () => {
 const _resetAssetsUpdateQueue = () => {
     UPDATE_QUEUE = [];
 };
+const cleanAssets = () => {
+    _resetAssetsCreateQueue();
+    _resetAssetsUpdateQueue();
+};
+exports.cleanAssets = cleanAssets;
 const createAsset = (payload) => {
     (0, asset_1.validateCreateAssetSchema)(payload);
     CREATE_QUEUE = [...CREATE_QUEUE, ...payload];

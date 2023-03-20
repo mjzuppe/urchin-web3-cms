@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllTemplates = exports.processTemplates = exports.updateTemplate = exports.getTemplatesQueues = exports.getTemplates = exports.createTemplate = void 0;
+exports.getAllTemplates = exports.processTemplates = exports.updateTemplate = exports.getTemplatesQueues = exports.getTemplateUpdateQueue = exports.getTemplateCreateQueue = exports.getTemplates = exports.createTemplate = exports.cleanTemplates = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
 const template_1 = require("../../validators/template");
@@ -46,6 +46,11 @@ const _resetTemplatesCreateQueue = () => {
 const _resetTemplatesUpdateQueue = () => {
     UPDATE_QUEUE = [];
 };
+const cleanTemplates = () => {
+    _resetTemplatesCreateQueue();
+    _resetTemplatesUpdateQueue();
+};
+exports.cleanTemplates = cleanTemplates;
 const createTemplate = (payload) => {
     (0, template_1.validateCreateTemplateSchema)(payload);
     CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
@@ -70,9 +75,11 @@ exports.getAllTemplates = getAllTemplates;
 const getTemplateCreateQueue = () => {
     return CREATE_QUEUE;
 };
+exports.getTemplateCreateQueue = getTemplateCreateQueue;
 const getTemplateUpdateQueue = () => {
     return UPDATE_QUEUE;
 };
+exports.getTemplateUpdateQueue = getTemplateUpdateQueue;
 const getTemplatesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 exports.getTemplatesQueues = getTemplatesQueues;
 const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* () {

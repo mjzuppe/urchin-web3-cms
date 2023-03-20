@@ -23,9 +23,9 @@ type Entry = {
     stage: 'published';
   }[];
   owner: string;
-  publicKey: string;
-  taxonomy: string[];
-  template: string;
+  publicKey: PublicKey;
+  taxonomy: PublicKey[];
+  template: PublicKey;
   version: number;
 };
 

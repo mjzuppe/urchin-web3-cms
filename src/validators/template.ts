@@ -16,13 +16,13 @@ const CREATE_TEMPLATE_SCHEMA = Joi.array().items( //need a different valiation i
       }),
     ),
     title: Joi.string().min(1).max(100).required(),
-    taxonomies: Joi.array().items(Joi.any()),
+    taxonomies: Joi.array().items(pubkey()),
     original: Joi.any(),
     archived: Joi.boolean(),
   }),
 ).min(1);
 
-const GET_TEMPLATES_SCHEMA = Joi.array().items(Joi.any());
+const GET_TEMPLATES_SCHEMA = Joi.array().items(pubkey());
 
 const UPDATE_TEMPLATE_SCHEMA = Joi.array().items(
   Joi.object({

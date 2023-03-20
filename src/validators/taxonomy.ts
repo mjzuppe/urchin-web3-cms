@@ -8,7 +8,7 @@ const CREATE_TAXONOMY_SCHEMA = Joi.array().items(
   }),
 ).min(1);
 
-const GET_TAXONOMIES_SCHEMA = Joi.array().items(Joi.any())
+const GET_TAXONOMIES_SCHEMA = Joi.array().items(pubkey())
 
 const CREATE_UPDATE_SCHEMA = Joi.array().items(
   Joi.object({

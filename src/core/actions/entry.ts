@@ -13,6 +13,11 @@ import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 let CREATE_QUEUE: EntryCreatePayload[] = [];
 let UPDATE_QUEUE: EntryUpdatePayload[] = [];
 
+const cleanEntries = () => {
+  _resetEntriesCreateQueue();
+  _resetEntriesUpdateQueue();
+};
+
 const _resetEntriesCreateQueue = (): void => {
   CREATE_QUEUE = [];
 };
@@ -21,13 +26,19 @@ const _resetEntriesUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
-const cleanEntries = () => {
-  _resetEntriesCreateQueue();
-  _resetEntriesUpdateQueue();
+const _validateInputsFromTemplate = (payload: EntryCreatePayload) => {
+  // Find template
+
+
+  // Create dynamic form validator
+
+  // Validate data
 };
 
 const createEntry = (payload: EntryCreatePayload[]): EntryCreatePayload[] => {
   validateCreateEntrySchema(payload);
+
+  // Validate inputs data from template rules
 
   CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
 

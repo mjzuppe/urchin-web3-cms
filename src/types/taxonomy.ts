@@ -22,7 +22,7 @@ type TaxonomyUpdatePayload = {
 type TaxonomyQueues = {
     create: TaxonomyCreatePayload[];
     update: TaxonomyUpdatePayload[];
-}
+};
 
 type TaxonomyOutput = {
     publicKey: PublicKey,

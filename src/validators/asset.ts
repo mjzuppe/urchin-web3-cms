@@ -10,7 +10,7 @@ const CREATE_ASSET_SCHEMA = Joi.array().items(
   })
 ).min(1);
 
-const GET_ASSETS_SCHEMA = Joi.array().items(Joi.any()).min(1);
+const GET_ASSETS_SCHEMA = Joi.array().items(pubkey()).min(1);
 
 const UPDATE_ASSET_SCHEMA = Joi.array().items(
   Joi.object({

@@ -40,19 +40,25 @@ const transform_1 = require("../../services/solana/transform");
 const metadata = __importStar(require("../../services/arweave/metadata"));
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
+const cleanEntries = () => {
+    _resetEntriesCreateQueue();
+    _resetEntriesUpdateQueue();
+};
+exports.cleanEntries = cleanEntries;
 const _resetEntriesCreateQueue = () => {
     CREATE_QUEUE = [];
 };
 const _resetEntriesUpdateQueue = () => {
     UPDATE_QUEUE = [];
 };
-const cleanEntries = () => {
-    _resetEntriesCreateQueue();
-    _resetEntriesUpdateQueue();
+const _validateInputsFromTemplate = (payload) => {
+    // Find template
+    // Create dynamic form validator
+    // Validate data
 };
-exports.cleanEntries = cleanEntries;
 const createEntry = (payload) => {
     (0, entry_1.validateCreateEntrySchema)(payload);
+    // Validate inputs data from template rules
     CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
     return payload;
 };

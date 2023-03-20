@@ -10,7 +10,7 @@ const CREATE_TAXONOMY_SCHEMA = joi_1.default.array().items(joi_1.default.object(
     label: joi_1.default.string().required(),
     parent: joi_1.default.string(),
 })).min(1);
-const GET_TAXONOMIES_SCHEMA = joi_1.default.array().items(joi_1.default.any());
+const GET_TAXONOMIES_SCHEMA = joi_1.default.array().items((0, custom_1.pubkey)());
 const CREATE_UPDATE_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     publicKey: (0, custom_1.pubkey)().required(),
     label: joi_1.default.string().required(),

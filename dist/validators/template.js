@@ -19,11 +19,11 @@ joi_1.default.object({
         }),
     })),
     title: joi_1.default.string().min(1).max(100).required(),
-    taxonomies: joi_1.default.array().items(joi_1.default.any()),
+    taxonomies: joi_1.default.array().items((0, custom_1.pubkey)()),
     original: joi_1.default.any(),
     archived: joi_1.default.boolean(),
 })).min(1);
-const GET_TEMPLATES_SCHEMA = joi_1.default.array().items(joi_1.default.any());
+const GET_TEMPLATES_SCHEMA = joi_1.default.array().items((0, custom_1.pubkey)());
 const UPDATE_TEMPLATE_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     // inputs: Joi.array().items(
     //   Joi.object({

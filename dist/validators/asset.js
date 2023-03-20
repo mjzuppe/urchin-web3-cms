@@ -12,7 +12,7 @@ const CREATE_ASSET_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     archived: joi_1.default.boolean().default(false),
     arweaveId: joi_1.default.string().required(),
 })).min(1);
-const GET_ASSETS_SCHEMA = joi_1.default.array().items(joi_1.default.any()).min(1);
+const GET_ASSETS_SCHEMA = joi_1.default.array().items((0, custom_1.pubkey)()).min(1);
 const UPDATE_ASSET_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     publicKey: (0, custom_1.pubkey)().required(),
     arweaveId: joi_1.default.string().required(),

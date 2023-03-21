@@ -14,6 +14,12 @@ const basicCreateAssetPayload: any = {
 const basicCreateEntryPayload: any = {
   archived: false,
   immutable: false,
+  inputs: [
+    {
+      label: 'title',
+      value: 'Titre 1',
+    }
+  ],
   template: pubkey,
 };
 

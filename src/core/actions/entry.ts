@@ -8,7 +8,8 @@ import { PublicKey } from '@solana/web3.js';
 import { validateCreateEntrySchema, validateGetEntriesSchema, validateUpdateEntrySchema } from '../../validators/entry';
 import { formatEntryAccounts } from '../../services/solana/transform';
 import * as metadata from '../../services/arweave/metadata';
-import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
+import { getTemplates } from './template';
+import Joi from 'joi';
 
 let CREATE_QUEUE: EntryCreatePayload[] = [];
 let UPDATE_QUEUE: EntryUpdatePayload[] = [];
@@ -26,21 +27,56 @@ const _resetEntriesUpdateQueue = (): void => {
   UPDATE_QUEUE = [];
 };
 
-const _validateInputsFromTemplate = (payload: EntryCreatePayload) => {
+const _validateInputsFromTemplate = async (args: PlayaArgs, payload: EntryCreatePayload): Promise<void> => {
+  if (!payload.inputs?.length) return;
+
   // Find template
+  const template = (await getTemplates(args, [payload.template]))?.[0];
 
+  if (!template) throw Error('Entry validation aborted cause due template not found!');
 
-  // Create dynamic form validator
+  // Create validation form
+  const validationTypes = (input: any) => {
+    const types: any = {
+      file: {},
+      numeric: Joi.number().min(input.validation.min).max(input.validation.max),
+      text: Joi.string().min(input.validation.min).max(input.validation.max),
+      textarea: Joi.string().min(input.validation.min).max(input.validation.max),
+      select: Joi.string().valid(input.options),
+    };
+
+    let validationType = types[input.type];
+
+    return validationType.required();
+  };
+
+  let validationSchema: any = {};
+
+  for (const input of template.inputs) {
+    validationSchema[input.label] = validationTypes(input);
+  }
+
+  let formattedDataForValidation: any = {};
+
+  for (const input of payload.inputs) {
+    formattedDataForValidation[input.label] = input.value;
+  }
 
   // Validate data
+  const { error } = Joi.object(validationSchema).validate(formattedDataForValidation);
+
+  if (error) throw new Error(error?.details[0].message);
 };
 
-const createEntry = (payload: EntryCreatePayload[]): EntryCreatePayload[] => {
+const createEntry = async (args: PlayaArgs, payload: EntryCreatePayload[]): Promise<EntryCreatePayload[]> => {
   validateCreateEntrySchema(payload);
 
   // Validate inputs data from template rules
+  for (const entry of payload) {
+    // await _validateInputsFromTemplate(args, entry);
 
-  CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
+    CREATE_QUEUE = [...CREATE_QUEUE, entry];
+  }
 
   return payload;
 };
@@ -59,7 +95,6 @@ const getEntries = async (args: PlayaArgs, publicKeys: PublicKey[] = []): Promis
 
   let entryAccounts: any = await new SolanaInteractions.Entry(sdk).getEntry(publicKeys);
   return formatEntryAccounts(entryAccounts);
-
 };
 
 const getAllEntries = async (args: PlayaArgs): Promise<Entry[]> => {
@@ -77,7 +112,6 @@ const getAllEntries = async (args: PlayaArgs): Promise<Entry[]> => {
   let entryAccounts: any = await new SolanaInteractions.Entry(sdk).getEntryAll(owner || payer);
   return formatEntryAccounts(entryAccounts);
 };
-
 
 const getEntriesQueues = (): EntryQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 

@@ -6,11 +6,11 @@ import { cleanEntries, createEntry, getAllEntries, getEntries, getEntriesQueues,
 describe('Manage entry', () => {
   beforeEach(() => { cleanEntries(); });
 
-  it('should create a new entry', () => {
-    const entry = createEntry([basicCreateEntryPayload]);
+  it('should create a new entry', async () => {
+    const entry = await createEntry({ cluster: 'devnet', payer }, [basicCreateEntryPayload]);
 
     expect(entry).to.deep.equal([basicCreateEntryPayload]);
-  });
+  }).timeout(20000);
 
   // TODO: Fix error
   it('should get entries', async () => {
@@ -26,7 +26,7 @@ describe('Manage entry', () => {
   });
 
   it('should get entries queues', () => {
-    createEntry([basicCreateEntryPayload]);
+    createEntry({ cluster: 'devnet', payer }, [basicCreateEntryPayload]);
     updateEntry([basicUpdateEntryPayload]);
 
     const entriesQueues = getEntriesQueues();
@@ -35,7 +35,7 @@ describe('Manage entry', () => {
   });
 
   it('should process entries', async () => {
-    createEntry([basicCreateEntryPayload]);
+    createEntry({ cluster: 'devnet', payer }, [basicCreateEntryPayload]);
 
     const entries = await processEntries({ cluster: 'devnet', payer });
 

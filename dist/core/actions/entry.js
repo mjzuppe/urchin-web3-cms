@@ -31,6 +31,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllEntries = exports.processEntries = exports.updateEntry = exports.getEntriesQueues = exports.getEntries = exports.createEntry = exports.cleanEntries = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
@@ -38,6 +41,8 @@ const solana_1 = require("../../services/solana");
 const entry_1 = require("../../validators/entry");
 const transform_1 = require("../../services/solana/transform");
 const metadata = __importStar(require("../../services/arweave/metadata"));
+const template_1 = require("./template");
+const joi_1 = __importDefault(require("joi"));
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
 const cleanEntries = () => {
@@ -51,17 +56,45 @@ const _resetEntriesCreateQueue = () => {
 const _resetEntriesUpdateQueue = () => {
     UPDATE_QUEUE = [];
 };
-const _validateInputsFromTemplate = (payload) => {
-    // Find template
-    // Create dynamic form validator
-    // Validate data
-};
-const createEntry = (payload) => {
+const _validateInputsFromTemplate = (args, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    if (!((_a = payload.inputs) === null || _a === void 0 ? void 0 : _a.length))
+        return;
+    const template = (_b = (yield (0, template_1.getTemplates)(args, [payload.template]))) === null || _b === void 0 ? void 0 : _b[0];
+    if (!template)
+        throw Error('Entry validation aborted cause due template not found!');
+    const validationTypes = (input) => {
+        const types = {
+            file: null,
+            numeric: joi_1.default.number().min(input.validation.min).max(input.validation.max),
+            text: joi_1.default.string().min(input.validation.min).max(input.validation.max),
+            textarea: joi_1.default.string().min(input.validation.min).max(input.validation.max),
+            select: joi_1.default.string().valid((input === null || input === void 0 ? void 0 : input.options) || ''),
+        };
+        let validationType = types[input.type];
+        return validationType;
+    };
+    let validationSchema = {};
+    for (const input of template.inputs) {
+        validationSchema[input.label] = validationTypes(input);
+    }
+    let formattedDataForValidation = {};
+    for (const input of payload.inputs) {
+        formattedDataForValidation[input.label] = input.value;
+    }
+    const { error } = joi_1.default.object(validationSchema).validate(formattedDataForValidation);
+    if (error)
+        throw new Error(error === null || error === void 0 ? void 0 : error.details[0].message);
+});
+const createEntry = (args, payload) => __awaiter(void 0, void 0, void 0, function* () {
     (0, entry_1.validateCreateEntrySchema)(payload);
     // Validate inputs data from template rules
+    for (const entry of payload) {
+        yield _validateInputsFromTemplate(args, entry);
+    }
     CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
     return payload;
-};
+});
 exports.createEntry = createEntry;
 const getEntries = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, function* () {
     (0, entry_1.validateGetEntriesSchema)(publicKeys);

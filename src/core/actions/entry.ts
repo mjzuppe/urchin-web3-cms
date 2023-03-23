@@ -30,24 +30,22 @@ const _resetEntriesUpdateQueue = (): void => {
 const _validateInputsFromTemplate = async (args: PlayaArgs, payload: EntryCreatePayload): Promise<void> => {
   if (!payload.inputs?.length) return;
 
-  // Find template
   const template = (await getTemplates(args, [payload.template]))?.[0];
 
   if (!template) throw Error('Entry validation aborted cause due template not found!');
 
-  // Create validation form
   const validationTypes = (input: any) => {
     const types: any = {
-      file: {},
+      file: null,
       numeric: Joi.number().min(input.validation.min).max(input.validation.max),
       text: Joi.string().min(input.validation.min).max(input.validation.max),
       textarea: Joi.string().min(input.validation.min).max(input.validation.max),
-      select: Joi.string().valid(input.options),
+      select: Joi.string().valid(input?.options || ''),
     };
 
     let validationType = types[input.type];
 
-    return validationType.required();
+    return validationType;
   };
 
   let validationSchema: any = {};
@@ -62,7 +60,6 @@ const _validateInputsFromTemplate = async (args: PlayaArgs, payload: EntryCreate
     formattedDataForValidation[input.label] = input.value;
   }
 
-  // Validate data
   const { error } = Joi.object(validationSchema).validate(formattedDataForValidation);
 
   if (error) throw new Error(error?.details[0].message);
@@ -73,10 +70,10 @@ const createEntry = async (args: PlayaArgs, payload: EntryCreatePayload[]): Prom
 
   // Validate inputs data from template rules
   for (const entry of payload) {
-    // await _validateInputsFromTemplate(args, entry);
-
-    CREATE_QUEUE = [...CREATE_QUEUE, entry];
+    await _validateInputsFromTemplate(args, entry);
   }
+
+  CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
 
   return payload;
 };

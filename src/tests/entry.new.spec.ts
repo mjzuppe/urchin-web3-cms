@@ -39,8 +39,8 @@ describe('Manage entry', () => {
     expect(entries.length).to.satisfy((count: number) => count > 0);
   });
 
-  it('should get entries queues', () => {
-    createEntry({ cluster: 'devnet', payer }, [basicCreateEntryPayload]);
+  it('should get entries queues', async () => {
+    await createEntry({ cluster: 'devnet', payer }, [basicCreateEntryPayload]);
     updateEntry([basicUpdateEntryPayload]);
 
     const entriesQueues = getEntriesQueues();

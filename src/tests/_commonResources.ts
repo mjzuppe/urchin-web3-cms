@@ -20,7 +20,7 @@ const basicCreateEntryPayload: any = {
       value: 'Titre 1',
     }
   ],
-  template: pubkey,
+  template: new PublicKey('5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd'),
 };
 
 const basicCreateTaxonomyPayload: any = {

@@ -2,6 +2,7 @@ import { expect } from 'chai';
 
 import { basicCreateTemplatePayload, basicUpdateTemplatePayload, payer } from './_commonResources';
 import { cleanTemplates, createTemplate, getAllTemplates, getTemplates, getTemplatesQueues, processTemplates, updateTemplate } from '../core/actions/template';
+import { PublicKey } from '@solana/web3.js';
 
 describe('Manage template', () => {
   beforeEach(() => { cleanTemplates(); });
@@ -13,9 +14,34 @@ describe('Manage template', () => {
   });
 
   it('should get templates', async () => {
-    const templates = await getTemplates({ cluster: 'devnet', payer }, []);
+    const pubkeyOne = new PublicKey('B8Wsxt5q1DihAiSSm4KTur6Ux5THprhW5FwyW8YyqmyK');
+    const templates = await getTemplates({ cluster: 'devnet', payer }, [pubkeyOne]);
 
-    // TODO: Need a public key
+    expect(templates).to.deep.equal(
+      [
+        {
+          publicKey: 'B8Wsxt5q1DihAiSSm4KTur6Ux5THprhW5FwyW8YyqmyK',
+          title: undefined,
+          owner: '5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd',
+          archived: true,
+          arweaveId: 'r2PqzUr_-vzoV2Yw6HjY95MshXGh-Q1DCqMkc0P1KFE',
+          original: null,
+          taxonomies: ['5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd'],
+          inputs: [
+            {
+              label: 'text',
+              type: 'text',
+              validation: {
+                max: 100,
+                min: 1,
+                type: 'text',
+              },
+            },
+          ],
+          created: 1678712441168
+        },
+      ]
+    );
   });
 
   it('should get all templates', async () => {

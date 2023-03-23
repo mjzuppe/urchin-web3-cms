@@ -2,6 +2,7 @@ import { expect } from 'chai';
 
 import { basicCreateAssetPayload, basicUpdateAssetPayload, payer, pubkey } from './_commonResources';
 import { cleanAssets, createAsset, getAllAssets, getAssets, getAssetsQueues, processAssets, updateAsset } from '../core/actions/asset';
+import { PublicKey } from '@solana/web3.js';
 
 describe('Manage asset', () => {
   beforeEach(() => { cleanAssets(); });
@@ -14,9 +15,21 @@ describe('Manage asset', () => {
 
   // TODO: Fix error
   it('should get assets', async () => {
-    const assets = await getAssets({ cluster: 'devnet', payer }, [pubkey]);
+    const pubkeyOne = new PublicKey('3W1As1tZj3H6vdcrthZi7GwN4QxJsrodr9fr9qEhLAM6');
+    const assets = await getAssets({ cluster: 'devnet', payer }, [pubkeyOne]);
 
-    // TODO: Need a public key
+    expect(assets).to.deep.equal(
+      [
+        {
+          publicKey: '3W1As1tZj3H6vdcrthZi7GwN4QxJsrodr9fr9qEhLAM6',
+          owner: '5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd',
+          arweaveId: '2222222222222222222222222222222222222222222',
+          url: 'https://arweave.net/2222222222222222222222222222222222222222222',
+          archived: false,
+          immutable: false,
+        },
+      ]
+    );
   });
 
   it('should get all assets', async () => {

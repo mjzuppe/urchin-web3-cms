@@ -2,6 +2,7 @@ import { expect } from 'chai';
 
 import { basicCreateEntryPayload, basicUpdateEntryPayload, payer } from './_commonResources';
 import { cleanEntries, createEntry, getAllEntries, getEntries, getEntriesQueues, processEntries, updateEntry } from '../core/actions/entry';
+import { PublicKey } from '@solana/web3.js';
 
 describe('Manage entry', () => {
   beforeEach(() => { cleanEntries(); });
@@ -12,11 +13,24 @@ describe('Manage entry', () => {
     expect(entry).to.deep.equal([basicCreateEntryPayload]);
   }).timeout(20000);
 
-  // TODO: Fix error
   it('should get entries', async () => {
-    const entries = await getEntries({ cluster: 'devnet', payer }, []);
+    const pubkeyOne = new PublicKey('DLyFQvyK4PDZZ7svKjSD8KcouMrCvy83HdiQDQoB6gqj');
+    const entries = await getEntries({ cluster: 'devnet', payer }, [pubkeyOne]);
 
-    // TODO: Need a public key
+    expect(entries).to.deep.equal(
+      [
+        {
+          publicKey: 'DLyFQvyK4PDZZ7svKjSD8KcouMrCvy83HdiQDQoB6gqj',
+          owner: '5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd',
+          template: '5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd',
+          taxonomy: [],
+          archived: true,
+          immutable: false,
+          arweaveId: 'efSj7Hut9rTaz4HjBa0t4hhzX_SkgN67-o9KZqUNack',
+          created: 1678725636574,
+        }
+      ]
+    );
   });
 
   it('should get all entries', async () => {

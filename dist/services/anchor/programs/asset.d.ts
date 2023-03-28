@@ -8,7 +8,7 @@ export declare class Asset {
         publicKey: anchor.web3.PublicKey;
     }>;
     getAsset(publicKeys: anchor.web3.PublicKey[]): Promise<any>;
-    getAssetAll(owner: anchor.web3.Keypair): Promise<anchor.ProgramAccount<{
+    getAssetAll(owner: anchor.web3.PublicKey): Promise<anchor.ProgramAccount<{
         [x: string]: any;
     }>[]>;
     updateAsset(publicKey: anchor.web3.PublicKey, owner: anchor.web3.Keypair, arweave_id: string, immutable: boolean, archived: boolean): Promise<{

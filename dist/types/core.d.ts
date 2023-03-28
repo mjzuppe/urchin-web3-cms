@@ -1,8 +1,8 @@
-import { Cluster, Keypair } from '@solana/web3.js';
+import { Cluster, Keypair, PublicKey } from '@solana/web3.js';
 import { ApiVersions } from './api';
 type PlayaArgs = {
     apiVersion?: ApiVersions;
-    payer: Keypair;
+    payer: Keypair | PublicKey;
     owner?: Keypair;
     cluster?: Cluster;
     rpc?: string;

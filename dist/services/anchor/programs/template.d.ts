@@ -8,7 +8,7 @@ export declare class Template {
         publicKey: anchor.web3.PublicKey;
     }>;
     getTemplate(publicKeys: anchor.web3.PublicKey[]): Promise<any>;
-    getTemplateAll(owner: anchor.web3.Keypair): Promise<anchor.ProgramAccount<{
+    getTemplateAll(owner: anchor.web3.PublicKey): Promise<anchor.ProgramAccount<{
         [x: string]: any;
     }>[]>;
     updateTemplate(publicKey: anchor.web3.PublicKey, owner: anchor.web3.Keypair, archived: boolean, version?: number): Promise<{

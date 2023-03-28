@@ -7,12 +7,20 @@ export declare class Taxonomy {
         tx: string;
         publicKey: anchor.web3.PublicKey;
     }>;
+    createTaxonomyTx(label: string, payer: anchor.web3.PublicKey, owner: anchor.web3.PublicKey, parent?: anchor.web3.PublicKey | undefined): Promise<{
+        tx: anchor.web3.Transaction;
+        publicKey: anchor.web3.PublicKey;
+    }>;
     getTaxonomy(publicKeys: anchor.web3.PublicKey[]): Promise<any>;
-    getTaxonomyAll(owner: anchor.web3.Keypair): Promise<anchor.ProgramAccount<{
+    getTaxonomyAll(owner: anchor.web3.PublicKey): Promise<anchor.ProgramAccount<{
         [x: string]: any;
     }>[]>;
     updateTaxonomy(publicKey: anchor.web3.PublicKey, label: string, owner: anchor.web3.Keypair, parent?: anchor.web3.PublicKey | undefined): Promise<{
         tx: string;
+        publicKey: anchor.web3.PublicKey;
+    }>;
+    updateTaxonomyTx(publicKey: anchor.web3.PublicKey, label: string, payer: anchor.web3.PublicKey, owner: anchor.web3.PublicKey, parent?: anchor.web3.PublicKey | undefined): Promise<{
+        tx: anchor.web3.Transaction;
         publicKey: anchor.web3.PublicKey;
     }>;
 }

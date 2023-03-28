@@ -67,7 +67,7 @@ class Entry {
                 {
                     memcmp: {
                         offset: 8,
-                        bytes: owner.publicKey.toBase58(),
+                        bytes: owner.toBase58(),
                     }
                 }
             ]);

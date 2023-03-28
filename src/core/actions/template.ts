@@ -51,7 +51,7 @@ const getTemplates = async (args: PlayaArgs, publicKeys: PublicKey[] = []): Prom
 
 const getAllTemplates = async (args: PlayaArgs) => {
 
-  const { cluster, payer, owner, rpc, wallet, preflightCommitment } = loadSolanaConfig(args);
+  const { cluster, payer, owner, ownerPublicKey, rpc, wallet, preflightCommitment } = loadSolanaConfig(args);
   const sdk = new SolanaInteractions.AnchorSDK(
     wallet as NodeWallet,
     rpc,
@@ -60,7 +60,7 @@ const getAllTemplates = async (args: PlayaArgs) => {
     cluster
   );
 
-  let templateAccounts: any = await new SolanaInteractions.Template(sdk).getTemplateAll(owner || payer);
+  let templateAccounts: any = await new SolanaInteractions.Template(sdk).getTemplateAll(ownerPublicKey);
   return templateAccounts
 
 };
@@ -77,7 +77,7 @@ const getTemplatesQueues = (): TemplateQueues => ({ create: CREATE_QUEUE, update
 
 const processTemplates = async (args: PlayaArgs): Promise<any> => {
   const { cluster, payer, rpc, wallet, preflightCommitment, owner, walletContextState } = await loadSolanaConfig(args);
-
+  if (payer instanceof PublicKey) throw new Error(`Attempting to process templates with a payer public key.`);
   const sdk = new SolanaInteractions.AnchorSDK(
     wallet as NodeWallet,
     rpc,

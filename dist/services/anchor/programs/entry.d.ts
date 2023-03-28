@@ -8,7 +8,7 @@ export declare class Entry {
         publicKey: anchor.web3.PublicKey;
     }>;
     getEntry(publicKeys: anchor.web3.PublicKey[]): Promise<any>;
-    getEntryAll(owner: anchor.web3.Keypair): Promise<anchor.ProgramAccount<{
+    getEntryAll(owner: anchor.web3.PublicKey): Promise<anchor.ProgramAccount<{
         [x: string]: any;
     }>[]>;
     updateEntry(publicKey: anchor.web3.PublicKey, owner: anchor.web3.Keypair, arweave_id: string, taxonomy: anchor.web3.PublicKey[], immutable: boolean, archived: boolean): Promise<{

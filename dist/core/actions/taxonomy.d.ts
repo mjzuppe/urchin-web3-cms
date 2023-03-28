@@ -9,5 +9,6 @@ declare const getTaxonomiesCreateQueue: () => TaxonomyCreatePayload[];
 declare const getTaxonomiesUpdateQueue: () => TaxonomyCreatePayload[];
 declare const getTaxonomiesQueues: () => TaxonomyQueues;
 declare const processTaxonomies: (args: PlayaArgs) => Promise<any>;
+declare const createTxsTaxonomies: (args: PlayaArgs) => Promise<any>;
 declare const updateTaxonomy: (payload: TaxonomyUpdatePayload[]) => TaxonomyUpdatePayload[];
-export { cleanTaxonomies, createTaxonomy, getTaxonomies, getAllTaxonomies, getTaxonomiesCreateQueue, getTaxonomiesUpdateQueue, getTaxonomiesQueues, processTaxonomies, updateTaxonomy };
+export { cleanTaxonomies, createTaxonomy, getTaxonomies, getAllTaxonomies, getTaxonomiesCreateQueue, getTaxonomiesUpdateQueue, getTaxonomiesQueues, processTaxonomies, createTxsTaxonomies, updateTaxonomy };

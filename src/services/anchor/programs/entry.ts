@@ -34,13 +34,13 @@ export class Entry {
     // if (r.owner.toString() !== owner.publicKey.toString()) throw Error("owner mismatch"); //TODO MZ: add validation for owner?
   };
 
-  async getEntryAll(owner: anchor.web3.Keypair) {
+  async getEntryAll(owner: anchor.web3.PublicKey) {
     return await this.sdk.program.account.entryAccount.all(
       [
         {
           memcmp: {
             offset: 8, // Discriminator.
-            bytes: owner.publicKey.toBase58(),
+            bytes: owner.toBase58(),
           }
         }
       ]

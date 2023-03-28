@@ -35,6 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllEntries = exports.processEntries = exports.updateEntry = exports.getEntriesQueues = exports.getEntries = exports.createEntry = exports.cleanEntries = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
+const web3_js_1 = require("@solana/web3.js");
 const entry_1 = require("../../validators/entry");
 const transform_1 = require("../../services/solana/transform");
 const metadata = __importStar(require("../../services/arweave/metadata"));
@@ -73,16 +74,18 @@ const getEntries = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, 
 exports.getEntries = getEntries;
 const getAllEntries = (args) => __awaiter(void 0, void 0, void 0, function* () {
     // validateGetAllTaxonomiesSchema(owner);
-    const { cluster, payer, owner, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const { cluster, payer, owner, ownerPublicKey, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'entry', cluster);
-    let entryAccounts = yield new SolanaInteractions.Entry(sdk).getEntryAll(owner || payer);
+    let entryAccounts = yield new SolanaInteractions.Entry(sdk).getEntryAll(ownerPublicKey);
     return (0, transform_1.formatEntryAccounts)(entryAccounts);
 });
 exports.getAllEntries = getAllEntries;
 const getEntriesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 exports.getEntriesQueues = getEntriesQueues;
 const processEntries = (args) => __awaiter(void 0, void 0, void 0, function* () {
-    const { cluster, payer, owner, rpc, wallet, preflightCommitment, walletContextState } = yield (0, solana_1.loadSolanaConfig)(args);
+    const { cluster, payer, owner, rpc, wallet, preflightCommitment, walletContextState, returnTransactions } = yield (0, solana_1.loadSolanaConfig)(args);
+    if (payer instanceof web3_js_1.PublicKey)
+        throw new Error(`Attempting to process entries with a payer public key.`);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'entry', cluster);
     let mutatedEntryIds = [];
     for (const createEntryFromQueue of CREATE_QUEUE) {

@@ -79,7 +79,7 @@ const createEntry = async (args: PlayaArgs, payload: EntryCreatePayload[]): Prom
 };
 
 const createTxsEntries = async (args: PlayaArgs): Promise<any> => {
-  const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment } = loadSolanaConfig(args);
+  const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment, walletContextState } = loadSolanaConfig(args);
 
   if (payer instanceof Keypair) throw new Error('To create entries transactions, you must provide Publickey instead of a Keypair.');
 
@@ -94,10 +94,18 @@ const createTxsEntries = async (args: PlayaArgs): Promise<any> => {
   let transactions: any = [];
 
   for (const createEntryFromQueue of CREATE_QUEUE) {
+    // Arweave
+    const arweaveData = {
+      inputs: createEntryFromQueue.inputs,
+      created: Date.now()
+    }
+    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+    const arweaveId = arweaveResponse.id;
+
     const createdEntry = await new SolanaInteractions.Entry(sdk).createEntryTx(
       payerPublicKey,
       ownerPublicKey,
-      createEntryFromQueue.arweaveId,
+      arweaveId,
       createEntryFromQueue.template,
       createEntryFromQueue.taxonomies || [],
       createEntryFromQueue.immutable || false,
@@ -110,10 +118,19 @@ const createTxsEntries = async (args: PlayaArgs): Promise<any> => {
   for (const updateEntryFromQueue of UPDATE_QUEUE) {
     if (!updateEntryFromQueue.publicKey) continue;
 
+    // Arweave
+    const arweaveData = {
+      inputs: updateEntryFromQueue.inputs,
+      created: Date.now()
+    }
+
+    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+    const arweaveId = arweaveResponse.id;
+
     const updatedEntry = await new SolanaInteractions.Entry(sdk).updateEntryTx(
       updateEntryFromQueue.publicKey,
       payerPublicKey,
-      updateEntryFromQueue.arweaveId,
+      arweaveId,
       updateEntryFromQueue.taxonomies || [],
       updateEntryFromQueue.immutable || false,
       updateEntryFromQueue.archived || false

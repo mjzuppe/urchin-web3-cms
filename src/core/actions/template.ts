@@ -34,7 +34,7 @@ const createTemplate = (payload: TemplateCreatePayload[]): TemplateCreatePayload
 };
 
 const createTxsTemplates = async (args: PlayaArgs): Promise<any> => {
-  const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment } = loadSolanaConfig(args);
+  const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment, walletContextState } = loadSolanaConfig(args);
 
   if (payer instanceof Keypair) throw new Error('To create template transactions, you must provide Publickey instead of a Keypair.');
 
@@ -49,10 +49,19 @@ const createTxsTemplates = async (args: PlayaArgs): Promise<any> => {
   let transactions: any = [];
 
   for (const createTemplateFromQueue of CREATE_QUEUE) {
+    // Arweave
+    const arweaveData = {
+      inputs: createTemplateFromQueue.inputs,
+      created: Date.now()
+    };
+
+    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+    const arweaveId = arweaveResponse.id;
+
     const createdTemplate = await new SolanaInteractions.Template(sdk).createTemplateTx(
       payerPublicKey,
       ownerPublicKey,
-      createTemplateFromQueue.arweave_id,
+      arweaveId,
       createTemplateFromQueue.archived,
       createTemplateFromQueue.original,
     );

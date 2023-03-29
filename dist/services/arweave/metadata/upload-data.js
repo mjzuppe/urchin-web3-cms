@@ -31,13 +31,13 @@ const client_2 = require("@bundlr-network/client");
 // import bs58 from "bs58";
 const uploadData = (secret, cluster, data, wallet = null) => __awaiter(void 0, void 0, void 0, function* () {
     if (wallet) {
-        const bundlr = new client_2.WebBundlr("https://devnet.bundlr.network", "solana", wallet, { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet
-        yield bundlr.fund(100000);
+        const bundlr = new client_2.WebBundlr("https://node2.bundlr.network", "solana", wallet, { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet ---previously https://devnet.bundlr.network
+        // await bundlr.fund(100000);
         return yield bundlr.upload(JSON.stringify(data));
     }
     else {
-        const bundlr = new client_1.default("https://devnet.bundlr.network", "solana", secret, { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet
-        yield bundlr.fund(100000);
+        const bundlr = new client_1.default("https://node2.bundlr.network", "solana", secret, { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet
+        // await bundlr.fund(100000);
         return yield bundlr.upload(JSON.stringify(data));
     }
 });

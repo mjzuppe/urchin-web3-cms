@@ -97,7 +97,7 @@ const getEntries = async (args: PlayaArgs, publicKeys: PublicKey[] = []): Promis
 const getAllEntries = async (args: PlayaArgs): Promise<Entry[]> => {
   // validateGetAllTaxonomiesSchema(owner);
 
-  const { cluster, payer, owner, rpc, wallet, preflightCommitment } = loadSolanaConfig(args);
+  const { cluster, payer, owner, ownerPublicKey, rpc, wallet, preflightCommitment } = loadSolanaConfig(args);
   const sdk = new SolanaInteractions.AnchorSDK(
     wallet as NodeWallet,
     rpc,
@@ -106,15 +106,15 @@ const getAllEntries = async (args: PlayaArgs): Promise<Entry[]> => {
     cluster
   );
 
-  let entryAccounts: any = await new SolanaInteractions.Entry(sdk).getEntryAll(owner || payer);
+  let entryAccounts: any = await new SolanaInteractions.Entry(sdk).getEntryAll(ownerPublicKey);
   return formatEntryAccounts(entryAccounts);
 };
 
 const getEntriesQueues = (): EntryQueues => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 
 const processEntries = async (args: PlayaArgs): Promise<any> => {
-  const { cluster, payer, owner, rpc, wallet, preflightCommitment, walletContextState } = await loadSolanaConfig(args);
-
+  const { cluster, payer, owner, rpc, wallet, preflightCommitment, walletContextState, returnTransactions } = await loadSolanaConfig(args);
+  if (payer instanceof PublicKey) throw new Error(`Attempting to process entries with a payer public key.`);
   const sdk = new SolanaInteractions.AnchorSDK(
     wallet as NodeWallet,
     rpc,

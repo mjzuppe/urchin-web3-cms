@@ -50,7 +50,7 @@ const getAssets = async (args: PlayaArgs, publicKeys: PublicKey[] = []): Promise
 
 const getAllAssets = async (args: PlayaArgs) => {
 
-  const { cluster, payer, owner, rpc, wallet, preflightCommitment } = loadSolanaConfig(args);
+  const { cluster, payer, owner, ownerPublicKey, rpc, wallet, preflightCommitment } = loadSolanaConfig(args);
   const sdk = new SolanaInteractions.AnchorSDK(
     wallet as NodeWallet,
     rpc,
@@ -59,7 +59,7 @@ const getAllAssets = async (args: PlayaArgs) => {
     cluster
   );
 
-  let AssetAccounts: any = await new SolanaInteractions.Asset(sdk).getAssetAll(owner || payer);
+  let AssetAccounts: any = await new SolanaInteractions.Asset(sdk).getAssetAll(ownerPublicKey);
   return AssetAccounts
 
 };
@@ -75,8 +75,8 @@ const getAssetsUpdateQueue = (): AssetUserUpdatePayload[] => {
 };
 
 const processAssets = async (args: PlayaArgs): Promise<any> => {
-  const { cluster, payer, owner, rpc, wallet, preflightCommitment } = await loadSolanaConfig(args);
-
+  const { cluster, payer, owner, rpc, wallet, preflightCommitment, returnTransactions } = await loadSolanaConfig(args);
+  if (payer instanceof PublicKey) throw new Error(`Attempting to process assets with a payer public key.`);
   const sdk = new SolanaInteractions.AnchorSDK(
     wallet as NodeWallet,
     rpc,

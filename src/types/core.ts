@@ -3,7 +3,7 @@ import { ApiVersions } from './api';
 
 type PlayaArgs = {
   apiVersion?: ApiVersions;
-  payer: Keypair,
+  payer: Keypair | PublicKey,
   owner?: Keypair,
   cluster?: Cluster,
   rpc?: string,

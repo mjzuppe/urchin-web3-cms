@@ -3,7 +3,7 @@ import * as SolanaInteractions from '../../services/anchor/programs';
 import { TemplateCreatePayload, Template, TemplateUpdatePayload, TemplateQueues } from '../../types/template';
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
-import { PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
 import { PlayaArgs } from '../../types/core';
 import { validateCreateTemplateSchema, validateGetTemplatesSchema, validateUpdateTemplateSchema } from '../../validators/template';
 import { formatTemplateAccounts } from '../../services/solana/transform';
@@ -31,6 +31,52 @@ const createTemplate = (payload: TemplateCreatePayload[]): TemplateCreatePayload
   CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
 
   return payload;
+};
+
+const createTxsTemplates = async (args: PlayaArgs): Promise<any> => {
+  const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment } = loadSolanaConfig(args);
+
+  if (payer instanceof Keypair) throw new Error('To create template transactions, you must provide Publickey instead of a Keypair.');
+
+  const sdk = new SolanaInteractions.AnchorSDK(
+    wallet as NodeWallet,
+    rpc,
+    preflightCommitment as anchor.web3.ConfirmOptions,
+    'template',
+    cluster
+  );
+
+  let transactions: any = [];
+
+  for (const createTemplateFromQueue of CREATE_QUEUE) {
+    const createdTemplate = await new SolanaInteractions.Template(sdk).createTemplateTx(
+      payerPublicKey,
+      ownerPublicKey,
+      createTemplateFromQueue.arweave_id,
+      createTemplateFromQueue.archived,
+      createTemplateFromQueue.original,
+    );
+    const { tx } = createdTemplate;
+    transactions.push(tx);
+  }
+
+  for (const updateTemplateFromQueue of UPDATE_QUEUE) {
+    if (!updateTemplateFromQueue.publicKey) continue;
+
+    const updatedTemplate = await new SolanaInteractions.Template(sdk).updateTemplateTx(
+      updateTemplateFromQueue.publicKey,
+      payerPublicKey,
+      updateTemplateFromQueue.archived,
+      updateTemplateFromQueue.version
+    );
+    const { tx } = updatedTemplate;
+    transactions.push(tx);
+  }
+
+  _resetTemplatesCreateQueue();
+  _resetTemplatesUpdateQueue();
+
+  return transactions;
 };
 
 const getTemplates = async (args: PlayaArgs, publicKeys: PublicKey[] = []): Promise<Template[]> => {
@@ -151,6 +197,7 @@ const updateTemplate = (payload: TemplateUpdatePayload[]): TemplateUpdatePayload
 export {
   cleanTemplates,
   createTemplate,
+  createTxsTemplates,
   getTemplates,
   getTemplateCreateQueue,
   getTemplateUpdateQueue,

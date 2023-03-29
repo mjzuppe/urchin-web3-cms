@@ -3,7 +3,7 @@ import * as SolanaInteractions from '../../services/anchor/programs';
 import { Asset, AssetQueues, AssetUserCreatePayload, AssetUserUpdatePayload } from '../../types/asset';
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
-import { PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
 import { validateCreateAssetSchema, validateGetAssetsSchema, validateUpdateAssetSchema } from '../../validators/asset';
 import { PlayaArgs } from '../../types/core';
 import { formatAssetAccounts } from '../../services/solana/transform';
@@ -30,6 +30,53 @@ const createAsset = (payload: AssetUserCreatePayload[]): AssetUserCreatePayload[
   CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
 
   return payload;
+};
+
+const createTxsAssets = async (args: PlayaArgs): Promise<any> => {
+  const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment } = loadSolanaConfig(args);
+
+  if (payer instanceof Keypair) throw new Error('To create assets transactions, you must provide Publickey instead of a Keypair.');
+
+  const sdk = new SolanaInteractions.AnchorSDK(
+    wallet as NodeWallet,
+    rpc,
+    preflightCommitment as anchor.web3.ConfirmOptions,
+    'asset',
+    cluster
+  );
+
+  let transactions: any = [];
+
+  for (const createAssetFromQueue of CREATE_QUEUE) {
+    const createdAsset = await new SolanaInteractions.Asset(sdk).createAssetTx(
+      payerPublicKey,
+      ownerPublicKey,
+      createAssetFromQueue.arweaveId,
+      createAssetFromQueue.immutable || false,
+      createAssetFromQueue.archived || false
+    );
+    const { tx } = createdAsset;
+    transactions.push(tx);
+  }
+
+  for (const updateAssetFromQueue of UPDATE_QUEUE) {
+    if (!updateAssetFromQueue.publicKey) continue;
+
+    const updatedAsset = await new SolanaInteractions.Asset(sdk).updateAssetTx(
+      updateAssetFromQueue.publicKey,
+      payerPublicKey,
+      updateAssetFromQueue.arweaveId,
+      updateAssetFromQueue.immutable || false,
+      updateAssetFromQueue.archived || false
+    );
+    const { tx } = updatedAsset;
+    transactions.push(tx);
+  }
+
+  _resetAssetsCreateQueue();
+  _resetAssetsUpdateQueue();
+
+  return transactions;
 };
 
 const getAssets = async (args: PlayaArgs, publicKeys: PublicKey[] = []): Promise<Asset[]> => {
@@ -142,6 +189,7 @@ const updateAsset = (payload: AssetUserUpdatePayload[]): AssetUserUpdatePayload[
 export {
   cleanAssets,
   createAsset,
+  createTxsAssets,
   getAssets,
   getAssetsCreateQueue,
   getAssetsQueues,

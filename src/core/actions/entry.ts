@@ -4,7 +4,7 @@ import { Entry, EntryCreatePayload, EntryUpdatePayload, EntryQueues } from '../.
 import { loadSolanaConfig, sleep } from '../../services/solana';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import { PlayaArgs } from '../../types/core';
-import { PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
 import { validateCreateEntrySchema, validateGetEntriesSchema, validateUpdateEntrySchema } from '../../validators/entry';
 import { formatEntryAccounts } from '../../services/solana/transform';
 import * as metadata from '../../services/arweave/metadata';
@@ -76,6 +76,56 @@ const createEntry = async (args: PlayaArgs, payload: EntryCreatePayload[]): Prom
   CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
 
   return payload;
+};
+
+const createTxsEntries = async (args: PlayaArgs): Promise<any> => {
+  const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment } = loadSolanaConfig(args);
+
+  if (payer instanceof Keypair) throw new Error('To create entries transactions, you must provide Publickey instead of a Keypair.');
+
+  const sdk = new SolanaInteractions.AnchorSDK(
+    wallet as NodeWallet,
+    rpc,
+    preflightCommitment as anchor.web3.ConfirmOptions,
+    'entry',
+    cluster
+  );
+
+  let transactions: any = [];
+
+  for (const createEntryFromQueue of CREATE_QUEUE) {
+    const createdEntry = await new SolanaInteractions.Entry(sdk).createEntryTx(
+      payerPublicKey,
+      ownerPublicKey,
+      createEntryFromQueue.arweaveId,
+      createEntryFromQueue.template,
+      createEntryFromQueue.taxonomies || [],
+      createEntryFromQueue.immutable || false,
+      createEntryFromQueue.archived || false
+    );
+    const { tx } = createdEntry;
+    transactions.push(tx);
+  }
+
+  for (const updateEntryFromQueue of UPDATE_QUEUE) {
+    if (!updateEntryFromQueue.publicKey) continue;
+
+    const updatedEntry = await new SolanaInteractions.Entry(sdk).updateEntryTx(
+      updateEntryFromQueue.publicKey,
+      payerPublicKey,
+      updateEntryFromQueue.arweaveId,
+      updateEntryFromQueue.taxonomies || [],
+      updateEntryFromQueue.immutable || false,
+      updateEntryFromQueue.archived || false
+    );
+    const { tx } = updatedEntry;
+    transactions.push(tx);
+  }
+
+  _resetEntriesCreateQueue();
+  _resetEntriesUpdateQueue();
+
+  return transactions;
 };
 
 const getEntries = async (args: PlayaArgs, publicKeys: PublicKey[] = []): Promise<Entry[]> => {
@@ -200,6 +250,7 @@ const updateEntry = (payload: EntryUpdatePayload[]): EntryUpdatePayload[] => {
 export {
   cleanEntries,
   createEntry,
+  createTxsEntries,
   getEntries,
   getEntriesQueues,
   updateEntry,

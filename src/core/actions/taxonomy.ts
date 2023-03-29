@@ -7,6 +7,7 @@ import { PlayaArgs } from '../../types/core';
 import { Taxonomy, TaxonomyCreatePayload, TaxonomyUpdatePayload, TaxonomyQueues } from '../../types/taxonomy';
 import { validateCreateTaxonomySchema, validateGetTaxonomiesSchema, validateUpdateTaxonomySchema, } from '../../validators/taxonomy';
 import { formatTaxonomyAccounts } from '../../services/solana/transform';
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
 let CREATE_QUEUE: TaxonomyCreatePayload[] = [];
 let UPDATE_QUEUE: TaxonomyUpdatePayload[] = [];
@@ -146,7 +147,12 @@ const createTxsTaxonomies = async (args: PlayaArgs): Promise<any> => {
       createTaxonomyFromQueue.parent,
     );
     const { tx } = createdTaxonomy;
-    transactions.push(tx);
+    const transactionSerialized = tx.serialize({
+      requireAllSignatures: false,
+    });
+    const transactionU8 = Uint8Array.from(transactionSerialized);
+    const transactionEncoded = bs58.encode(transactionU8);
+    transactions.push(transactionEncoded);
   }
 
   for (const updateTaxonomyFromQueue of UPDATE_QUEUE) {

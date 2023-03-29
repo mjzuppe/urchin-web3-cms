@@ -38,6 +38,7 @@ const solana_1 = require("../../services/solana");
 const web3_js_1 = require("@solana/web3.js");
 const taxonomy_1 = require("../../validators/taxonomy");
 const transform_1 = require("../../services/solana/transform");
+const bytes_1 = require("@project-serum/anchor/dist/cjs/utils/bytes");
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
 const _resetTaxonomiesCreateQueue = () => {
@@ -122,7 +123,12 @@ const createTxsTaxonomies = (args) => __awaiter(void 0, void 0, void 0, function
     for (const createTaxonomyFromQueue of CREATE_QUEUE) {
         const createdTaxonomy = yield new SolanaInteractions.Taxonomy(sdk).createTaxonomyTx(createTaxonomyFromQueue.label, payerPublicKey, ownerPublicKey, createTaxonomyFromQueue.parent);
         const { tx } = createdTaxonomy;
-        transactions.push(tx);
+        const transactionSerialized = tx.serialize({
+            requireAllSignatures: false,
+        });
+        const transactionU8 = Uint8Array.from(transactionSerialized);
+        const transactionEncoded = bytes_1.bs58.encode(transactionU8);
+        transactions.push(transactionEncoded);
     }
     for (const updateTaxonomyFromQueue of UPDATE_QUEUE) {
         if (!updateTaxonomyFromQueue.publicKey)

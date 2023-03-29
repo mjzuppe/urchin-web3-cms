@@ -7,7 +7,7 @@ declare const urchin: (args: PlayaArgs) => {
         update: (payload: import("./types/asset").AssetUserUpdatePayload[]) => import("./types/asset").AssetUserUpdatePayload[];
     };
     entry: {
-        create: (payload: import("./types/entry").EntryCreatePayload[]) => import("./types/entry").EntryCreatePayload[];
+        create: (args: PlayaArgs, payload: import("./types/entry").EntryCreatePayload[]) => Promise<import("./types/entry").EntryCreatePayload[]>;
         queue: () => import("./types/entry").EntryQueues;
         get: (props: any) => Promise<import("./types/entry").Entry[]>;
         getAll: () => Promise<import("./types/entry").Entry[]>;

@@ -2,6 +2,7 @@ import { expect } from 'chai';
 
 import { basicCreateTaxonomyPayload, basicUpdateTaxonomyPayload, payer } from './_commonResources';
 import { cleanTaxonomies, createTaxonomy, getAllTaxonomies, getTaxonomies, getTaxonomiesQueues, processTaxonomies, updateTaxonomy } from '../core/actions/taxonomy';
+import { PublicKey } from '@solana/web3.js';
 
 describe('Manage taxonomy', () => {
   beforeEach(() => { cleanTaxonomies(); });
@@ -13,9 +14,19 @@ describe('Manage taxonomy', () => {
   });
 
   it('should get taxonomies', async () => {
-    const taxonomies = await getTaxonomies({ cluster: 'devnet', payer }, []);
+    const pubkeyOne = new PublicKey('FoSrausuMN5wTMr82nzUDnq4WCtpvCEanDDS2UAdcCBy');
+    const taxonomies = await getTaxonomies({ cluster: 'devnet', payer }, [pubkeyOne]);
 
-    // TODO: Need a public key
+    expect(taxonomies).to.deep.equal(
+      [
+        {
+          publicKey: 'FoSrausuMN5wTMr82nzUDnq4WCtpvCEanDDS2UAdcCBy',
+          label: 'new label',
+          owner: '5SKNwTC2Svdd7AbynWTSwPdyZitDcLVcFeQrkqQ137Hd',
+          parent: null
+        },
+      ]
+    );
   });
 
   it('should get all taxonomies', async () => {

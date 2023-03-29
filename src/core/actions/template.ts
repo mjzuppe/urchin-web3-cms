@@ -50,8 +50,8 @@ const getTemplates = async (args: PlayaArgs, publicKeys: PublicKey[] = []): Prom
 };
 
 const getAllTemplates = async (args: PlayaArgs) => {
-
   const { cluster, payer, owner, ownerPublicKey, rpc, wallet, preflightCommitment } = loadSolanaConfig(args);
+
   const sdk = new SolanaInteractions.AnchorSDK(
     wallet as NodeWallet,
     rpc,

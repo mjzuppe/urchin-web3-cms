@@ -14,7 +14,13 @@ const basicCreateAssetPayload: any = {
 const basicCreateEntryPayload: any = {
   archived: false,
   immutable: false,
-  template: pubkey,
+  inputs: [
+    {
+      label: 'text',
+      value: 'Titre 1',
+    }
+  ],
+  template: new PublicKey('B8Wsxt5q1DihAiSSm4KTur6Ux5THprhW5FwyW8YyqmyK'),
 };
 
 const basicCreateTaxonomyPayload: any = {
@@ -43,7 +49,6 @@ const basicUpdateEntryPayload: any = {
   archived: false,
   immutable: false,
   publicKey: pubkey,
-  template: pubkey,
 };
 
 const basicUpdateTaxonomyPayload: any = {

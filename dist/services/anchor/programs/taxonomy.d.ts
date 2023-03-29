@@ -1,5 +1,6 @@
 import { AnchorSDK } from "./workspace";
 import * as anchor from "@project-serum/anchor";
+import { PublicKey } from "@solana/web3.js";
 export declare class Taxonomy {
     readonly sdk: AnchorSDK;
     constructor(sdk: AnchorSDK);
@@ -7,7 +8,7 @@ export declare class Taxonomy {
         tx: string;
         publicKey: anchor.web3.PublicKey;
     }>;
-    createTaxonomyTx(label: string, payer: anchor.web3.PublicKey, owner: anchor.web3.PublicKey, parent?: anchor.web3.PublicKey | undefined): Promise<{
+    createTaxonomyTx(label: string, payer: PublicKey, owner: PublicKey, parent?: anchor.web3.PublicKey | undefined): Promise<{
         tx: anchor.web3.Transaction;
         publicKey: anchor.web3.PublicKey;
     }>;

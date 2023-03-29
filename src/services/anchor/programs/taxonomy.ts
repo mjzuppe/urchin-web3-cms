@@ -1,5 +1,6 @@
 import { AnchorSDK } from "./workspace";
 import * as anchor from "@project-serum/anchor";
+import { PublicKey } from "@solana/web3.js";
 
 const { SystemProgram } = anchor.web3;
 
@@ -33,8 +34,8 @@ export class Taxonomy {
 
   async createTaxonomyTx(
     label: string,
-    payer: anchor.web3.PublicKey,
-    owner: anchor.web3.PublicKey,
+    payer: PublicKey,
+    owner: PublicKey,
     parent?: anchor.web3.PublicKey | undefined,
   ) {
     const accountInit = anchor.web3.Keypair.generate();

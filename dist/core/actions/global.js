@@ -62,6 +62,7 @@ const createTransactionsAll = (props) => __awaiter(void 0, void 0, void 0, funct
 exports.createTransactionsAll = createTransactionsAll;
 const queryAll = (props) => __awaiter(void 0, void 0, void 0, function* () {
     const { cluster, payer, rpc } = yield (0, solana_1.loadSolanaConfig)(props);
+    console.log("PAYER::", payer instanceof web3_js_1.PublicKey);
     const payload = {
         asset: (0, asset_1.getAssetsQueues)(),
         cluster,

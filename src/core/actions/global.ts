@@ -63,7 +63,7 @@ const createTransactionsAll = async (props: any) => {
 
 const queryAll = async (props:any) => {
   const { cluster, payer, rpc } = await loadSolanaConfig(props);
-
+  console.log("PAYER::", payer instanceof PublicKey);
   const payload: any = {
     asset: getAssetsQueues(),
     cluster,

@@ -52,6 +52,22 @@ class Asset {
         });
     }
     ;
+    createAssetTx(payer, owner, arweave_id, immutable, archived, recentBlockhash) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const accountInit = anchor.web3.Keypair.generate();
+            const method = yield this.sdk.program.methods.createAsset(arweave_id, immutable, archived).accounts({
+                asset: accountInit.publicKey,
+                payer,
+                owner,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            });
+            const tx = yield method.transaction(); // get transaction 
+            tx.feePayer = payer;
+            tx.recentBlockhash = (yield this.sdk.provider.connection.getLatestBlockhash()).blockhash;
+            let txId = yield method.signers([accountInit]);
+            return ({ tx, publicKey: accountInit.publicKey });
+        });
+    }
     getAsset(publicKeys) {
         return __awaiter(this, void 0, void 0, function* () {
             let r = yield this.sdk.program.account.assetAccount.fetchMultiple(publicKeys);
@@ -81,6 +97,21 @@ class Asset {
                 payer: this.sdk.provider.wallet.publicKey,
                 owner: owner.publicKey,
             }).signers([owner]).rpc();
+            return ({ tx, publicKey });
+        });
+    }
+    ;
+    updateAssetTx(publicKey, payer, arweave_id, immutable, archived) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const method = yield this.sdk.program.methods.updateAsset(arweave_id, immutable, archived).accounts({
+                template: publicKey,
+                payer: payer,
+                owner: payer,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            });
+            const tx = yield method.transaction(); // get transaction 
+            tx.feePayer = payer;
+            tx.recentBlockhash = (yield this.sdk.provider.connection.getLatestBlockhash()).blockhash;
             return ({ tx, publicKey });
         });
     }

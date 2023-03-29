@@ -14,6 +14,8 @@ import Joi from 'joi';
 let CREATE_QUEUE: EntryCreatePayload[] = [];
 let UPDATE_QUEUE: EntryUpdatePayload[] = [];
 
+const ephemeralKeypair = Keypair.generate();
+
 const cleanEntries = () => {
   _resetEntriesCreateQueue();
   _resetEntriesUpdateQueue();
@@ -99,7 +101,7 @@ const createTxsEntries = async (args: PlayaArgs): Promise<any> => {
       inputs: createEntryFromQueue.inputs,
       created: Date.now()
     }
-    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+    const arweaveResponse = await metadata.uploadData(payer instanceof Keypair? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
     const arweaveId = arweaveResponse.id;
 
     const createdEntry = await new SolanaInteractions.Entry(sdk).createEntryTx(
@@ -124,7 +126,7 @@ const createTxsEntries = async (args: PlayaArgs): Promise<any> => {
       created: Date.now()
     }
 
-    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+    const arweaveResponse = await metadata.uploadData(payer instanceof Keypair? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
     const arweaveId = arweaveResponse.id;
 
     const updatedEntry = await new SolanaInteractions.Entry(sdk).updateEntryTx(
@@ -198,7 +200,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
       inputs: createEntryFromQueue.inputs,
       created: Date.now()
     }
-    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+    const arweaveResponse = await metadata.uploadData(payer instanceof Keypair? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
     const arweaveId = arweaveResponse.id;
 
     // Solana 
@@ -226,7 +228,7 @@ const processEntries = async (args: PlayaArgs): Promise<any> => {
       inputs: updateEntryFromQueue.inputs,
       created: Date.now()
     }
-    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+    const arweaveResponse = await metadata.uploadData(payer instanceof Keypair? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
     const arweaveId = arweaveResponse.id;
 
     // Solana

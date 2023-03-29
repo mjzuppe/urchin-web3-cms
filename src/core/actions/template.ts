@@ -12,6 +12,8 @@ import * as metadata from '../../services/arweave/metadata';
 let CREATE_QUEUE: TemplateCreatePayload[] = [];
 let UPDATE_QUEUE: TemplateUpdatePayload[] = [];
 
+const ephemeralKeypair = Keypair.generate();
+
 const _resetTemplatesCreateQueue = (): void => {
   CREATE_QUEUE = [];
 };
@@ -55,7 +57,7 @@ const createTxsTemplates = async (args: PlayaArgs): Promise<any> => {
       created: Date.now()
     };
 
-    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+    const arweaveResponse = await metadata.uploadData(payer instanceof Keypair? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
     const arweaveId = arweaveResponse.id;
 
     const createdTemplate = await new SolanaInteractions.Template(sdk).createTemplateTx(
@@ -151,7 +153,7 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
       created: Date.now()
     }
     // console.log("SECRET: ", bs58.encode( new Uint8Array(payer.secretKey)));
-    const arweaveResponse = await metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+    const arweaveResponse = await metadata.uploadData(payer instanceof Keypair? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
     const arweaveId = arweaveResponse.id;
 
     // Solana 

@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllTemplates = exports.processTemplates = exports.updateTemplate = exports.getTemplatesQueues = exports.getTemplateUpdateQueue = exports.getTemplateCreateQueue = exports.getTemplates = exports.createTemplate = exports.cleanTemplates = void 0;
+exports.getAllTemplates = exports.processTemplates = exports.updateTemplate = exports.getTemplatesQueues = exports.getTemplateUpdateQueue = exports.getTemplateCreateQueue = exports.getTemplates = exports.createTxsTemplates = exports.createTemplate = exports.cleanTemplates = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
 const web3_js_1 = require("@solana/web3.js");
@@ -41,6 +41,7 @@ const transform_1 = require("../../services/solana/transform");
 const metadata = __importStar(require("../../services/arweave/metadata"));
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
+const ephemeralKeypair = web3_js_1.Keypair.generate();
 const _resetTemplatesCreateQueue = () => {
     CREATE_QUEUE = [];
 };
@@ -58,6 +59,36 @@ const createTemplate = (payload) => {
     return payload;
 };
 exports.createTemplate = createTemplate;
+const createTxsTemplates = (args) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment, walletContextState } = (0, solana_1.loadSolanaConfig)(args);
+    if (payer instanceof web3_js_1.Keypair)
+        throw new Error('To create template transactions, you must provide Publickey instead of a Keypair.');
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'template', cluster);
+    let transactions = [];
+    for (const createTemplateFromQueue of CREATE_QUEUE) {
+        // Arweave
+        const arweaveData = {
+            inputs: createTemplateFromQueue.inputs,
+            created: Date.now()
+        };
+        const arweaveResponse = yield metadata.uploadData(payer instanceof web3_js_1.Keypair ? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
+        const arweaveId = arweaveResponse.id;
+        const createdTemplate = yield new SolanaInteractions.Template(sdk).createTemplateTx(payerPublicKey, ownerPublicKey, arweaveId, createTemplateFromQueue.archived, createTemplateFromQueue.original);
+        const { tx } = createdTemplate;
+        transactions.push(tx);
+    }
+    for (const updateTemplateFromQueue of UPDATE_QUEUE) {
+        if (!updateTemplateFromQueue.publicKey)
+            continue;
+        const updatedTemplate = yield new SolanaInteractions.Template(sdk).updateTemplateTx(updateTemplateFromQueue.publicKey, payerPublicKey, updateTemplateFromQueue.archived, updateTemplateFromQueue.version);
+        const { tx } = updatedTemplate;
+        transactions.push(tx);
+    }
+    _resetTemplatesCreateQueue();
+    _resetTemplatesUpdateQueue();
+    return transactions;
+});
+exports.createTxsTemplates = createTxsTemplates;
 const getTemplates = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, function* () {
     (0, template_1.validateGetTemplatesSchema)(publicKeys);
     const { cluster, payer, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
@@ -97,7 +128,7 @@ const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* (
             created: Date.now()
         };
         // console.log("SECRET: ", bs58.encode( new Uint8Array(payer.secretKey)));
-        const arweaveResponse = yield metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+        const arweaveResponse = yield metadata.uploadData(payer instanceof web3_js_1.Keypair ? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
         const arweaveId = arweaveResponse.id;
         // Solana 
         const createdTemplate = yield new SolanaInteractions.Template(sdk).createTemplate(owner || payer, arweaveId, createTemplateFromQueue.archived, createTemplateFromQueue.original || null);

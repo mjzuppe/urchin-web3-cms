@@ -152,7 +152,7 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
       inputs: createTemplateFromQueue.inputs,
       created: Date.now()
     }
-    // console.log("SECRET: ", bs58.encode( new Uint8Array(payer.secretKey)));
+
     const arweaveResponse = await metadata.uploadData(payer instanceof Keypair? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
     const arweaveId = arweaveResponse.id;
 

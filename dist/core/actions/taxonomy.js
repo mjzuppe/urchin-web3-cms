@@ -59,6 +59,7 @@ const createTaxonomy = (payload) => {
 };
 exports.createTaxonomy = createTaxonomy;
 const getTaxonomies = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("IS VALID?::", publicKeys[0] instanceof web3_js_1.PublicKey);
     (0, taxonomy_1.validateGetTaxonomiesSchema)(publicKeys);
     const { cluster, payer, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'taxonomy', cluster);
@@ -69,6 +70,7 @@ exports.getTaxonomies = getTaxonomies;
 const getAllTaxonomies = (args) => __awaiter(void 0, void 0, void 0, function* () {
     // validateGetAllTaxonomiesSchema(owner);
     const { cluster, payer, owner, ownerPublicKey, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    console.log("OWNERPUBLICKEY:: ", ownerPublicKey);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'taxonomy', cluster);
     let taxonomyAccounts = yield new SolanaInteractions.Taxonomy(sdk).getTaxonomyAll(ownerPublicKey);
     return (0, transform_1.formatTaxonomyAccounts)(taxonomyAccounts);

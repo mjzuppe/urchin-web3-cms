@@ -48,7 +48,8 @@ export class Taxonomy {
     const tx = await method.transaction(); // get transaction 
     tx.feePayer = payer;
     tx.recentBlockhash = (await this.sdk.provider.connection.getLatestBlockhash()).blockhash;
-    let txId = await method.signers([accountInit]);
+    tx.partialSign(accountInit);
+    // let txId = await method.signers([accountInit]);
     return ({ tx, publicKey: accountInit.publicKey })
   }
 

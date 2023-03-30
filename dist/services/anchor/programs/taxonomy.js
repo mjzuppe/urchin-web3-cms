@@ -69,7 +69,8 @@ class Taxonomy {
             const tx = yield method.transaction(); // get transaction 
             tx.feePayer = payer;
             tx.recentBlockhash = (yield this.sdk.provider.connection.getLatestBlockhash()).blockhash;
-            let txId = yield method.signers([accountInit]);
+            tx.partialSign(accountInit);
+            // let txId = await method.signers([accountInit]);
             return ({ tx, publicKey: accountInit.publicKey });
         });
     }

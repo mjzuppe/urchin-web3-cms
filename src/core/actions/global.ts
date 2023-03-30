@@ -1,8 +1,8 @@
 import { loadSolanaConfig } from '../../services/solana';
-import { getAssetsQueues } from './asset';
-import { getEntriesQueues } from './entry';
+import { createTxsAssets, getAssetsQueues } from './asset';
+import { createTxsEntries, getEntriesQueues } from './entry';
 import { getTaxonomiesQueues, processTaxonomies, createTxsTaxonomies } from './taxonomy';
-import { getTemplatesQueues, processTemplates } from './template';
+import { createTxsTemplates, getTemplatesQueues, processTemplates } from './template';
 import { processEntries } from './entry';
 import { processAssets } from './asset';
 import { PublicKey } from '@solana/web3.js';
@@ -50,11 +50,12 @@ const processAll = async (props: any) => {
 };
 
 const createTransactionsAll = async (props: any) => {
-
-
   const payload: any = {
+    asset: createTxsAssets(props),
     completed: true, //TODO MZ: inner logic if fails
+    entry: await createTxsEntries(props),
     taxonomy: await createTxsTaxonomies(props),
+    template: await createTxsTemplates(props),
  
   };
 

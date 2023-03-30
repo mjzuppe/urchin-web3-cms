@@ -54,8 +54,11 @@ const processAll = (props) => __awaiter(void 0, void 0, void 0, function* () {
 exports.processAll = processAll;
 const createTransactionsAll = (props) => __awaiter(void 0, void 0, void 0, function* () {
     const payload = {
+        asset: (0, asset_1.createTxsAssets)(props),
         completed: true,
+        entry: yield (0, entry_1.createTxsEntries)(props),
         taxonomy: yield (0, taxonomy_1.createTxsTaxonomies)(props),
+        template: yield (0, template_1.createTxsTemplates)(props),
     };
     return payload;
 });

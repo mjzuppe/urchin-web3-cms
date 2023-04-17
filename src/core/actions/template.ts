@@ -148,6 +148,7 @@ const processTemplates = async (args: PlayaArgs): Promise<any> => {
   for (const createTemplateFromQueue of CREATE_QUEUE) {
     // Arweave
     const arweaveData = { // TODO MJZ update
+      title: createTemplateFromQueue.title,
       taxonomies: createTemplateFromQueue.taxonomies,
       inputs: createTemplateFromQueue.inputs,
       created: Date.now()

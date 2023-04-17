@@ -18,7 +18,7 @@ describe('Manage template', () => {
         u.template.create(
             [
                 { 
-                    title: "field1", 
+                    title: "title of record", 
                     inputs: [
                         { label: "text", type: "text", validation: { 
                             type: "text", 
@@ -36,6 +36,7 @@ describe('Manage template', () => {
 const preflight = await u.preflight();
 
 const r = await u.process();
+console.log("r::", r);
 pubkey = new PublicKey(r.template[0].publicKey);
 
   }).timeout(100000);

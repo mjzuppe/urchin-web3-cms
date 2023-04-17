@@ -5,10 +5,7 @@ const CREATE_ENTRY_SCHEMA = Joi.array().items(
   Joi.object({
     immutable: Joi.boolean().default(false),
     inputs: Joi.array().items(
-      Joi.object({
-        label: Joi.string(),
-        value: Joi.string(),
-      }),
+      Joi.object(),
     ),
     private: Joi.boolean().default(false),
     taxonomies: Joi.array().items(pubkey()).max(3),
@@ -23,10 +20,7 @@ const UPDATE_ENTRY_SCHEMA =  Joi.array().items(
   Joi.object({
     immutable: Joi.boolean().default(false),
     inputs: Joi.array().items(
-      Joi.object({
-        label: Joi.string(),
-        value: Joi.string(),
-      }),
+      Joi.object(),
     ),
     taxonomies: Joi.array().items(pubkey()).max(3),
     publicKey: pubkey().required(),

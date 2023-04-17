@@ -123,6 +123,7 @@ const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* (
     for (const createTemplateFromQueue of CREATE_QUEUE) {
         // Arweave
         const arweaveData = {
+            title: createTemplateFromQueue.title,
             taxonomies: createTemplateFromQueue.taxonomies,
             inputs: createTemplateFromQueue.inputs,
             created: Date.now()

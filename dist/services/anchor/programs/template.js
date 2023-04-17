@@ -52,6 +52,22 @@ class Template {
         });
     }
     ;
+    createTemplateTx(payer, owner, arweave_id, archived, original) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const accountInit = anchor.web3.Keypair.generate();
+            const method = yield this.sdk.program.methods.createTemplate(arweave_id, original, archived).accounts({
+                template: accountInit.publicKey,
+                payer,
+                owner,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            });
+            const tx = yield method.transaction(); // get transaction 
+            tx.feePayer = payer;
+            tx.recentBlockhash = (yield this.sdk.provider.connection.getLatestBlockhash()).blockhash;
+            let txId = yield method.signers([accountInit]);
+            return ({ tx, publicKey: accountInit.publicKey });
+        });
+    }
     getTemplate(publicKeys) {
         return __awaiter(this, void 0, void 0, function* () {
             let r = yield this.sdk.program.account.templateAccount.fetchMultiple(publicKeys);
@@ -67,7 +83,7 @@ class Template {
                 {
                     memcmp: {
                         offset: 8,
-                        bytes: owner.publicKey.toBase58(),
+                        bytes: owner.toBase58(),
                     }
                 }
             ]);
@@ -81,6 +97,21 @@ class Template {
                 payer: this.sdk.provider.wallet.publicKey,
                 owner: owner.publicKey,
             }).signers([owner]).rpc();
+            return ({ tx, publicKey });
+        });
+    }
+    ;
+    updateTemplateTx(publicKey, payer, archived, version) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const method = yield this.sdk.program.methods.updateTemplate(archived, version).accounts({
+                template: publicKey,
+                payer: payer,
+                owner: payer,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            });
+            const tx = yield method.transaction(); // get transaction 
+            tx.feePayer = payer;
+            tx.recentBlockhash = (yield this.sdk.provider.connection.getLatestBlockhash()).blockhash;
             return ({ tx, publicKey });
         });
     }

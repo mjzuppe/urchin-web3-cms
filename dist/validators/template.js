@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateUpdateTemplateSchema = exports.validateGetTemplatesSchema = exports.validateCreateTemplateSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
+const custom_1 = require("./custom");
 const CREATE_TEMPLATE_SCHEMA = joi_1.default.array().items(//need a different valiation if 
 joi_1.default.object({
     inputs: joi_1.default.array().items(joi_1.default.object({
@@ -18,11 +19,11 @@ joi_1.default.object({
         }),
     })),
     title: joi_1.default.string().min(1).max(100).required(),
-    taxonomies: joi_1.default.array().items(joi_1.default.any()),
+    taxonomies: joi_1.default.array().items((0, custom_1.pubkey)()),
     original: joi_1.default.any(),
     archived: joi_1.default.boolean(),
 })).min(1);
-const GET_TEMPLATES_SCHEMA = joi_1.default.array().items(joi_1.default.any());
+const GET_TEMPLATES_SCHEMA = joi_1.default.array().items((0, custom_1.pubkey)());
 const UPDATE_TEMPLATE_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     // inputs: Joi.array().items(
     //   Joi.object({
@@ -32,7 +33,7 @@ const UPDATE_TEMPLATE_SCHEMA = joi_1.default.array().items(joi_1.default.object(
     //   }),
     // ),
     // private: Joi.boolean().default(false),
-    publicKey: joi_1.default.any(),
+    publicKey: (0, custom_1.pubkey)().required(),
     archived: joi_1.default.boolean(),
     version: joi_1.default.number(),
     // title: Joi.string().min(1).max(100).required(),

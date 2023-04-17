@@ -32,11 +32,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTaxonomy = exports.processTaxonomies = exports.getTaxonomiesQueues = exports.getTaxonomiesUpdateQueue = exports.getTaxonomiesCreateQueue = exports.getAllTaxonomies = exports.getTaxonomies = exports.createTaxonomy = void 0;
+exports.updateTaxonomy = exports.createTxsTaxonomies = exports.processTaxonomies = exports.getTaxonomiesQueues = exports.getTaxonomiesUpdateQueue = exports.getTaxonomiesCreateQueue = exports.getAllTaxonomies = exports.getTaxonomies = exports.createTaxonomy = exports.cleanTaxonomies = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
+const web3_js_1 = require("@solana/web3.js");
 const taxonomy_1 = require("../../validators/taxonomy");
 const transform_1 = require("../../services/solana/transform");
+const bytes_1 = require("@project-serum/anchor/dist/cjs/utils/bytes");
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
 const _resetTaxonomiesCreateQueue = () => {
@@ -45,6 +47,11 @@ const _resetTaxonomiesCreateQueue = () => {
 const _resetTaxonomiesUpdateQueue = () => {
     UPDATE_QUEUE = [];
 };
+const cleanTaxonomies = () => {
+    _resetTaxonomiesCreateQueue();
+    _resetTaxonomiesUpdateQueue();
+};
+exports.cleanTaxonomies = cleanTaxonomies;
 const createTaxonomy = (payload) => {
     (0, taxonomy_1.validateCreateTaxonomySchema)(payload);
     CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
@@ -61,9 +68,9 @@ const getTaxonomies = (args, publicKeys = []) => __awaiter(void 0, void 0, void 
 exports.getTaxonomies = getTaxonomies;
 const getAllTaxonomies = (args) => __awaiter(void 0, void 0, void 0, function* () {
     // validateGetAllTaxonomiesSchema(owner);
-    const { cluster, payer, owner, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const { cluster, payer, owner, ownerPublicKey, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'taxonomy', cluster);
-    let taxonomyAccounts = yield new SolanaInteractions.Taxonomy(sdk).getTaxonomyAll(owner || payer);
+    let taxonomyAccounts = yield new SolanaInteractions.Taxonomy(sdk).getTaxonomyAll(ownerPublicKey);
     return (0, transform_1.formatTaxonomyAccounts)(taxonomyAccounts);
 });
 exports.getAllTaxonomies = getAllTaxonomies;
@@ -78,7 +85,9 @@ exports.getTaxonomiesUpdateQueue = getTaxonomiesUpdateQueue;
 const getTaxonomiesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 exports.getTaxonomiesQueues = getTaxonomiesQueues;
 const processTaxonomies = (args) => __awaiter(void 0, void 0, void 0, function* () {
-    const { cluster, payer, rpc, wallet, owner, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const { cluster, payer, rpc, wallet, owner, preflightCommitment, returnTransactions } = (0, solana_1.loadSolanaConfig)(args);
+    if (payer instanceof web3_js_1.PublicKey)
+        throw new Error(`Attempting to process taxonomies with a payer public key.`);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'taxonomy', cluster);
     let mutatedTaxonomyIds = [];
     for (const createTaxonomyFromQueue of CREATE_QUEUE) {
@@ -105,6 +114,34 @@ const processTaxonomies = (args) => __awaiter(void 0, void 0, void 0, function* 
     return taxonomyAccounts;
 });
 exports.processTaxonomies = processTaxonomies;
+const createTxsTaxonomies = (args) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    if (payer instanceof web3_js_1.Keypair)
+        throw new Error("To create taxonomy transactions, you must provide Publickey instead of a Keypair.");
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'taxonomy', cluster);
+    let transactions = [];
+    for (const createTaxonomyFromQueue of CREATE_QUEUE) {
+        const createdTaxonomy = yield new SolanaInteractions.Taxonomy(sdk).createTaxonomyTx(createTaxonomyFromQueue.label, payerPublicKey, ownerPublicKey, createTaxonomyFromQueue.parent);
+        const { tx } = createdTaxonomy;
+        const transactionSerialized = tx.serialize({
+            requireAllSignatures: false,
+        });
+        const transactionU8 = Uint8Array.from(transactionSerialized);
+        const transactionEncoded = bytes_1.bs58.encode(transactionU8);
+        transactions.push(transactionEncoded);
+    }
+    for (const updateTaxonomyFromQueue of UPDATE_QUEUE) {
+        if (!updateTaxonomyFromQueue.publicKey)
+            continue;
+        const updatedTaxonomy = yield new SolanaInteractions.Taxonomy(sdk).updateTaxonomyTx(updateTaxonomyFromQueue.publicKey, updateTaxonomyFromQueue.label, payerPublicKey, ownerPublicKey, updateTaxonomyFromQueue.parent);
+        const { tx } = updatedTaxonomy;
+        transactions.push(tx);
+    }
+    _resetTaxonomiesCreateQueue();
+    _resetTaxonomiesUpdateQueue();
+    return transactions;
+});
+exports.createTxsTaxonomies = createTxsTaxonomies;
 const updateTaxonomy = (payload) => {
     (0, taxonomy_1.validateUpdateTaxonomySchema)(payload);
     UPDATE_QUEUE = [...UPDATE_QUEUE, ...payload];

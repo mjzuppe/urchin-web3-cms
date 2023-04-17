@@ -15,16 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.uploadData = void 0;
 const client_1 = __importDefault(require("@bundlr-network/client"));
 const client_2 = require("@bundlr-network/client");
-const bs58_1 = __importDefault(require("bs58"));
-const uploadData = (payer, cluster, data, wallet = null) => __awaiter(void 0, void 0, void 0, function* () {
+
+const uploadData = (secret, cluster, data, wallet = null) => __awaiter(void 0, void 0, void 0, function* () {
+
     if (wallet) {
-        const bundlr = new client_2.WebBundlr("https://devnet.bundlr.network", "solana", wallet, { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet
-        yield bundlr.fund(100000);
+        const bundlr = new client_2.WebBundlr("https://node2.bundlr.network", "solana", wallet, { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet ---previously https://devnet.bundlr.network
+        // await bundlr.fund(100000);
         return yield bundlr.upload(JSON.stringify(data));
     }
     else {
-        const bundlr = new client_1.default("https://devnet.bundlr.network", "solana", bs58_1.default.encode(new Uint8Array(payer.secretKey)), { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet
-        yield bundlr.fund(100000);
+        const bundlr = new client_1.default("https://node2.bundlr.network", "solana", secret, { providerUrl: "https://api.devnet.solana.com" }); // TODO dynamic for mainnet
+
+
         return yield bundlr.upload(JSON.stringify(data));
     }
 });

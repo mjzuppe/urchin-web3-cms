@@ -2,7 +2,7 @@ import { PublicKey, Keypair } from "@solana/web3.js";
 
 type Asset = {
   id: string;
-  publicKey: string;
+  publicKey: PublicKey;
   updated: number;
   url: string;
   arweaveId: string;

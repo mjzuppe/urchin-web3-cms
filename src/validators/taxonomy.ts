@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { pubkey } from './custom';
 
 const CREATE_TAXONOMY_SCHEMA = Joi.array().items(
   Joi.object({
@@ -7,11 +8,11 @@ const CREATE_TAXONOMY_SCHEMA = Joi.array().items(
   }),
 ).min(1);
 
-const GET_TAXONOMIES_SCHEMA = Joi.array().items(Joi.any())
+const GET_TAXONOMIES_SCHEMA = Joi.array().items(pubkey())
 
 const CREATE_UPDATE_SCHEMA = Joi.array().items(
   Joi.object({
-    publicKey: Joi.any(), //TODO VV: how to validate a PublicKey class
+    publicKey: pubkey().required(),
     label: Joi.string().required(),
     parent: Joi.string(),
   }),

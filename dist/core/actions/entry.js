@@ -31,27 +31,110 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEntries = exports.processEntries = exports.updateEntry = exports.getEntriesQueues = exports.getEntries = exports.createEntry = void 0;
+exports.getAllEntries = exports.processEntries = exports.updateEntry = exports.getEntriesQueues = exports.getEntries = exports.createTxsEntries = exports.createEntry = exports.cleanEntries = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
+const web3_js_1 = require("@solana/web3.js");
 const entry_1 = require("../../validators/entry");
 const transform_1 = require("../../services/solana/transform");
 const metadata = __importStar(require("../../services/arweave/metadata"));
+const template_1 = require("./template");
+const joi_1 = __importDefault(require("joi"));
 let CREATE_QUEUE = [];
 let UPDATE_QUEUE = [];
+const ephemeralKeypair = web3_js_1.Keypair.generate();
+const cleanEntries = () => {
+    _resetEntriesCreateQueue();
+    _resetEntriesUpdateQueue();
+};
+exports.cleanEntries = cleanEntries;
 const _resetEntriesCreateQueue = () => {
     CREATE_QUEUE = [];
 };
 const _resetEntriesUpdateQueue = () => {
     UPDATE_QUEUE = [];
 };
-const createEntry = (payload) => {
+const _validateInputsFromTemplate = (args, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    if (!((_a = payload.inputs) === null || _a === void 0 ? void 0 : _a.length))
+        return;
+    const template = (_b = (yield (0, template_1.getTemplates)(args, [payload.template]))) === null || _b === void 0 ? void 0 : _b[0];
+    if (!template)
+        throw Error('Entry validation aborted cause due template not found!');
+    const validationTypes = (input) => {
+        const types = {
+            file: null,
+            numeric: joi_1.default.number().min(input.validation.min).max(input.validation.max),
+            text: joi_1.default.string().min(input.validation.min).max(input.validation.max),
+            textarea: joi_1.default.string().min(input.validation.min).max(input.validation.max),
+            select: joi_1.default.string().valid((input === null || input === void 0 ? void 0 : input.options) || ''),
+        };
+        let validationType = types[input.type];
+        return validationType;
+    };
+    let validationSchema = {};
+    for (const input of template.inputs) {
+        validationSchema[input.label] = validationTypes(input);
+    }
+    let formattedDataForValidation = {};
+    for (const input of payload.inputs) {
+        formattedDataForValidation[input.label] = input.value;
+    }
+    const { error } = joi_1.default.object(validationSchema).validate(formattedDataForValidation);
+    if (error)
+        throw new Error(error === null || error === void 0 ? void 0 : error.details[0].message);
+});
+const createEntry = (args, payload) => __awaiter(void 0, void 0, void 0, function* () {
     (0, entry_1.validateCreateEntrySchema)(payload);
+    // Validate inputs data from template rules
+    for (const entry of payload) {
+        yield _validateInputsFromTemplate(args, entry);
+    }
     CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
     return payload;
-};
+});
 exports.createEntry = createEntry;
+const createTxsEntries = (args) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment, walletContextState } = (0, solana_1.loadSolanaConfig)(args);
+    if (payer instanceof web3_js_1.Keypair)
+        throw new Error('To create entries transactions, you must provide Publickey instead of a Keypair.');
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'entry', cluster);
+    let transactions = [];
+    for (const createEntryFromQueue of CREATE_QUEUE) {
+        // Arweave
+        const arweaveData = {
+            inputs: createEntryFromQueue.inputs,
+            created: Date.now()
+        };
+        const arweaveResponse = yield metadata.uploadData(payer instanceof web3_js_1.Keypair ? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
+        const arweaveId = arweaveResponse.id;
+        const createdEntry = yield new SolanaInteractions.Entry(sdk).createEntryTx(payerPublicKey, ownerPublicKey, arweaveId, createEntryFromQueue.template, createEntryFromQueue.taxonomies || [], createEntryFromQueue.immutable || false, createEntryFromQueue.archived || false);
+        const { tx } = createdEntry;
+        transactions.push(tx);
+    }
+    for (const updateEntryFromQueue of UPDATE_QUEUE) {
+        if (!updateEntryFromQueue.publicKey)
+            continue;
+        // Arweave
+        const arweaveData = {
+            inputs: updateEntryFromQueue.inputs,
+            created: Date.now()
+        };
+        const arweaveResponse = yield metadata.uploadData(payer instanceof web3_js_1.Keypair ? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
+        const arweaveId = arweaveResponse.id;
+        const updatedEntry = yield new SolanaInteractions.Entry(sdk).updateEntryTx(updateEntryFromQueue.publicKey, payerPublicKey, arweaveId, updateEntryFromQueue.taxonomies || [], updateEntryFromQueue.immutable || false, updateEntryFromQueue.archived || false);
+        const { tx } = updatedEntry;
+        transactions.push(tx);
+    }
+    _resetEntriesCreateQueue();
+    _resetEntriesUpdateQueue();
+    return transactions;
+});
+exports.createTxsEntries = createTxsEntries;
 const getEntries = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, function* () {
     (0, entry_1.validateGetEntriesSchema)(publicKeys);
     const { cluster, payer, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
@@ -62,16 +145,18 @@ const getEntries = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, 
 exports.getEntries = getEntries;
 const getAllEntries = (args) => __awaiter(void 0, void 0, void 0, function* () {
     // validateGetAllTaxonomiesSchema(owner);
-    const { cluster, payer, owner, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const { cluster, payer, owner, ownerPublicKey, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'entry', cluster);
-    let entryAccounts = yield new SolanaInteractions.Entry(sdk).getEntryAll(owner || payer);
+    let entryAccounts = yield new SolanaInteractions.Entry(sdk).getEntryAll(ownerPublicKey);
     return (0, transform_1.formatEntryAccounts)(entryAccounts);
 });
 exports.getAllEntries = getAllEntries;
 const getEntriesQueues = () => ({ create: CREATE_QUEUE, update: UPDATE_QUEUE });
 exports.getEntriesQueues = getEntriesQueues;
 const processEntries = (args) => __awaiter(void 0, void 0, void 0, function* () {
-    const { cluster, payer, owner, rpc, wallet, preflightCommitment, walletContextState } = yield (0, solana_1.loadSolanaConfig)(args);
+    const { cluster, payer, owner, rpc, wallet, preflightCommitment, walletContextState, returnTransactions } = yield (0, solana_1.loadSolanaConfig)(args);
+    if (payer instanceof web3_js_1.PublicKey)
+        throw new Error(`Attempting to process entries with a payer public key.`);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'entry', cluster);
     let mutatedEntryIds = [];
     for (const createEntryFromQueue of CREATE_QUEUE) {
@@ -80,7 +165,7 @@ const processEntries = (args) => __awaiter(void 0, void 0, void 0, function* () 
             inputs: createEntryFromQueue.inputs,
             created: Date.now()
         };
-        const arweaveResponse = yield metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+        const arweaveResponse = yield metadata.uploadData(payer instanceof web3_js_1.Keypair ? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
         const arweaveId = arweaveResponse.id;
         // Solana 
         const createdEntry = yield new SolanaInteractions.Entry(sdk).createEntry(owner || payer, arweaveId, createEntryFromQueue.template, createEntryFromQueue.taxonomies || [], createEntryFromQueue.immutable || false, createEntryFromQueue.archived || false);
@@ -97,7 +182,7 @@ const processEntries = (args) => __awaiter(void 0, void 0, void 0, function* () 
             inputs: updateEntryFromQueue.inputs,
             created: Date.now()
         };
-        const arweaveResponse = yield metadata.uploadData(payer, cluster, arweaveData, walletContextState);
+        const arweaveResponse = yield metadata.uploadData(payer instanceof web3_js_1.Keypair ? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
         const arweaveId = arweaveResponse.id;
         // Solana
         const updatedEntry = yield new SolanaInteractions.Entry(sdk).updateEntry(updateEntryFromQueue.publicKey, owner || payer, arweaveId, updateEntryFromQueue.taxonomies || [], updateEntryFromQueue.immutable || false, updateEntryFromQueue.archived || false);

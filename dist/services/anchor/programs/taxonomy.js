@@ -41,23 +41,44 @@ class Taxonomy {
     }
     createTaxonomy(label, owner, parent) {
         return __awaiter(this, void 0, void 0, function* () {
+            const wallet = new anchor.Wallet(owner); // also perhaps feed useAnchorWallet when in front?
             const accountInit = anchor.web3.Keypair.generate();
-            const tx = yield this.sdk.program.methods.createTaxonomy(label, parent || null).accounts({
+            const method = yield this.sdk.program.methods.createTaxonomy(label, parent || null).accounts({
                 taxonomy: accountInit.publicKey,
                 payer: this.sdk.provider.wallet.publicKey,
                 owner: owner.publicKey,
                 systemProgram: anchor.web3.SystemProgram.programId,
-            }).signers([accountInit, owner]).rpc();
+            });
+            // see: https://coral-xyz.github.io/anchor/ts/classes/Program.html#transaction
+            const tx = yield method.transaction(); // get transaction 
+            tx.feePayer = wallet.publicKey;
+            tx.recentBlockhash = (yield this.sdk.provider.connection.getLatestBlockhash()).blockhash;
+            let txId = yield method.signers([accountInit, owner]).rpc();
+            return ({ tx: txId, publicKey: accountInit.publicKey });
+        });
+    }
+    createTaxonomyTx(label, payer, owner, parent) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const accountInit = anchor.web3.Keypair.generate();
+            const method = yield this.sdk.program.methods.createTaxonomy(label, parent || null).accounts({
+                taxonomy: accountInit.publicKey,
+                payer,
+                owner,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            });
+            const tx = yield method.transaction(); // get transaction 
+            tx.feePayer = payer;
+            tx.recentBlockhash = (yield this.sdk.provider.connection.getLatestBlockhash()).blockhash;
+            tx.partialSign(accountInit);
+            // let txId = await method.signers([accountInit]);
             return ({ tx, publicKey: accountInit.publicKey });
         });
     }
-    ;
     getTaxonomy(publicKeys) {
         return __awaiter(this, void 0, void 0, function* () {
             let r = yield this.sdk.program.account.taxonomyAccount.fetchMultiple(publicKeys);
             r = r.map((r, i) => (Object.assign({ publicKey: publicKeys[i] }, r)));
             return r;
-            // if (r.owner.toString() !== owner.publicKey.toString()) throw Error("owner mismatch"); //TODO MZ: add validation for owner?
         });
     }
     ;
@@ -67,7 +88,7 @@ class Taxonomy {
                 {
                     memcmp: {
                         offset: 8,
-                        bytes: owner.publicKey.toBase58(),
+                        bytes: owner.toBase58(),
                     }
                 }
             ]);
@@ -81,6 +102,21 @@ class Taxonomy {
                 payer: this.sdk.provider.wallet.publicKey,
                 owner: owner.publicKey,
             }).signers([owner]).rpc();
+            return ({ tx, publicKey });
+        });
+    }
+    ;
+    updateTaxonomyTx(publicKey, label, payer, owner, parent) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const method = yield this.sdk.program.methods.updateTaxonomy(label, parent || null).accounts({
+                taxonomy: publicKey,
+                payer: payer,
+                owner: payer,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            });
+            const tx = yield method.transaction(); // get transaction 
+            tx.feePayer = payer;
+            tx.recentBlockhash = (yield this.sdk.provider.connection.getLatestBlockhash()).blockhash;
             return ({ tx, publicKey });
         });
     }

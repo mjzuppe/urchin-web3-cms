@@ -1,11 +1,12 @@
 {
   "name": "urchin-web3-cms",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "An SDK and protocal layer for headless content and file mananagement for decentralized applications and web apps. Built on Solana, Arweave, and Bundlr.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "node_modules/.bin/ts-mocha --file src/tests/*.spec.ts",
+    "test": "node_modules/.bin/ts-mocha --file src/tests/*.spec.ts --exclude src/tests/disabled",
+    "testone": "node_modules/.bin/ts-mocha",
     "build": "rm -rf dist && tsc"
   },
   "keywords": [],

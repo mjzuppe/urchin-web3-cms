@@ -32,9 +32,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllAssets = exports.processAssets = exports.updateAsset = exports.getAssetsUpdateQueue = exports.getAssetsQueues = exports.getAssetsCreateQueue = exports.getAssets = exports.createAsset = void 0;
+exports.getAllAssets = exports.processAssets = exports.updateAsset = exports.getAssetsUpdateQueue = exports.getAssetsQueues = exports.getAssetsCreateQueue = exports.getAssets = exports.createTxsAssets = exports.createAsset = exports.cleanAssets = void 0;
 const SolanaInteractions = __importStar(require("../../services/anchor/programs"));
 const solana_1 = require("../../services/solana");
+const web3_js_1 = require("@solana/web3.js");
 const asset_1 = require("../../validators/asset");
 const transform_1 = require("../../services/solana/transform");
 let CREATE_QUEUE = [];
@@ -45,12 +46,40 @@ const _resetAssetsCreateQueue = () => {
 const _resetAssetsUpdateQueue = () => {
     UPDATE_QUEUE = [];
 };
+const cleanAssets = () => {
+    _resetAssetsCreateQueue();
+    _resetAssetsUpdateQueue();
+};
+exports.cleanAssets = cleanAssets;
 const createAsset = (payload) => {
     (0, asset_1.validateCreateAssetSchema)(payload);
     CREATE_QUEUE = [...CREATE_QUEUE, ...payload];
     return payload;
 };
 exports.createAsset = createAsset;
+const createTxsAssets = (args) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cluster, payer, rpc, wallet, owner, ownerPublicKey, payerPublicKey, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    if (payer instanceof web3_js_1.Keypair)
+        throw new Error('To create assets transactions, you must provide Publickey instead of a Keypair.');
+    const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'asset', cluster);
+    let transactions = [];
+    for (const createAssetFromQueue of CREATE_QUEUE) {
+        const createdAsset = yield new SolanaInteractions.Asset(sdk).createAssetTx(payerPublicKey, ownerPublicKey, createAssetFromQueue.arweaveId, createAssetFromQueue.immutable || false, createAssetFromQueue.archived || false);
+        const { tx } = createdAsset;
+        transactions.push(tx);
+    }
+    for (const updateAssetFromQueue of UPDATE_QUEUE) {
+        if (!updateAssetFromQueue.publicKey)
+            continue;
+        const updatedAsset = yield new SolanaInteractions.Asset(sdk).updateAssetTx(updateAssetFromQueue.publicKey, payerPublicKey, updateAssetFromQueue.arweaveId, updateAssetFromQueue.immutable || false, updateAssetFromQueue.archived || false);
+        const { tx } = updatedAsset;
+        transactions.push(tx);
+    }
+    _resetAssetsCreateQueue();
+    _resetAssetsUpdateQueue();
+    return transactions;
+});
+exports.createTxsAssets = createTxsAssets;
 const getAssets = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, function* () {
     (0, asset_1.validateGetAssetsSchema)(publicKeys);
     const { cluster, payer, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
@@ -60,9 +89,9 @@ const getAssets = (args, publicKeys = []) => __awaiter(void 0, void 0, void 0, f
 });
 exports.getAssets = getAssets;
 const getAllAssets = (args) => __awaiter(void 0, void 0, void 0, function* () {
-    const { cluster, payer, owner, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
+    const { cluster, payer, owner, ownerPublicKey, rpc, wallet, preflightCommitment } = (0, solana_1.loadSolanaConfig)(args);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'asset', cluster);
-    let AssetAccounts = yield new SolanaInteractions.Asset(sdk).getAssetAll(owner || payer);
+    let AssetAccounts = yield new SolanaInteractions.Asset(sdk).getAssetAll(ownerPublicKey);
     return AssetAccounts;
 });
 exports.getAllAssets = getAllAssets;
@@ -77,7 +106,9 @@ const getAssetsUpdateQueue = () => {
 };
 exports.getAssetsUpdateQueue = getAssetsUpdateQueue;
 const processAssets = (args) => __awaiter(void 0, void 0, void 0, function* () {
-    const { cluster, payer, owner, rpc, wallet, preflightCommitment } = yield (0, solana_1.loadSolanaConfig)(args);
+    const { cluster, payer, owner, rpc, wallet, preflightCommitment, returnTransactions } = yield (0, solana_1.loadSolanaConfig)(args);
+    if (payer instanceof web3_js_1.PublicKey)
+        throw new Error(`Attempting to process assets with a payer public key.`);
     const sdk = new SolanaInteractions.AnchorSDK(wallet, rpc, preflightCommitment, 'asset', cluster);
     let mutatedAssetIds = [];
     for (const createAssetFromQueue of CREATE_QUEUE) {

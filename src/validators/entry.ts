@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { pubkey } from './custom';
 
 const CREATE_ENTRY_SCHEMA = Joi.array().items(
   Joi.object({
@@ -7,13 +8,13 @@ const CREATE_ENTRY_SCHEMA = Joi.array().items(
       Joi.object(),
     ),
     private: Joi.boolean().default(false),
-    taxonomies: Joi.array().items(Joi.any()).max(3),
-    template: Joi.any().required(),
+    taxonomies: Joi.array().items(pubkey()).max(3),
+    template: pubkey().required(),
     archived: Joi.boolean().default(false),
   }),
 ).min(1);
 
-const GET_ENTRIES_SCHEMA = Joi.array().items(Joi.any()).min(1);
+const GET_ENTRIES_SCHEMA = Joi.array().items(pubkey()).min(1);
 
 const UPDATE_ENTRY_SCHEMA =  Joi.array().items(
   Joi.object({
@@ -21,8 +22,8 @@ const UPDATE_ENTRY_SCHEMA =  Joi.array().items(
     inputs: Joi.array().items(
       Joi.object(),
     ),
-    taxonomies: Joi.array().items(Joi.any()).max(3),
-    publicKey: Joi.any().required(),
+    taxonomies: Joi.array().items(pubkey()).max(3),
+    publicKey: pubkey().required(),
     archived: Joi.boolean().default(false),
   })
 ).min(1);

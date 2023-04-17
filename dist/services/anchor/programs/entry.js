@@ -52,6 +52,22 @@ class Entry {
         });
     }
     ;
+    createEntryTx(payer, owner, arweave_id, template, taxonomy, immutable, archived) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const accountInit = anchor.web3.Keypair.generate();
+            const method = yield this.sdk.program.methods.createEntry(template, arweave_id, taxonomy, immutable, archived).accounts({
+                entry: accountInit.publicKey,
+                payer,
+                owner,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            });
+            const tx = yield method.transaction(); // get transaction 
+            tx.feePayer = payer;
+            tx.recentBlockhash = (yield this.sdk.provider.connection.getLatestBlockhash()).blockhash;
+            let txId = yield method.signers([accountInit]);
+            return ({ tx, publicKey: accountInit.publicKey });
+        });
+    }
     getEntry(publicKeys) {
         return __awaiter(this, void 0, void 0, function* () {
             let r = yield this.sdk.program.account.entryAccount.fetchMultiple(publicKeys);
@@ -67,7 +83,7 @@ class Entry {
                 {
                     memcmp: {
                         offset: 8,
-                        bytes: owner.publicKey.toBase58(),
+                        bytes: owner.toBase58(),
                     }
                 }
             ]);
@@ -81,6 +97,21 @@ class Entry {
                 payer: this.sdk.provider.wallet.publicKey,
                 owner: owner.publicKey,
             }).signers([owner]).rpc();
+            return ({ tx, publicKey });
+        });
+    }
+    ;
+    updateEntryTx(publicKey, payer, arweave_id, taxonomy, immutable, archived) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const method = yield this.sdk.program.methods.updateEntry(arweave_id, immutable, taxonomy, archived).accounts({
+                template: publicKey,
+                payer: payer,
+                owner: payer,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            });
+            const tx = yield method.transaction(); // get transaction 
+            tx.feePayer = payer;
+            tx.recentBlockhash = (yield this.sdk.provider.connection.getLatestBlockhash()).blockhash;
             return ({ tx, publicKey });
         });
     }

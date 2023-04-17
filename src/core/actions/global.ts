@@ -1,10 +1,11 @@
 import { loadSolanaConfig } from '../../services/solana';
-import { getAssetsQueues } from './asset';
-import { getEntriesQueues } from './entry';
-import { getTaxonomiesQueues, processTaxonomies } from './taxonomy';
-import { getTemplatesQueues, processTemplates } from './template';
+import { createTxsAssets, getAssetsQueues } from './asset';
+import { createTxsEntries, getEntriesQueues } from './entry';
+import { getTaxonomiesQueues, processTaxonomies, createTxsTaxonomies } from './taxonomy';
+import { createTxsTemplates, getTemplatesQueues, processTemplates } from './template';
 import { processEntries } from './entry';
 import { processAssets } from './asset';
+import { PublicKey } from '@solana/web3.js';
 
 const PRICING: any = {
   asset: { create: 3002800, update: 5000 },
@@ -48,14 +49,27 @@ const processAll = async (props: any) => {
   return payload;
 };
 
+const createTransactionsAll = async (props: any) => {
+  const payload: any = {
+    asset: createTxsAssets(props),
+    completed: true, //TODO MZ: inner logic if fails
+    entry: await createTxsEntries(props),
+    taxonomy: await createTxsTaxonomies(props),
+    template: await createTxsTemplates(props),
+ 
+  };
+
+  return payload;
+};
+
 const queryAll = async (props:any) => {
   const { cluster, payer, rpc } = await loadSolanaConfig(props);
-
+  console.log("PAYER::", payer instanceof PublicKey);
   const payload: any = {
     asset: getAssetsQueues(),
     cluster,
     entry: getEntriesQueues(),
-    payer: payer.publicKey.toString(),
+    payer: payer instanceof PublicKey? payer.toString() : payer.publicKey.toString(),
     rpc: rpc.rpcEndpoint,
     taxonomy: getTaxonomiesQueues(),
     template: getTemplatesQueues(),
@@ -66,4 +80,4 @@ const queryAll = async (props:any) => {
   return payload;
 };
 
-export { processAll, queryAll };
+export { processAll, createTransactionsAll, queryAll };

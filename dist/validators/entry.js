@@ -5,20 +5,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateUpdateEntrySchema = exports.validateGetEntriesSchema = exports.validateCreateEntrySchema = void 0;
 const joi_1 = __importDefault(require("joi"));
+const custom_1 = require("./custom");
 const CREATE_ENTRY_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     immutable: joi_1.default.boolean().default(false),
     inputs: joi_1.default.array().items(joi_1.default.object()),
     private: joi_1.default.boolean().default(false),
-    taxonomies: joi_1.default.array().items(joi_1.default.any()).max(3),
-    template: joi_1.default.any().required(),
+    taxonomies: joi_1.default.array().items((0, custom_1.pubkey)()).max(3),
+    template: (0, custom_1.pubkey)().required(),
     archived: joi_1.default.boolean().default(false),
 })).min(1);
-const GET_ENTRIES_SCHEMA = joi_1.default.array().items(joi_1.default.any()).min(1);
+const GET_ENTRIES_SCHEMA = joi_1.default.array().items((0, custom_1.pubkey)()).min(1);
 const UPDATE_ENTRY_SCHEMA = joi_1.default.array().items(joi_1.default.object({
     immutable: joi_1.default.boolean().default(false),
-    inputs: joi_1.default.array().items(joi_1.default.object()),
-    taxonomies: joi_1.default.array().items(joi_1.default.any()).max(3),
-    publicKey: joi_1.default.any().required(),
+    inputs: joi_1.default.array().items(joi_1.default.object({
+        label: joi_1.default.string(),
+        value: joi_1.default.string(),
+    })),
+    taxonomies: joi_1.default.array().items((0, custom_1.pubkey)()).max(3),
+    publicKey: (0, custom_1.pubkey)().required(),
+
     archived: joi_1.default.boolean().default(false),
 })).min(1);
 const validateCreateEntrySchema = (data) => {

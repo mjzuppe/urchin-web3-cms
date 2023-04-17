@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { pubkey } from './custom';
 
 const CREATE_ASSET_SCHEMA = Joi.array().items(
   Joi.object({
@@ -9,11 +10,11 @@ const CREATE_ASSET_SCHEMA = Joi.array().items(
   })
 ).min(1);
 
-const GET_ASSETS_SCHEMA = Joi.array().items(Joi.any()).min(1);
+const GET_ASSETS_SCHEMA = Joi.array().items(pubkey()).min(1);
 
 const UPDATE_ASSET_SCHEMA = Joi.array().items(
   Joi.object({
-    publicKey: Joi.any().required(),
+    publicKey: pubkey().required(),
     arweaveId: Joi.string().required(),
     // original: Joi.string().required(),
     immutable: Joi.boolean().default(false),

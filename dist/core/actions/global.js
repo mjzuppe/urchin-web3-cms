@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.queryAll = exports.processAll = void 0;
+exports.queryAll = exports.createTransactionsAll = exports.processAll = void 0;
 const solana_1 = require("../../services/solana");
 const asset_1 = require("./asset");
 const entry_1 = require("./entry");
@@ -17,6 +17,7 @@ const taxonomy_1 = require("./taxonomy");
 const template_1 = require("./template");
 const entry_2 = require("./entry");
 const asset_2 = require("./asset");
+const web3_js_1 = require("@solana/web3.js");
 const PRICING = {
     asset: { create: 3002800, update: 5000 },
     entry: { create: 3928480, update: 5000 },
@@ -51,13 +52,25 @@ const processAll = (props) => __awaiter(void 0, void 0, void 0, function* () {
     return payload;
 });
 exports.processAll = processAll;
+const createTransactionsAll = (props) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = {
+        asset: (0, asset_1.createTxsAssets)(props),
+        completed: true,
+        entry: yield (0, entry_1.createTxsEntries)(props),
+        taxonomy: yield (0, taxonomy_1.createTxsTaxonomies)(props),
+        template: yield (0, template_1.createTxsTemplates)(props),
+    };
+    return payload;
+});
+exports.createTransactionsAll = createTransactionsAll;
 const queryAll = (props) => __awaiter(void 0, void 0, void 0, function* () {
     const { cluster, payer, rpc } = yield (0, solana_1.loadSolanaConfig)(props);
+    console.log("PAYER::", payer instanceof web3_js_1.PublicKey);
     const payload = {
         asset: (0, asset_1.getAssetsQueues)(),
         cluster,
         entry: (0, entry_1.getEntriesQueues)(),
-        payer: payer.publicKey.toString(),
+        payer: payer instanceof web3_js_1.PublicKey ? payer.toString() : payer.publicKey.toString(),
         rpc: rpc.rpcEndpoint,
         taxonomy: (0, taxonomy_1.getTaxonomiesQueues)(),
         template: (0, template_1.getTemplatesQueues)(),

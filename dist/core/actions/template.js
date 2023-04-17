@@ -127,7 +127,6 @@ const processTemplates = (args) => __awaiter(void 0, void 0, void 0, function* (
             inputs: createTemplateFromQueue.inputs,
             created: Date.now()
         };
-        // console.log("SECRET: ", bs58.encode( new Uint8Array(payer.secretKey)));
         const arweaveResponse = yield metadata.uploadData(payer instanceof web3_js_1.Keypair ? payer : ephemeralKeypair, cluster, arweaveData, walletContextState);
         const arweaveId = arweaveResponse.id;
         // Solana 
